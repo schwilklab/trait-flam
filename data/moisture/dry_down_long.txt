@@ -1,0 +1,10 @@
+
+dry_down_long file:
+
+hour: number of hours since start of dry-down
+rep: first digit represents true replication, second digit represents sub-replication
+wet_weight: weight of subsample from original saturated litter
+dry_weight: weight of subsample after ovendried (48 hours @ 95C
+sp: species
+MC_wet: moisture content calculated using wet weight
+MC_dry: moisture content calculated using dry weight
