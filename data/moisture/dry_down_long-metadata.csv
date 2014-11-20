@@ -1,0 +1,9 @@
+variable,type ,units,description
+hour,numerical,,number of hours since beginning of dry down process
+rep,string,,"first digit represents replicate, second digit represents subreplicate "
+wet_weight,numerical,g,
+wet_dry,numerical,g,
+spcode,string,,4 letter code uniquely identifying single species 
+MC_wet,numerical,%,moisture content on a wet weight basis
+MC_dry,numerical,%,moisture content on a dry weight basis
+,,,

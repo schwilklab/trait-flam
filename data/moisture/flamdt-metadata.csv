@@ -1,0 +1,14 @@
+variable,type ,units,description
+tr,string,,trial identifier
+spcode,string,,4 letter code uniquely identifying single species / 12 letter code uniquely identifying a mixture
+bulk,numerical,gcm-3,bulk density of the litter bed measured as the average of 6 points
+ignit,numerical,s,"ignitability, measured as the # of seconds it takes for steady flame"
+sustain,numerical,s,"sustainability, measured as the # of seconds it takes flame to travel through the bed"
+spread,numerical,cms-1,"spread rate, measured by dividing the length of the bed by sustainability"
+comb,numerical,mm,"combustability, measured as height of the tallest flame"
+consum,numerical,%,"consumability, as percent mass loss"
+b75.num,numerical,,"number of seconds temperature was above 100 °C, at the middle of the table (75 cm), at the bottom"
+b75.heat100,numerical,°C min,temperature time integration at 100 °C
+leaf.length,numerical,mm,
+leaf.area,numerical,mm2,
+mixture,boolean,,True/False statement determining whether spcode corresponds to a mixture

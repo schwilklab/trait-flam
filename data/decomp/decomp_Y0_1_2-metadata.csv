@@ -1,0 +1,9 @@
+variable,type ,units,description
+tag,string,,decomposition bag identifier
+spcode,string,,4 letter code uniquely identifying single species 
+alt,numerical,m,altitude of decomposition site
+asp,string,,aspect of decomposition site (N or S)
+year,string,,"0, 1 or 2, depending on whether it corresponds to initial measurement (0), or the year of decomposition"
+l,numerical,mm,leaf particle length (longest axis)
+w,numerical,mm,leaf particle width (longest axis perpendicular to length)
+t,numerical,mm,leaf particle thickness
