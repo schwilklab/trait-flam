@@ -10,9 +10,9 @@ library(plyr)
 source("dist-funcs.R")
 
 ## DWS: why are these in separate files?
-Y0 <- read.csv("../data/decomp/Decomp_Y0.csv")
-Y1 <- read.csv("../data/decomp/Decomp_Y1.csv")
-Y2 <- read.csv("../data/decomp/Decomp_Y2.csv")
+Y0 <- read.csv("../data/decomp/Decomp_Y0.csv", na.strings = c("","NA"))
+Y1 <- read.csv("../data/decomp/Decomp_Y1.csv", na.strings = c("","NA"))
+Y2 <- read.csv("../data/decomp/Decomp_Y2.csv", na.strings = c("","NA"))
 # rbind em up
 decomp <- rbind.fill(Y0,Y1,Y2)
 # clean up
@@ -39,9 +39,8 @@ decomp.sum <- ddply(decomp, .(spcode, year, alt, asp), summarize,
 
 
 ## Some data checks
-## subset(decomp, spcode=="")
-##       tag spcode alt asp year     l     w     t
-## 9794   31                   2 22.77  4.14  2.58
-## 10419  31                   2 50.42 28.45 11.11
-
-## DWS: missing spcode in 2 lines
+## subset(decomp, is.na(spcode))
+##       tag spcode  alt  asp year     l     w     t
+## 9794   31   <NA> <NA> <NA>    2 22.77  4.14  2.58
+## 10419  31   <NA> <NA> <NA>    2 50.42 28.45 11.11
+## DWS: missing all id variables spcode in 2 lines
