@@ -23,9 +23,8 @@ decomp$tag <- factor(decomp$tag)
 
 # Using ddply to summarize by different measures, and then using model
 # selection to determine which measure is the best to use. mean(l)
-## DWS: shouldn't this be summarizing over replicates, not spcodes? How do you
-## deal with variance?
-decomp.sum <- ddply(decomp, .(spcode, year, alt, asp), summarize,
+
+decomp.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
                  l.mean=mean(l, na.rm=TRUE),
                  l.var=var(l, na.rm=TRUE),
                  l.med=median(l, na.rm=TRUE),
@@ -35,12 +34,3 @@ decomp.sum <- ddply(decomp, .(spcode, year, alt, asp), summarize,
                  l.k=kurtosis(l, na.rm=TRUE),
                  n = sum(!is.na(l)) # get sample size too
                  )
-
-
-
-## Some data checks
-## subset(decomp, is.na(spcode))
-##       tag spcode  alt  asp year     l     w     t
-## 9794   31   <NA> <NA> <NA>    2 22.77  4.14  2.58
-## 10419  31   <NA> <NA> <NA>    2 50.42 28.45 11.11
-## DWS: missing all id variables spcode in 2 lines
