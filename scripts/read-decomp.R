@@ -9,7 +9,7 @@ library(plyr)
 # for kurtosis() function:
 source("dist-funcs.R")
 
-## DWS: why are these in separate files?
+## The files are separate due to their size 
 Y0 <- read.csv("../data/decomp/Decomp_Y0.csv", na.strings = c("","NA"))
 Y1 <- read.csv("../data/decomp/Decomp_Y1.csv", na.strings = c("","NA"))
 Y2 <- read.csv("../data/decomp/Decomp_Y2.csv", na.strings = c("","NA"))
@@ -22,7 +22,7 @@ decomp$year <- factor(decomp$year)
 decomp$tag <- factor(decomp$tag)
 
 # Using ddply to summarize by different measures, and then using model
-# selection to determine which measure is the best to use. mean(l)
+# selection to determine which measure is the best to use. It is mean(l)
 
 decomp.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
                  l.mean=mean(l, na.rm=TRUE),
@@ -34,3 +34,11 @@ decomp.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
                  l.k=kurtosis(l, na.rm=TRUE),
                  n = sum(!is.na(l)) # get sample size too
                  )
+
+wt <- read.csv("../data/decomp/Decomp_weight.csv", na.strings = c("","NA"))
+
+decomp2.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
+                     l.mean=mean(l, na.rm=TRUE),
+                     n = sum(!is.na(l))
+                    )
+

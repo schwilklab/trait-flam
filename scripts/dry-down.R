@@ -32,7 +32,8 @@ p + stat_smooth(data=mc, method="lm", se=FALSE, size=1)
 
 png("moisture.png", width=9*ppi, height=5*ppi, res=ppi)
 
-p + geom_smooth(method="glm", family=gaussian(link="log")) + themeopts + theme_bw()
+p + geom_smooth(method="glm", family=gaussian(link="log")) + themeopts + 
+  theme_bw()
 
 dev.off()
 
@@ -40,6 +41,10 @@ ggsave("../results/plots/moisture2.png", width=9, height=5, dpi=ppi, units="cm")
 
 # subset by species to get the coefficients (y0 and B) for each curve. Can the
 # slope of each curve be a dry down index or dissecation index?
-mcdry.lm <- lm(log(MC_dry)~hour, data=mc) 
-summary(mcdry.lm)
-coef(mcdry.lm)
+
+coefunc <- function(mc){
+            mod <- lm(log(MC_dry)~hour, data=mc)
+            return(coef(mod))
+            }
+mcdis <- ddply(mc, .(sp), coefunc)
+mcdis
