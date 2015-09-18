@@ -13,8 +13,10 @@ source("dist-funcs.R")
 Y0 <- read.csv("../data/decomp/Decomp_Y0.csv", na.strings = c("","NA"))
 Y1 <- read.csv("../data/decomp/Decomp_Y1.csv", na.strings = c("","NA"))
 Y2 <- read.csv("../data/decomp/Decomp_Y2.csv", na.strings = c("","NA"))
+
 # rbind em up
 decomp <- rbind.fill(Y0,Y1,Y2)
+
 # clean up
 rm(list = c("Y0","Y1", "Y2"))
 
@@ -40,5 +42,5 @@ wt <- read.csv("../data/decomp/Decomp_weight.csv", na.strings = c("","NA"))
 decomp2.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
                      l.mean=mean(l, na.rm=TRUE),
                      n = sum(!is.na(l))
-                    )
+                     )
 

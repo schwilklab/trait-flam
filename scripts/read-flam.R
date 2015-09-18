@@ -12,10 +12,9 @@ flam.mixtures <- subset(flam, mixture)
 flam$type <- factor(flam$mixture)
 levels(flam$type) <- c("monoculture","mixture")
 
-# std error ## DWS: why this and not sample se?
 std.err <- function(x) {
-  sd(x)/sqrt(length(x))
-}
+            sd(x)/sqrt(length(x))
+            }
 
 flam.avg <- ddply(flam, .(spcode,type), summarise,
                   bulk.mean = mean(bulk),

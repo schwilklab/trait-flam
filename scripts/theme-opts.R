@@ -1,6 +1,7 @@
 ## Some theme options for graphs to be sourced in
 
 library(ggplot2)
+library(gridExtra)
 
 ggtheme = theme(legend.background = element_blank(), 
                 legend.key = element_blank(), 
@@ -17,8 +18,8 @@ textsize <- 16
 themeopts <-  theme(axis.title.y = element_text(size = textsize, angle = 90, vjust=0.3),
                     axis.title.x = element_text(size = textsize, vjust=-0.3),
                     panel.background = element_rect(size = 2),
-                    axis.text.x  = element_text(size=16),
-                    axis.text.y  = element_text(size=16),
+                    axis.text.x  = element_text(size=12),
+                    axis.text.y  = element_text(size=12),
                     panel.grid.minor = element_line(colour = NA),
                     panel.grid.major = element_line(colour = NA)
                     )
@@ -26,6 +27,7 @@ themeopts <-  theme(axis.title.y = element_text(size = textsize, angle = 90, vju
 ppi <- 300
 
 spbreaks <- c("Abco", "Abma", "Cade", "Pije", "Pila", "Pipo", "Quke", "Segi")
+
 labels1 <- c("White Fir", "Red Fir", "Incense Cedar", "Jeffrey Pine",
             "Sugar Pine", "Ponderosa Pine", "Black Oak", "Sequoia")
 labels2=c(expression(italic("Abies concolor")), 
@@ -36,3 +38,8 @@ labels2=c(expression(italic("Abies concolor")),
          expression(italic("Pinus ponderosa")), 
          expression(italic("Quercus kelloggii")), 
          expression(italic("Sequoiadendron giganteum")))
+
+#To modify the colour scheme into colours of my choosing:
+mycolours <- c("#FF6600", "#CC0000", "#660066", "#000999", "#3366CC", "#00CCFF", 
+               "#00FF33", "#006600")
+# + scale_colour_manual(values=mycolours)
