@@ -1,4 +1,4 @@
-name,group,flash_point,abco 1,abco 2,abco 3,abco 4,abma 1,abma 2,abma 3,abma 4,cade 1,cade 2,cade 3,cade 4,pije 1,pije 2,pije 3,pije 4,pila 1,pila 2,pila 3,pila 4,pipo 1,pipo 2,pipo 3,pipo 4,quke 1,quke 2,quke 3,quke 4,segi 1,segi 2,segi 3,segi 4
+name,group,flash_point,Abco 1,Abco 2,Abco 3,Abco 4,Abma 1,Abma 2,Abma 3,Abma 4,Cade 1,Cade 2,Cade 3,Cade 4,Pije 1,Pije 2,Pije 3,Pije 4,Pila 1,Pila 2,Pila 3,Pila 4,Pipo 1,Pipo 2,Pipo 3,Pipo 4,Quke 1,Quke 2,Quke 3,Quke 4,Segi 1,Segi 2,Segi 3,Segi 4
 3-carene,bicyclic monoterpene,46,2.42,,,1.64,,,,,8.4,3.96,4.48,5.06,,1.86,,,,,,,,1.5,,,,,,,28.24,8.66,,
 a-pinene,monoterpene,33,5.64,16.37,17.73,4.38,22.04,1.41,,18.13,5.96,1.4,1.86,1.27,5.78,8.21,4.99,20.25,,,,,4.19,3.59,,,,,,,,,5.33,79.91
 b-pinene,monoterpene,36,,,,,,5.65,9.95,,2.72,,,,,,,,,,,,,,,,,,,,,,,
@@ -46,9 +46,9 @@ Hedycaryol,terpenoid,110.9,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,14.9,20.23,
 (-)-Spathulenol,sesquiterpenoid,123.9,,0.5,,,,,,,,,,,12.13,7.94,,,,,,,,4.06,5.24,,,,,,,,,
 Caryophyllene oxide,epoxide sesquiterpene,119.7,5.92,,2.27,6.38,,1.57,,,4.08,,,0.97,,,,,,,3.1,,,,,,,,,,,1.84,2.63,
 b-eudesmol,terpene alcohol,108.6,,,,,,,,,,,,,,,,,,,,,,,,,,,,,7.86,17.35,,
-Z-11-Tetradecenoic acid,,235.3,,,3.72,0.62,3.05,,3.33,,,0.37,,,,4.76,36.29,5.46,35.3,20.83,25.86,44.13,or here,,,12.56,,,,,,,4.76,
+Z-11-Tetradecenoic acid,,235.3,,,3.72,0.62,3.05,,3.33,,,0.37,,,,4.76,36.29,5.46,35.3,20.83,25.86,44.13,,,,12.56,,,,,,,4.76,
 Z-11-Pentadecenol,,128.6,,,,,,,,,,,,,8.05,,,,,,,,35.41,8.07,,,,,,,,,,
 Hexahydrofarnesyl acetone,,95.1,4.79,1.39,1.65,2.38,5.81,2.27,3.33,5.8,1.01,0.53,0.73,1.19,12.38,8.74,29.68,9.72,11.19,7.96,12.12,18.87,18.27,9.98,6.75,18.69,76.62,48.83,30.34,74.53,0.92,4.55,5.96,
 Geranyl-a-terpinene,,,,,,,,,,,,,,,,,,,,,,,,5.09,5.95,,,,,,,,,
 Palmitoleic acid ,,239.2,,,,,,,,,,,,,,,,,,,2.81,,17.42,,,,,,,,,2.09,3.42,
-Sclareol,labdane diterpenoid,169%,1.55,,,0.9,5.35,,7.65,5.07,,,,,,,,,,,,,,,,,,,,,,,,
+Sclareol,labdane diterpenoid,169,1.55,,,0.9,5.35,,7.65,5.07,,,,,,,,,,,,,,,,,,,,,,,,
