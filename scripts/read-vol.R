@@ -14,13 +14,12 @@ vol <- melt(vol_wide, id.vars=c("name","group","flash_point"),
             variable.name = "spcode", 
             value.name = "area")
 
-sapply(vol, class)
-#after melting the area column is now considered a character, not a numeric value!
+#sapply(vol, class)
 
-write.csv(vol, file = "../data/volatiles/vol_long1.csv")
+write.csv(vol, file = "../data/volatiles/vol_long.csv")
 
 # Need to separate spcode into spcode and replicate
-splist <- strsplit(vol$spcode, "\\.", fixed = TRUE)
+splist <- strsplit(vol[,4], "\\.")
   
 vol <- ldply(splist)
 colnames(vol) <- c("spcode", "replicate")
@@ -29,13 +28,9 @@ colnames(vol) <- c("spcode", "replicate")
 
 vol_long <- read.csv("../data/volatiles/vol_long.csv", na.strings = c("","NA"))
 
-vol_long$flash_point <- as.numeric(vol_long$flash_point)
-vol_long$x.area <- as.numeric(levels(vol_long$x.area))[vol_long$x.area] # this won't work!
-#I think it might be due to the NA's present...
+#PCA 
 
-#PCA - can't work until I fix the problem with the area column
-
-vol_PCA <- prcomp(vol_long, center=TRUE, scale.=TRUE)
+vol_PCA <- prcomp(na.omit(vol_long[, 6]), center=TRUE, scale.=TRUE)
 
 
 # loadings
