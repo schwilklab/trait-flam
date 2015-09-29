@@ -3,6 +3,8 @@
 # read data
 burnt <- read.csv("../data/moisture/burn_moisture_trials.csv")
 
+burnt$spcode <- factor(burnt$spcode)
+
 source("theme-opts.R")
 
 # Plots of flammability and moisture levels

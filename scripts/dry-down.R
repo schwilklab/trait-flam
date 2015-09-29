@@ -11,7 +11,7 @@ source("theme-opts.R")
 xbreaks <- seq(0, 144, 12)
 ybreaks <- seq(0, 700, 50)
 
-p <- ggplot(mc, aes(hour, MC_dry, colour=sp)) +
+p <- ggplot(mc, aes(hour, MC_dry, colour=spcode)) +
             geom_point(size=1.5) +
             scale_colour_discrete(name="Species", breaks=spbreaks, labels=labels1) +
             xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
@@ -48,5 +48,29 @@ coefunc <- function(mc){
             mod <- lm(log(MC_dry)~hour, data=mc)
             return(coef(mod))
             }
-mcdis <- ddply(mc, .(sp), coefunc)
+mcdis <- ddply(mc, .(spcode), coefunc)
 mcdis
+
+## K-means cluster analysis to determine number of groups
+
+mcdis <- scale(mcdis[-1])
+
+wss <- (nrow(mcdis)-1)*sum(apply(mcdis, 2, var))
+
+for (i in 2:8) wss[i] <- sum(kmeans(mcdis, centers=i)$withinss)
+
+plot(1:8, wss, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
+
+fit <- kmeans(mcdis, 4) #of clusters from above
+
+aggregate(mcdis, by=list(fit$cluster), FUN=mean)
+
+mcdis <- data.frame(mcdis, fit$cluster)
+
+library(cluster)
+
+clusplot(mcdis, fit$cluster, color=TRUE, shade=TRUE, labels=2, lines=0)
+
+library(fpc)
+
+plotcluster(mcdis, fit$cluster)

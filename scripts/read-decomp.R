@@ -2,12 +2,15 @@
 
 ## 1. Read in files, combine, create factors
 ## 2. Create summary statistics data frame
-## 3. Exports two data frames, "decomp" and "decomp.sum"
+## 3. Exports three data frames, "decomp", "decomp.sum" and "decomp.sum2"
+
+source("read-flam.R")
 
 library(plyr)
 
 # for kurtosis() function:
 source("dist-funcs.R")
+
 
 ## The files are separate due to their size 
 Y0 <- read.csv("../data/decomp/Decomp_Y0.csv", na.strings = c("","NA"))
@@ -39,8 +42,11 @@ decomp.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
 
 wt <- read.csv("../data/decomp/Decomp_weight.csv", na.strings = c("","NA"))
 
-decomp2.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
+decomp.sum2 <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
                      l.mean=mean(l, na.rm=TRUE),
+                     l.sd=sd(l, na.rm=TRUE),
                      n = sum(!is.na(l))
                      )
 
+flamdecomp <- merge(subset(flam.avg, type="monoculture"), subset(decomp.sum2, year == "0"),
+                    by="spcode", sort=F) 
