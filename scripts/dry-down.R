@@ -67,6 +67,7 @@ coefunc <- function(mc){
             mod <- lm(log(MC_dry)~hour, data=mc)
             return(coef(mod))
             }
+
 mcdis <- ddply(mc, .(spcode, rep), coefunc)
 mcdis
 
