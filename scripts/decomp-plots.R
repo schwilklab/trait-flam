@@ -4,8 +4,14 @@ source("decomp-flam.R")
 
 source("theme-opts.R")
 
-# Doing the graph just for length (all years) and putting it in 1 column
+# length over thickness
+ggplot(decomp, aes(x=l/t)) + 
+       geom_density() +
+       scale_x_log10("Length / thickness", limits = c(1, 500)) +
+       facet_grid( spcode ~ year)
 
+
+# Doing the graph just for length (all years) and putting it in 1 column
 a <- ggplot(subset(decomp, year=="0"), aes(x=l, colour=spcode)) + 
             geom_density() + 
             xlab("Length (mm)") + 
