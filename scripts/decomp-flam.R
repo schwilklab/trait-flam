@@ -4,51 +4,52 @@
 ## 2. Creates a file, flamdecomp, that merges the flammability data with the 
 ##    decomposition data
 ## 3. Explores the relationship between spread rate and leaf length
-## 4. Predicts spread rate from leaf length using the relatioship uncovered in 3.
+## 4. Predicts spread rate from leaf length using the relationship uncovered in 3.
 
 source("read-decomp.R")
-source("read-flam.R")
 
 library(ggplot2)
+library(dplyr)
+library(lme4)
+library(AICcmodavg)
 
-# Using mean as the better predictor:
+# DWS: you should fit on original flam data in a nested model. By fitting on
+# means you are overestimating certainty. But may be fine for now
+flamdecomp.sum <- flamdecomp %>%
+    select(spcode, bulk.mean, l_mean, w_mean, t_mean, spread.mean, larea_mean) %>%
+    group_by(spcode) %>%
+    summarise_each(funs(mean))
 
-decomp.avg <- ddply(decomp.sum, .(spcode, year), summarise,
-                    l.mean = mean(l.mean),
-                    l.se = std.err(l.mean)
-                    ) 
-
-flamdecomp <- merge(subset(flam.avg, type="monoculture"), subset(decomp.avg, year == "0"),
-                    by="spcode", sort=F) 
-
-# Finding the relationship between the species 
-lmfit <- lm(spread.mean~l.mean, data=flamdecomp)
+lmfit <- lm(spread.mean~ larea_mean*t_mean, data=flamdecomp.sum)
 summary(lmfit)
 
-lmfit2 <- lm(spread.mean~l.mean + I(l.mean^2), data=flamdecomp)
+# just "thinness"
+lmfit2 <- lm(spread.mean~ I(l_mean / t_mean), data=flamdecomp.sum)
 summary(lmfit2)
 
-### Quke seems to be an outlier, without it the relationship seems quadratic
-flamy0q <- subset(flamdecomp, spcode!="Quke")
+# compare
+aictab(list(lmfit, lmfit2))
 
-ggplot(flamy0q, aes(l.mean, spread.mean)) +
-  geom_point(size=3) 
-
-# Finding the relationship between the species without Quke
-lmfit3 <- lm(spread.mean~l.mean, data=flamy0q)
-summary(lmfit3)
-
-lmfit4 <- lm(spread.mean~l.mean + I(l.mean^2), data=flamy0q)
-summary(lmfit4)
-
-### Without Quke the r2 is much better
+# so simple model wins.
+# does this mean bulk density is fucntion oflength of thickness?
+ggplot(flamdecomp.sum, aes(l_mean/t_mean, bulk.mean)) + geom_point()
+# yes.
 
 # Creating new dataframe with the predicted spread rate after decomposition (year 1)
 
-new.datay1 <- subset(decomp.sum2, year=="1", select=c(spcode, l.mean, l.sd))
-new.dfy1 <- na.omit(new.datay1)
-new.dfy1q <- subset(new.dfy1, spcode!="Quke")
+pred.y1 <- decomp.sum %>%  filter(year==1) %>%
+    select(spcode, l_mean, w_mean, t_mean, larea_mean)
 
-prd <- predict(lmfit4, data=new.dfy1q$l.mean)
+pred.y1$spread.mean <- predict(lmfit2, newdata=pred.y1)
 
-new.datay1$spread.pred <- prd # does not work, says replacement is smaller than data
+pred.y1 <- pred.y1 %>% select(spcode, spread.mean, l_mean, w_mean, larea_mean, t_mean) %>%
+    group_by(spcode) %>%
+    summarise_each(funs(mean))
+
+flamdecomp.sum$pred.spread <- predict(lmfit2) # pred fitted values
+
+ggplot(flamdecomp.sum, aes(l_mean/t_mean, spread.mean)) +
+    geom_point(size=3, color="black")  +
+    geom_point(data=pred.y1, size=3,color="gray50") +
+    geom_point(aes(l_mean/t_mean, pred.spread), size=3, color="blue")
+

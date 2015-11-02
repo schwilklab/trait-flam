@@ -52,8 +52,7 @@ ggplot(decomp, aes(spcode, l)) +
         themeopts +
         theme_bw() 
 
-ggsave("../results/plots/Decomp_L_box.eps", width=15, height=10)
-ggsave("../results/plots/Decomp_L_box.png", width=15, height=10)
+ggsave("../results/plots/Decomp_L_box.pdf", width=15, height=10)
 
 # Graphing leaf length and spread rate for Year 0
 
