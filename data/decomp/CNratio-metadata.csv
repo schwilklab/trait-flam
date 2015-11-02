@@ -1,0 +1,7 @@
+variable,type ,units,description
+spcode,string,,4-letter code for the species
+replicate,numeric,,replicate number
+mass,numeric,g,weight of replicate sample used in elemental analysis
+C,numeric,%,percentage of carbon in the sample
+H,numeric,%,percentage of hydrogen in the sample
+N,numeric,%,percentage of nitrogen in the sample
