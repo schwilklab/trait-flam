@@ -37,5 +37,6 @@ flam.avg <- ddply(flam, .(spcode,type), summarise,
                   leaf.area.se = std.err(leaf.area)
                   )
 
+# just monocultures:
 species <- read.csv("../data/species.csv", stringsAsFactors=FALSE)
-flam.avg <- merge(flam.avg, species)
+flam.sp.avg <- merge(flam.avg, species)
