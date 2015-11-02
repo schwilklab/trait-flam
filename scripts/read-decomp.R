@@ -26,6 +26,9 @@ rm(list = c("Y0","Y1", "Y2"))
 decomp$year <- factor(decomp$year)
 decomp$tag <- factor(decomp$tag)
 
+decomp$larea <- decomp$l * decomp$w
+decomp$lvol <- decomp$larea * decomp$t
+
 # Using ddply to summarize by different measures, and then using model
 # selection to determine which measure is the best to use. It is mean(l)
 
@@ -42,11 +45,19 @@ decomp.sum <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
 
 wt <- read.csv("../data/decomp/Decomp_weight.csv", na.strings = c("","NA"))
 
+wt$drate <- -log(wt$wf/wt$wi)/wt$year
+
 decomp.sum2 <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
                      l.mean=mean(l, na.rm=TRUE),
                      l.sd=sd(l, na.rm=TRUE),
+                     larea.mean=mean(larea, na.rm=TRUE),
+                     larea.sd=sd(larea, na.rm=TRUE),
+                     lvol.mean=mean(lvol, na.rm=TRUE),
+                     lvol.sd=sd(lvol, na.rm=TRUE),
                      n = sum(!is.na(l))
                      )
+
+decompwt <- merge(subset(decomp.sum2, year!="0"), wt, by="tag", sort=F)
 
 flamdecomp <- merge(subset(flam.avg, type="monoculture"), subset(decomp.sum2, year == "0"),
                     by="spcode", sort=F) 
