@@ -1,0 +1,5 @@
+variable,type ,units,description
+name,string,,name of volatile compound
+group,string,,group of volatile comound
+flash_point,numeric,C,temperature at which volatile ignites
+spcode/area,numeric,%,percentage of spectrum ocupied by the compound
