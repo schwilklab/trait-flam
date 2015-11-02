@@ -3,11 +3,14 @@
 # read data
 burnt <- read.csv("../data/moisture/burn_moisture_trials.csv")
 
+burnt$spcode <- factor(burnt$spcode)
+
 source("theme-opts.R")
+source("read-decomp.R")
 
 # Plots of flammability and moisture levels
 
-ggplot(burnt, aes(moisture, t2ignit, colour=spcode)) +
+ggplot(burnt, aes(moisture, log(t2ignit), colour=spcode)) +
         geom_point(size=1.5) +
         scale_colour_discrete(name="Species", breaks=spbreaks, labels=labels1) +
         xlab("Moisture content (%)") + ylab("Ignitability (s)") +
@@ -53,4 +56,15 @@ ggplot(burnt, aes(moisture, sustain, colour=spcode)) +
 
 ggsave("../results/plots/moisture_sustain.png", width=9, height=5, dpi=ppi)
 
+burntr <- merge(subset(decomp.sum2, year=="0"), burnt, by="spcode", sort=F)
 
+## Binomial analysis of ignition
+
+ggplot(burnt, aes(moisture, ignit, colour=spcode)) +
+        geom_point(size=1.5) +
+        stat_smooth(method="glm", family="binomial", se=F) +
+        scale_colour_manual(name="Species", breaks=spbreaks, labels=labels2, 
+                            values=cbcolours1) +
+        theme_bw()
+
+fit <- glm(ignit~moisture + spcode + rh + temp, data=burnt, family=binomial())
