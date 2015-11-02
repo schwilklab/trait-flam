@@ -60,4 +60,5 @@ decomp.sum2 <- ddply(decomp, .(tag, spcode, year, alt, asp), summarize,
 decompwt <- merge(subset(decomp.sum2, year!="0"), wt, by="tag", sort=F)
 
 flamdecomp <- merge(subset(flam.avg, type="monoculture"), subset(decomp.sum2, year == "0"),
-                    by="spcode", sort=F) 
+                    by="spcode", sort=F)
+flamdecomp <- merge(flamdecomp, species)
