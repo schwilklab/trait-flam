@@ -3,15 +3,6 @@
 library(ggplot2)
 library(gridExtra)
 
-ggtheme = theme(legend.background = element_blank(), 
-                legend.key = element_blank(), 
-                panel.grid.minor = element_blank(), 
-                panel.grid.major = element_blank(), 
-                panel.background = element_blank(), 
-                panel.border = element_blank(), 
-                strip.background = element_blank(), 
-                plot.background = element_blank())
-
 bestfit <- geom_smooth(method="lm",se = F, color = "black", size=1.5)
 isoline <- geom_abline(color="black", size=1.5, linetype="dashed") 
 textsize <- 14
