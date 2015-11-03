@@ -39,4 +39,7 @@ flam.avg <- ddply(flam, .(spcode,type), summarise,
 
 # just monocultures:
 species <- read.csv("../data/species.csv", stringsAsFactors=FALSE)
+splevels = c("S. giganteum", "C. decurrens", "A. concolor", "A. magnifica", "P. ponderosa",
+             "P. lambertiana", "P. jeffreyi", "Q. kelloggii")
+species <- mutate(species, display.name = factor(display.name, levels=splevels))
 flam.sp.avg <- merge(flam.avg, species)
