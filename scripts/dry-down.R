@@ -88,34 +88,29 @@ dry.mod.results <- rbind(dry.mod.ints, dry.mod.slopes) %>% select(-label)
 # subset by species to get the coefficients (y0 and B) for each curve. Can the
 # slope of each curve be a dry down index or dissecation index?
 
-library(plyr)
-
 coefunc <- function(mc){
-            mod <- lm(log(MC_dry)~hour, data=mc) # you can't ignore your nesting!
-            return(coef(mod))
-            }
+    mod <- lm(log(MC_dry)~hour, data=mc) # you can't ignore your nesting!
+    res <- coef(mod)
+    return(data.frame(maxMC = res[1], di= res[2]))
+}
 
-mcdis <- ddply(mc, .(spcode, rep), coefunc)
-mcdis
-
-names(mcdis)[names(mcdis)=="(Intercept)"] <- "maxMC"
-names(mcdis)[names(mcdis)=="hour"] <- "di"
+mcdis <- mc %>% group_by(spcode, rep) %>% do(coefunc(.))
 
 newmc <- merge(mc[, c(1, 5, 7)], mcdis[, c(1, 2, 3, 4)], by="spcode")
 
 source("./read-decomp.R")
 newmctr <- merge(subset(decomp.sum, year=="0"), newmc, by="spcode", sort=F)
 
-newmctr.avg <- ddply(newmctr, .(spcode), summarise, 
-                     MCmean = mean(MC_dry), 
-                     dimean = mean(di),
-                     maxMCmean = mean(maxMC),
-                     l.mean = mean(l_mean),
-                     l.sd = mean(l_sd),
-                     larea.mean = mean(larea_mean),
-                     larea.sd = mean(larea_sd),
-                     lvol.mean = mean(lvol_mean),
-                     lvol.sd = mean(lvol_sd))
+newmctr.avg <- newmctr %>% group_by(spcode) %>%
+    summarise(MCmean = mean(MC_dry),
+              dimean = mean(di),
+              maxMCmean = mean(maxMC),
+              l.mean = mean(l_mean),
+              l.sd = mean(l_sd),
+              larea.mean = mean(larea_mean),
+              larea.sd = mean(larea_sd),
+              lvol.mean = mean(lvol_mean),
+              lvol.sd = mean(lvol_sd))
 
 ## K-means cluster analysis to determine number of groups
 ## newmc.avg <- scale(newmctr.avg[-1])
