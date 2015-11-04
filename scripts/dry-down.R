@@ -1,62 +1,30 @@
 ## dry-down.R
 
-# read data
-mc <- read.csv("../data/moisture/dry_down_long.csv")
-
-# Graph with points instead of lines (and add the lowess line), and species
-# names, saved in high resolution for exporting 
-
 source("theme-opts.R")
+source("read-flam.R") # for species table
+
+# read data
+mc <- read.csv("../data/moisture/dry_down_long.csv", stringsAsFactors=FALSE)
+mc <- left_join(mc, species)
 
 xbreaks <- seq(0, 144, 12)
 ybreaks <- seq(0, 700, 50)
 
-p <- ggplot(mc, aes(hour, MC_dry, colour=spcode)) +
-            geom_point(size=1.5) +
-            scale_colour_discrete(name="Species", breaks=spbreaks, labels=labels1) +
-            xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
-            scale_x_continuous(breaks=xbreaks) +
-            scale_y_continuous(breaks=ybreaks) +
-            theme_bw()
+p <- ggplot(mc, aes(hour, MC_dry, colour=display.name)) +
+    geom_point(size=1.5) +
+    scale_colour_discrete(name="") +
+    xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
+    scale_x_continuous(breaks=xbreaks) +
+    scale_y_continuous(breaks=ybreaks) +
+    pubtheme
 
-
-p + stat_smooth(data=mc, method="loess", se=FALSE, size=1)
-
+p <- p+ geom_smooth(method="glm", family=gaussian(link="log"), se=FALSE)
+p
 ggsave("../results/plots/moisture.png", width=9, height=5, dpi=ppi)
+# and cut off the y axis due to oaks holding a ton of water:
+p + ylim(c(0,350))
+ggsave("../results/plots/moisture2.png", width=9, height=5, dpi=ppi)
 
-
-# Graph with log of moisture and lm line to see if data is exponential
-
-p + stat_smooth(data=mc, method="lm", se=FALSE, size=1) 
-
-# Fitting an exponential curve to all species
-
-png("moisture.png", width=9*ppi, height=5*ppi, res=ppi)
-
-p + geom_smooth(method="glm", family=gaussian(link="log")) 
-  + themeopts 
-  + theme_bw()
-
-dev.off()
-
-ggsave("../results/plots/moisture3.png", width=9, height=5, dpi=ppi)
-
-mcnoq <- subset(mc, spcode!="Quke")
-
-png("moisture4.png", width=9*ppi, height=5*ppi, res=ppi)
-
-ggplot(mcnoq, aes(hour, MC_dry, colour=spcode)) +
-  geom_point(size=1.5) +
-  scale_colour_manual(name="Species", breaks=spbreaks, labels=labels1, values=cbcolours1) +
-  xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
-  scale_x_continuous(breaks=xbreaks) +
-  scale_y_continuous(breaks=ybreaks) +
-  theme_bw() + 
-  geom_smooth(method="glm", family=gaussian(link="log")) 
-
-dev.off()
-
-ggsave("../results/plots/moisture4.png", width=9, height=5, dpi=ppi)
 
 # subset by species to get the coefficients (y0 and B) for each curve. Can the
 # slope of each curve be a dry down index or dissecation index?
