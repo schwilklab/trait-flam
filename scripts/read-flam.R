@@ -37,7 +37,7 @@ flam.avg <- flam %>% group_by(spcode, type) %>%
 
 # just monocultures:
 species <- read.csv("../data/species.csv", stringsAsFactors=FALSE)
-splevels = c("S. giganteum", "C. decurrens", "A. concolor", "A. magnifica", "P. ponderosa",
+splevels = c("S. giganteum", "C. decurrens", "A. magnifica", "A. concolor", "P. ponderosa",
              "P. lambertiana", "P. jeffreyi", "Q. kelloggii")
 species <- mutate(species, display.name = factor(display.name, levels=splevels))
 flam.sp.avg <- merge(flam.avg, species)

@@ -2,6 +2,7 @@
 
 source("theme-opts.R")
 source("read-flam.R") # for species table
+source("read-decomp.R") # for leaf trait data
 
 library(lme4)
 
@@ -44,15 +45,15 @@ ggsave("../results/plots/moisture2.png", width=9, height=5, dpi=ppi)
 ###############################################################################
 ggplot(mc, aes(hour, log10(MC_dry), colour=display.name)) +
     geom_point() +
-    scale_colour_brewer(palette="Reds", name="") +
+    #scale_colour_brewer(palette="Reds", name="") +
     geom_smooth(method="lm", se=FALSE, size=1)
 mc$logMC_dry <-  log(mc$MC_dry)
 
-# Fitr a nested model using lmer
+# Fit a nested model using lmer
 dry.mod <- lmer(logMC_dry ~ hour*spcode + (1 | rep), data=mc)
 summary(dry.mod)
 
-# test for pairwise differences and number of distinnct groups
+# test for pairwise differences and number of distinct groups
 library(lsmeans)
 cld(lstrends(dry.mod,~ spcode, var = "hour"))
 # so there are three slope groups

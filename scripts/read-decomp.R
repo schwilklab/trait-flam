@@ -62,7 +62,7 @@ flamdecomp <- merge(flam.sp.avg, decomp.sum, all.x=TRUE)
 
 flamdecomp.sum <- flamdecomp %>% filter(year==0) %>%
     select(display.name, bulk.mean, bulk.se, spread.mean, spread.se,
-           l_mean, w_mean, t_mean, spread.mean, larea_mean) %>%
+           l_mean, w_mean, t_mean, larea_mean) %>%
     group_by(display.name) %>% summarise(bulk.mean = mean(bulk.mean),
                                          bulk.se = mean(bulk.se),
                                          spread.mean = mean(spread.mean),
