@@ -39,7 +39,8 @@ N <- function(x) {sum(!is.na(x))}
 
 wt <- read.csv("../data/decomp/Decomp_weight.csv", na.strings = c("","NA"), stringsAsFactors=FALSE)
 wt <- filter(wt, tag!=126)
-wt$drate <- -log(wt$wf/wt$wi)/wt$year
+wt$drate <- -log(wt$wf/wt$wi)/wt$year  # what is this?
+wt$massloss <- wt$wi - wt$wf
 
 # summarize by litter bag
 decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
@@ -60,10 +61,10 @@ decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
 ##                                          lt_sd=sd(l_mean/t_mean, na.rm=TRUE))
 flamdecomp <- merge(flam.sp.avg, decomp.sum, all.x=TRUE)
 
-flamdecomp.sum <- flamdecomp %>% filter(year==0) %>%
-    select(display.name, bulk.mean, bulk.se, spread.mean, spread.se,
-           l_mean, w_mean, t_mean, larea_mean) %>%
-    group_by(display.name) %>% summarise(bulk.mean = mean(bulk.mean),
+flamdecomp.sum <- flamdecomp %>%
+    select(spcode, display.name, year, bulk.mean, bulk.se, spread.mean, spread.se,
+           l_mean, w_mean, t_mean, larea_mean, drate, massloss) %>%
+    group_by(display.name, spcode, year) %>% summarise(bulk.mean = mean(bulk.mean),
                                          bulk.se = mean(bulk.se),
                                          spread.mean = mean(spread.mean),
                                          spread.se = mean(spread.se),
@@ -72,6 +73,8 @@ flamdecomp.sum <- flamdecomp %>% filter(year==0) %>%
                                          l_mean = mean(l_mean),
                                          w_mean = mean(w_mean),
                                          lt_mean= mean(l_mean/t_mean),
-                                         lt_sd  = sd(l_mean/t_mean)
+                                         lt_sd  = sd(l_mean/t_mean),
+                                         drate_mean = mean(drate, na.rm=TRUE),
+                                         massloss_mean = mean(massloss, na.rm=TRUE)
                                          )
 
