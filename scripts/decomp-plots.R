@@ -15,7 +15,7 @@ ggplot(flamdecomp.sum, aes(lt_mean, bulk.mean)) +
   geom_errorbar(aes(ymin=bulk.mean-bulk.se, ymax=bulk.mean+bulk.se), 
                 size=0.5)+
   scale_x_continuous("Particle length / thickness", limits=c(0.0,400)) +
-  scale_y_continuous("Litter bulk denisty (g/cm)") + #CHECK UNITS
+  scale_y_continuous(expression(paste("Litter density (", gcm^-3,")"))) + 
   scale_linetype_manual(values = c(1,3,2)) +
   scale_color_manual(values = c( "gray50", "black")) +
   pubtheme +
