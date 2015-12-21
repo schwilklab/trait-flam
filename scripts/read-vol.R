@@ -22,7 +22,14 @@ vol.sum <- vol %>% group_by(spcode, replicate, group) %>%
               sum_low_fp = sum(area[flash_point < 100]))
 
 library(ggplot2)
+
 ggplot(vol.sum, aes(group, sum_low_fp)) + geom_point() + facet_grid(. ~ spcode)
+
 ggplot(filter(vol, flash_point<100), aes(spcode, flash_point, color=group)) +
-    geom_jitter(aes(size=area))
+   	geom_jitter(aes(size=area)) +
+	xlab("Species") + ylab("Flash point (C)") +
+	pubtheme
+
+ggsave("../results/plot/volatiles.png", width=9, height=5, dpi=ppi)
+
 
