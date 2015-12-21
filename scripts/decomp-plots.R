@@ -3,14 +3,42 @@
 source("decomp-flam.R")
 source("theme-opts.R")
 
+
+# actual and predicted spread rate by year
+ggplot(pred.allyears %>% filter(year<2) %>% mutate(yearf = paste("year", year)),
+       aes(lt_mean, spread.mean, group=spcode)) +
+    geom_line(size=1) +
+    geom_point(aes(color=yearf), size=4) +
+    scale_x_continuous("Particle length / thickness") +
+    scale_y_continuous("Spread rate (m/s)") +
+    scale_color_brewer(palette="Set1") +
+    pubtheme +
+    guides(colour=guide_legend(title=("")))
+ggsave("../results/plots/observed-pred-spread-rate-shift.pdf", width=col1*1.5, height=col1*1.2, units="cm")
+
+
+# does mass loss predict change in length/thickness
+flamdecomp.sum <- flamdecomp.sum %>% left_join(flamdecomp.sum %>% filter(year==0) %>%
+                                               mutate(initial.lt_mean = lt_mean) %>%
+                                               select(spcode, initial.lt_mean))
+
+ggplot(flamdecomp.sum %>% filter(year==1), aes(massloss_mean/2, lt_mean - initial.lt_mean)) +
+  geom_point(size=3) +
+  scale_x_continuous("Proportional mass loss") +
+  scale_y_continuous(expression (Delta~" length / thickness")) + #CHECK UNITS
+  pubtheme
+ggsave("../results/plots/mass-vs-lt.pdf", width=col1, height=col1, units="cm") 
+
+
 # local version of decomp data just for figures (adds display names, drops year
 # 2, reorders species names levels (almost by spread rate, but with pines
 # together)
 decomp.forplots <- decomp %>% filter(year < 2) %>% left_join(species) %>%
   mutate(yearc=paste("year", year))
 
+
 # leaf l/t vs bulk density
-ggplot(flamdecomp.sum, aes(lt_mean, bulk.mean)) +
+ggplot(flamdecomp.sum %>% filter(year==0), aes(lt_mean, bulk.mean)) +
   geom_point(size=3) +
   geom_errorbar(aes(ymin=bulk.mean-bulk.se, ymax=bulk.mean+bulk.se), 
                 size=0.5)+
@@ -18,14 +46,14 @@ ggplot(flamdecomp.sum, aes(lt_mean, bulk.mean)) +
   scale_y_continuous(expression(paste("Litter density (", gcm^-3,")"))) + 
   scale_linetype_manual(values = c(1,3,2)) +
   scale_color_manual(values = c( "gray50", "black")) +
-  pubtheme +
-  geom_text(aes(label=display.name),
-            hjust=-0.1, vjust=0.5, family=fontfamily,
-            fontface="italic")
-ggsave("../results/plots/bd_vs_lt.pdf")
+  pubtheme
+  ## geom_text(aes(label=display.name),
+  ##           hjust=-0.1, vjust=0.5, family=fontfamily,
+  ##           fontface="italic")
+ggsave("../results/plots/bd_vs_lt.pdf", width=col1, height=col1, units="cm")
 
 # leaf length over thickness and spread rate for Year 0
-ggplot(flamdecomp.sum, aes(lt_mean, spread.mean)) +
+ggplot(flamdecomp.sum %>% filter(year==0), aes(lt_mean, spread.mean)) +
   geom_point(size=3) +
   geom_errorbar(aes(ymin=spread.mean-spread.se, ymax=spread.mean+spread.se), 
                 size=0.5)+
@@ -34,9 +62,9 @@ ggplot(flamdecomp.sum, aes(lt_mean, spread.mean)) +
   scale_linetype_manual(values = c(1,3,2)) +
   scale_color_manual(values = c( "gray50", "black")) +
   theme_bw() + pubtheme + geom_text(aes(label=display.name),
-                                     hjust=-0.1, vjust=0.5, family=fontfamily,
+                                     hjust=-0.2, vjust=0.5, family=fontfamily, size=2,
                                      fontface="italic")
-ggsave("../results/plots/spread_vs_lt.pdf")
+ggsave("../results/plots/spread_vs_lt.pdf", width=col1, height=col1, units="cm")
 # Note: should add x-axis error to graphs above
 
 

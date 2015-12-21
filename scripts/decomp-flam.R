@@ -13,14 +13,15 @@ library(dplyr)
 library(lme4)
 library(AICcmodavg)
 
+flamdecomp.sum.y0 <- filter(flamdecomp.sum, year == 0)
 # DWS: you should fit on original flam data in a nested model. By fitting on
 # means you are overestimating certainty. But may be fine for now
 
-lmfit <- lm(spread.mean ~ larea_mean*t_mean, data=flamdecomp.sum)
+lmfit <- lm(spread.mean ~ larea_mean*t_mean, data=flamdecomp.sum.y0)
 summary(lmfit)
 
 # just "thinness"
-lmfit2 <- lm(spread.mean~ I(l_mean / t_mean), data=flamdecomp.sum)
+lmfit2 <- lm(spread.mean~ I(l_mean / t_mean), data=flamdecomp.sum.y0)
 summary(lmfit2)
 
 # compare
@@ -28,32 +29,25 @@ aictab(list(lmfit, lmfit2))
 
 # so simple model wins.
 # does this mean bulk density is function of length over thickness?
-ggplot(flamdecomp.sum, aes(l_mean/t_mean, bulk.mean)) + geom_point() +
+ggplot(flamdecomp.sum.y0, aes(l_mean/t_mean, bulk.mean)) + geom_point() +
     geom_smooth(method="lm", se=FALSE)
-ggplot(flamdecomp.sum, aes(l_mean/t_mean, spread.mean)) + geom_point()
-ggplot(flamdecomp.sum, aes(bulk.mean, spread.mean)) + geom_point()
+ggplot(flamdecomp.sum.y0, aes(l_mean/t_mean, spread.mean)) + geom_point()
+ggplot(flamdecomp.sum.y0, aes(bulk.mean, spread.mean)) + geom_point()
 # yes.
 
-# Creating new dataframe with the predicted spread rate after decomposition (year 1)
+# Creating new dataframe with the predicted spread rate (y0, y1, y2))
+pred.allyears <- decomp.sum  %>% ungroup() %>%
+    select(spcode, year, l_mean, w_mean, t_mean, larea_mean)
 
-pred.y1 <- decomp.sum %>%  filter(year==1) %>% ungroup() %>%
-    select(spcode, l_mean, w_mean, t_mean, larea_mean)
+pred.allyears$pred.spread <- predict(lmfit2, newdata=pred.allyears)
 
-pred.y1$pred.spread <- predict(lmfit2, newdata=pred.y1)
-#pred.y1$ci.spread.y1 <- predict(lmfit2, newdata=pred.y1, interval="confidence")
+pred.allyears <- pred.allyears %>%
+    select(spcode, year, pred.spread, l_mean, t_mean) %>%
+    group_by(spcode, year) %>%
+    summarise(lt_mean = mean(l_mean/t_mean),
+              pred.spread_mean = mean(pred.spread))
 
+#flamdecomp.sum$pred.spread <- predict(lmfit2) # pred fitted values
 
-pred.y1 <- pred.y1 %>% select(spcode, pred.spread, l_mean, w_mean, larea_mean, t_mean) %>%
-    group_by(spcode) %>% summarise_each(funs(mean, sd))
-
-flamdecomp.sum$pred.spread <- predict(lmfit2) # pred fitted values
-
-## flamdecomp.sum <- left_join(flamdecomp.sum, select(pred.y1, spcode, pred.spread_mean, pred.spread_sd), by="spcode")
-
-## ggplot(flamdecomp.sum, aes(l_mean/t_mean, spread.mean)) +
-##     geom_point(size=3, color="black")  +
-##     geom_point(data=pred.y1, size=3,color="gray50") +
-##     geom_point(aes(l_mean/t_mean, pred.spread), size=3, color="blue")
-
-# todo: add CI to predictions
-
+pred.allyears <- left_join(pred.allyears, select(flamdecomp.sum, spcode, year, spread.mean))
+pred.allyears$spread.mean[pred.allyears$year > 0] <- pred.allyears$pred.spread_mean[pred.allyears$year > 0]
