@@ -5,6 +5,8 @@ source("read-flam.R") # for species table
 source("read-decomp.R") # for leaf trait data
 
 library(lme4)
+library(plyr)
+library (tidyr)
 
 # function to make nice table of model coefficients and standard errors:
 model.coefs <- function(the.mod) {
@@ -25,16 +27,17 @@ xbreaks <- seq(0, 144, 12)
 ybreaks <- seq(0, 700, 50)
 
 p <- ggplot(mc, aes(hour, MC_dry, colour=display.name)) +
-    geom_point(size=1.5) +
-    scale_colour_brewer(palette="Reds", name="") +
-    xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
-    scale_x_continuous(breaks=xbreaks) +
-    scale_y_continuous(breaks=ybreaks) +
-    pubtheme
+	    geom_point(size=1.5) +
+	    scale_colour_brewer(palette="Reds", name="") +
+	    xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
+	    scale_x_continuous(breaks=xbreaks) +
+	    scale_y_continuous(breaks=ybreaks) +
+	    pubtheme
 
 p.exp <- p + geom_smooth(method="glm", family=gaussian(link="log"), se=FALSE, size=1)
 p.exp
 ggsave("../results/plots/moisture.png", width=9, height=5, dpi=ppi)
+
 # and cut off the y axis due to oaks holding a ton of water:
 p.exp + ylim(c(0,350))
 ggsave("../results/plots/moisture2.png", width=9, height=5, dpi=ppi)
@@ -47,6 +50,7 @@ ggplot(mc, aes(hour, log10(MC_dry), colour=display.name)) +
     geom_point() +
     #scale_colour_brewer(palette="Reds", name="") +
     geom_smooth(method="lm", se=FALSE, size=1)
+
 mc$logMC_dry <-  log(mc$MC_dry)
 
 # Fit a nested model using lmer
@@ -75,19 +79,16 @@ dry.mod.slopes <- dry.mod.coefs %>% filter(grepl("^hour:", label)) %>%
     mutate(spcode = substr(label,12,15), param = "slope")
 
 dry.mod.results <- rbind(dry.mod.ints, dry.mod.slopes) %>% select(-label)
+dry.mod.results$param <- revalue(dry.mod.results$param, 
+                                 c("intercept"="maxMC", "slope"="di"))
 
+# subset by species to get the coefficients (y0 and B) for each curve.
 
+mc2 <- mc %>% separate(rep, c("rep", "subrep"), "_")
+mc2 <- mc2[, c(1, 2, 6, 8, 13, 14)]
 
-
-###############################################################################
-## DWS: Rita's code below. Not not sure what this does as what exactly is kmeans
-## space? Why include decomp results in this? Simplest it seems to me is simply
-## look at figure of dry down rates. There are 3-6 groups depending on how fine
-## one wants to go and depending on how one weights intercepts vs slopes.
-
-
-# subset by species to get the coefficients (y0 and B) for each curve. Can the
-# slope of each curve be a dry down index or dissecation index?
+mc2.sum <- mc2 %>% group_by(spcode, hour, rep, display.name) %>% 
+  summarise_each(funs(mean(., na.rm=TRUE),sd(., na.rm=TRUE)))
 
 coefunc <- function(mc){
     mod <- lm(log(MC_dry)~hour, data=mc) # you can't ignore your nesting!
@@ -95,31 +96,83 @@ coefunc <- function(mc){
     return(data.frame(maxMC = res[1], di= res[2]))
 }
 
-mcdis <- mc %>% group_by(spcode, rep) %>% do(coefunc(.))
+mcdis <- mc2 %>% group_by(spcode, rep) %>% do(coefunc(.)) 
 
-newmc <- merge(mc[, c(1, 5, 7)], mcdis[, c(1, 2, 3, 4)], by="spcode")
+newmc <- merge(mc2.sum, mcdis, by="spcode")
+
+## Getting the leaf trait data
 
 source("./read-decomp.R")
-newmctr <- merge(subset(decomp.sum, year=="0"), newmc, by="spcode", sort=F)
+
+decomp.sum3 <- decomp[, c(2, 5:11)] %>% group_by(spcode, year) %>%
+                  summarize_each(funs(mean(., na.rm=TRUE),
+                                      sd(., na.rm=TRUE)))
+
+decomp.sum4 <- decomp.sum3 %>% filter(year==0)
+
+newmctr <- merge(decomp.sum4[, c(1, 3:14)], mcdis, by="spcode", sort=F)
 
 newmctr.avg <- newmctr %>% group_by(spcode) %>%
-    summarise(MCmean = mean(MC_dry),
-              dimean = mean(di),
-              maxMCmean = mean(maxMC),
-              l.mean = mean(l_mean),
-              l.sd = mean(l_sd),
-              larea.mean = mean(larea_mean),
-              larea.sd = mean(larea_sd),
-              lvol.mean = mean(lvol_mean),
-              lvol.sd = mean(lvol_sd))
+                summarise(dimean = mean(di),
+                          maxMCmean = mean(maxMC),
+                          l.mean = mean(l_mean),
+                          l.sd = mean(l_sd),
+                      		w.mean = mean(w_mean), 
+                          w.sd = mean(w_sd),
+                          t.mean = mean(t_mean), 
+                          t.sd = mean(t_sd),
+                          lt.mean = mean(lt_mean), 
+                          lt.sd = mean(lt_sd),
+                          larea.mean = mean(larea_mean),
+                          larea.sd = mean(larea_sd),
+                          lvol.mean = mean(lvol_mean),
+                          lvol.sd = mean(lvol_sd))
 
-## K-means cluster analysis to determine number of groups
-## newmc.avg <- scale(newmctr.avg[-1])
-## wss <- (nrow(newmc.avg)-1)*sum(apply(newmc.avg, 2, var))
-## # for (i in 2:8) wss[i] <- sum(kmeans(newmc.avg, centers=i)$withinss)
-## plot(1:8, wss, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares")
-## fit <- kmeans(newmc.avg, 4) #of clusters from above
-## aggregate(newmc.avg, by=list(fit$cluster), FUN=mean)
-## newmc.avg <- data.frame(newmc.avg, fit$cluster)
-## library(cluster)
-## clusplot(newmc.avg, fit$cluster, color=TRUE, shade=TRUE, labels=2, lines=0)
+flam.sp.avg <- flam.sp.avg[, c(1, 3:4)]
+newmctrbd <- merge(newmctr.avg, flam.sp.avg, by="spcode")
+
+## Plotting against traits ##
+
+ggplot(newmctr.avg, aes(lt_mean, dimean)) +
+  geom_point(size=3) +
+  scale_x_continuous("Particle length / thickness") +
+  scale_y_continuous("Desiccation index") + 
+  #geom_errorbarh(aes(xmin = lt_mean-lt_sd,xmax = lt_mean+lt_sd))+
+  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
+  pubtheme
+
+ggsave("../myresults/di_lt.pdf", width=9, height=6, dpi=ppi)
+ggsave("../myresults/di_lt.png", width=9, height=6, dpi=ppi)
+
+ggplot(newmctr.avg, aes(lt_mean, maxMCmean)) +
+  geom_point(size=3) +
+  scale_x_continuous("Particle length / thickness") +
+  scale_y_continuous("Maximum water retention (log)") + 
+  #geom_errorbarh(aes(xmin = lt_mean-lt_sd,xmax = lt_mean+lt_sd)) +
+  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
+  pubtheme
+
+ggsave("../myresults/maxMC_lt.pdf", width=9, height=6, dpi=ppi)
+ggsave("../myresults/maxMC_lt.png", width=9, height=6, dpi=ppi)  
+
+ggplot(newmctrbd, aes(bulk.mean, dimean)) +
+  geom_point(size=3) +
+  scale_x_continuous("Litter bulk density (", gcm^-3,")") +
+  scale_y_continuous("Desiccation index") + 
+  #geom_errorbarh(aes(xmin = t_mean-t_sd,xmax = t_mean+t_sd))+
+  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
+  pubtheme
+
+ggsave("../myresults/di_bd.pdf", width=9, height=6, dpi=ppi)
+ggsave("../myresults/di_bd.png", width=9, height=6, dpi=ppi)
+
+ggplot(newmctrbd, aes(bulk.mean, maxMCmean)) +
+  geom_point(size=3) +
+  scale_x_continuous("Litter bulk density (", gcm^-3,")") +
+  scale_y_continuous("Maximum water retention (log)") + 
+  #geom_errorbarh(aes(xmin = t_mean-t_sd,xmax = t_mean+t_sd)) +
+  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
+  pubtheme
+
+ggsave("../myresults/maxMC_bd.pdf", width=9, height=6, dpi=ppi)
+ggsave("../myresults/maxMC_bd.png", width=9, height=6, dpi=ppi)
