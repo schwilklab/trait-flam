@@ -2,7 +2,7 @@ LAI_File,alt,asp,replicate,Year,Date,LAI,SMP,TransComp,Model,Records,ScattCorr
 SEKI-HS2,h,s,2,2012,20120729 13:40:29,1.35,4,a-p-s,Horizontal,1A 5B ,none
 SEKI-HS1,h,s,1,2012,20120729 13:30:34,1.59,3,a-p-s,Horizontal,1A 5B ,none
 SEKI-HN2,h,n,2,2012,20120729 13:37:38,1.47,5,a-p-s,Horizontal,1A 5B ,none
-SEKI-HS2,h,s,1,2012,20120729 13:31:32,1.37,5,a-p-s,Horizontal,1A 5B ,none
+SEKI-HN1,h,n,1,2012,20120729 13:31:32,1.37,5,a-p-s,Horizontal,1A 5B ,none
 SEKI-LS2,l,s,2,2012,20120728 14:07:06,2.64,4,a-p-s,Horizontal,1A 5B ,none
 SEKI-LS1,l,s,1,2012,20120728 13:58:49,2,5,a-p-s,Horizontal,1A 5B ,none
 SEKI-LN1,l,n,1,2012,20120728 13:02:49,1.32,3,a-p-s,Horizontal,1A 5B ,none

@@ -2,30 +2,54 @@
 
 library(ggplot2)
 library(gridExtra)
+library(scales)
+library(extrafont)
+#font_import(pattern="Arial")
+loadfonts()
 
-ggtheme = theme(legend.background = element_blank(), 
-                legend.key = element_blank(), 
-                panel.grid.minor = element_blank(), 
-                panel.grid.major = element_blank(), 
-                panel.background = element_blank(), 
-                panel.border = element_blank(), 
-                strip.background = element_blank(), 
-                plot.background = element_blank())
-
+# constants and theme for publications
 bestfit <- geom_smooth(method="lm",se = F, color = "black", size=1.5)
-isoline <- geom_abline(color="black", size=1.5, linetype="dashed") 
-textsize <- 14
-themeopts <-  theme(axis.title.y = element_text(size = textsize, angle = 90, vjust=0.3),
-                    axis.title.x = element_text(size = textsize, vjust=-0.3),
-                    panel.background = element_rect(size = 2),
-                    axis.text.x  = element_text(size=14),
-                    axis.text.y  = element_text(size=14),
-                    panel.grid.minor = element_line(colour = NA),
-                    panel.grid.major = element_line(colour = NA)
-                    )
+textsize <- 12
+smsize <- textsize-2
+pt2mm <- 0.35146
+smsize.mm <- smsize*pt2mm
+fontfamily = "Arial"
+col2 <- 17.5 # cm
+col1 <- 8.0 # cm
+
+pubtheme <- theme_grey() +
+  theme(axis.title.y = element_text(family=fontfamily,
+                                    size = textsize, angle = 90, vjust=0.3),
+        axis.title.x = element_text(family=fontfamily, size = textsize, vjust=-0.3),
+        axis.ticks = element_line(colour = "black"),
+        panel.background = element_rect(size = 1.6, fill = NA),
+        panel.border = element_rect(size = 1.6, fill=NA),
+        axis.text.x  = element_text(family=fontfamily, size=smsize, color="black"),
+        axis.text.y  = element_text(family=fontfamily, size=smsize, color = "black"),
+        strip.background = element_rect(fill="gray90"),
+        ## strip.text.x = element_text(family=fontfamily, size = smsize, face="italic"),
+        ## strip.text.y = element_text(family=fontfamily, size = smsize, face="italic"),
+        legend.title = element_text(family=fontfamily, size=textsize),
+        legend.text = element_text(family=fontfamily, size=smsize, face="italic"),
+        legend.key = element_rect(fill=NA),
+        panel.grid.major = element_line(colour = "grey90", size = 0.2),
+        panel.grid.minor = element_line(colour = "grey95", size =0.5),
+        #    panel.grid.minor = element_blank(),
+        #    panel.grid.major = element_blank(),
+        strip.background = element_rect(fill = "grey80", colour = "grey50")      
+        )
+
+pubtheme.nogridlines <- pubtheme +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank())
+
+stat_sum_single <- function(fun, geom="point", ...) {
+  stat_summary(fun.y=fun, geom=geom, size = 3, ...)
+}
+
+
 
 ppi <- 300
-
 spbreaks <- c("Abco", "Abma", "Cade", "Pije", "Pila", "Pipo", "Quke", "Segi")
 
 mspbreaks <- c("AbPiQu", "AbCaQu", "CaPiQu", "AbCaPi")
