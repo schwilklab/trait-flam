@@ -11,7 +11,32 @@ rates <- read.csv("../data/decomp/decomp_rates_lw.csv", na.strings = c("","NA"),
 rates1 <- na.omit(rates)
 allrates <- rates1 %>% left_join(CN)
 
-# Correlation analysis #
+allrates2.sum <- allrates %>%
+                    select(spcode, ldrate, ltdrate, wdrate, CNratio) %>%
+                    group_by(spcode) %>% summarise(ldrate.mean = mean(ldrate),
+                                                   ldrate.sd = sd(ldrate),
+                                                   ltdrate.mean = mean(ltdrate),
+                                                   ltdrate.sd = sd(ltdrate),
+                                                   wdrate.mean = mean(wdrate),
+                                                   wdrate.sd = sd(wdrate),
+                                                   CNratio.mean= mean(CNratio),
+                                                   CNratio.sd  = sd(CNratio)
+                                                    )
+
+# Regression analysis#
+allratesfit <- lm(ldrate ~ wdrate + CNratio, data=allrates)
+summary(allratesfit)
+
+# Checking the relationships graphically
+library(ggplot2)
+ggplot(allrates, aes(wdrate, ldrate)) + geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+ggplot(allrates, aes(CNratio, ldrate)) + geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+ggplot(allrates, aes(CNratio, wdrate)) + geom_point() +
+  geom_smooth(method="lm", se=FALSE)
+
+# Correlation analysis (old) #
 corr.data <- allrates[c(8, 11, 14, 21)]
 cor.mat <- cor(corr.data)
 
