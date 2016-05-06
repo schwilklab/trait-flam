@@ -105,52 +105,50 @@ ggplot(decomp.forplots, aes(x=factor(year), y=l/t)) +
 ggsave("../results/plots/decomp-lt-shift2.pdf", width=col2*1.5, height=col2, units="cm" )
 
 ###############################################################################
-## Rita's older plots:
-# notes:
-# 1. Keeping labels separate from data is fragile
-# 2. Prefer faceting over manual plotting on a grid (when possible)
-
-# Doing the graph just for length (all years) and putting it in 1 column
-a <- ggplot(subset(decomp, year==0), aes(x=l, colour=spcode)) +
-            geom_density() + 
-            xlab("Length (mm)") + 
-            annotate(geom = "text", label="Year 0", x=155, y=.025) +
-            guides(colour=guide_legend(title=("Species"))) +
-            scale_colour_manual(values=mycolours, breaks=spbreaks, labels=labels1) +
-            theme_bw()
-
-b <- ggplot(subset(decomp, year==1), aes(x=l, colour=spcode)) +
-            geom_density() + 
-            xlim(0, 300) + 
-            xlab("Length (mm)") + 
-            annotate(geom = "text", label="Year 1", x=155, y=.12) +
-            guides(colour=guide_legend(title=("Species"))) +
-            scale_colour_manual(values=mycolours, breaks=spbreaks, labels=labels1) +
-            theme_bw()
-
-c <- ggplot(subset(decomp, year==2), aes(x=l, colour=spcode)) +
-            geom_density() + 
-            xlim(0, 300) + 
-            xlab("Length (mm)") + 
-            annotate(geom = "text", label="Year 2", x=155, y=.15) +
-            guides(colour=guide_legend(title=("Species"))) + 
-            scale_colour_manual(values=mycolours, breaks=spbreaks, labels=labels1) +
-            theme_bw()
-
-png("../results/plots/Decomp_L.png", width=10*ppi, height=15*ppi, res=ppi)
-      grid.arrange(a, b, c, ncol=1)
-      #grid.text("Year 0",0.76,0.95, gp=gpar(fontsize=20))
-      #grid.text("Year 1",0.76,0.45, gp=gpar(fontsize=20))
-      #grid.text("Year 2",0.76,0.45, gp=gpar(fontsize=20))
-dev.off()
 
 # Doing boxplots instead of density plots
 
-ggplot(decomp, aes(spcode, l)) +
-        geom_boxplot(aes(fill=year)) +
-        xlab("Species") +
-        ylab("Length (mm)") +
-        scale_fill_manual(values=mycolours2, name="Year") +
-        theme_bw() 
+decompsp <- decomp %>% left_join(species)
 
-ggsave("../results/plots/Decomp_L_box.pdf", width=15, height=10)
+ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
+  geom_boxplot() +
+  xlab("Species") +
+  ylab("Length (mm)") +
+  scale_fill_brewer(palette="Greys", direction=-1, name="Year") +
+  theme_bw() +
+  theme(axis.text.x  = element_text(face="italic")) 
+
+ggsave("../results/plots/Decomp_L_box_bw.pdf", width=15, height=10)
+
+# leaf length over thickness and spread rate for Year 0
+ggplot(flamdecomp.sum, aes(lt_mean, spread.mean)) +
+  geom_point(size=3) +
+  geom_pointrange(aes(ymin=spread.mean-spread.se, ymax=spread.mean+spread.se), 
+                  size=0.5)+
+  scale_x_continuous("Particle length / thickness", limits=c(0.0,400)) +
+  scale_y_continuous("Spread rate (cm/s)") +
+  scale_color_manual(values = c( "gray50", "black")) +
+  theme_bw() + geom_text(aes(label=display.name),
+                         hjust=-0.1, vjust=0.5, family=fontfamily,
+                         fontface="italic")
+
+ggsave("../results/plots/spread_vs_lt_y0.pdf")
+
+# leaf length over thickness and spread rate for Year 1
+
+ggplot(pred.y1sum, aes(lt_mean, pred_spread_mean)) +
+  geom_point(size=3) +
+  geom_errorbar(aes(ymin=pred_spread_mean-pred_spread_sd, ymax=pred_spread_mean+pred_spread_sd),size=0.5)+
+  scale_x_continuous("Particle length / thickness", limits=c(0.0,400)) +
+  scale_y_continuous("Spread rate (cm/s)", limits=c(0.0,0.45)) +
+  scale_color_manual(values = c( "gray50", "black")) +
+  theme_bw() + geom_text(aes(label=display.name), hjust=-0.1, 
+                         vjust=0.5, family="Arial",
+                         fontface="italic")  
+# Trying to put both sets of values in one plot
+## ggplot(flamdecomp.sum, aes(l_mean/t_mean, spread.mean)) +
+##     geom_point(size=3, color="black")  +
+##     geom_point(data=pred.y1, size=3,color="gray50") +
+##     geom_point(aes(l_mean/t_mean, pred.spread), size=3, color="blue")
+
+ggsave("../results/plots/spread_vs_lt_y1.pdf")
