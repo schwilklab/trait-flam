@@ -7,14 +7,14 @@ source("theme-opts.R")
 
 decompsp <- decomp %>% left_join(species)
 
+
 ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
   geom_boxplot() +
   xlab("Species") +
   ylab("Length (mm)") +
-  scale_fill_brewer(palette="Greys", direction=-1, name="Year") +
+  scale_fill_brewer(palette="Greys", name="Year") +
   theme_bw(base_size = 18) +
   theme(axis.text.x  = element_text(face="italic")) 
-
 ggsave("../results/plots/Decomp_L_box_bw.pdf", width=15, height=10)
 
 ## Or violin plots
@@ -22,8 +22,8 @@ ggsave("../results/plots/Decomp_L_box_bw.pdf", width=15, height=10)
 ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
   geom_violin(scale="width") +
   xlab("Species") +
-  ylab("Length (mm)") +
-  scale_fill_brewer(palette="Greys", direction=-1, name="Year") +
+  ylab("Leaf particle length (mm)") +
+  scale_fill_brewer(palette="Greys", name="Year") +
   theme_bw(base_size = 20) +
   theme(axis.text.x  = element_text(face="italic")) 
 
