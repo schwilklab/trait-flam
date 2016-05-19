@@ -7,11 +7,9 @@
 source("read-decomp.R")
 
 allrates.sum <- decomp.allrates %>%
-                    select(spcode, ldrate, ltdrate, wdrate, CNratio) %>%
+                    select(spcode, ldrate, wdrate, CNratio) %>%
                     group_by(spcode) %>% summarise(ldrate.mean = mean(ldrate),
                                                    ldrate.sd = sd(ldrate),
-                                                   ltdrate.mean = mean(ltdrate),
-                                                   ltdrate.sd = sd(ltdrate),
                                                    wdrate.mean = mean(wdrate),
                                                    wdrate.sd = sd(wdrate),
                                                    CNratio.mean= mean(CNratio),
@@ -40,7 +38,7 @@ ggplot(decomp.allrates, aes(CNratio, wdrate)) + geom_point() +
 #corrplot(cor.mat, method = "number")
 
 # Modelling #
-decomp_rates_lai <- decomp.allrates %>% left_join(LAI, by=c("year", "alt", "asp"))
+decomp_rates_lai <- decomp.allrates %>% left_join(LAI, by=c("alt", "asp"))
 
 library(lme4)
 
