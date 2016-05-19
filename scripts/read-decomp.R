@@ -2,7 +2,7 @@
 
 ## 1. Read in files, combine, create factors
 ## 2. Create summary statistics data frame
-## 3. Exports five data frames, "decomp", "decomp.sum", "decomp.sum2",
+## 3. Exports six data frames, "decomp", "decomp.sum", "decomp.sum2", "decomp.allrates",
 ##                                    "flamdecomp", and "flamdecomp.sum.y0"
 
 source("read-flam.R")
@@ -58,9 +58,21 @@ decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
                         IQR(., na.rm=TRUE), # IQR(l) Interquartile range (3Q-1Q)
                         kurtosis(., na.rm=TRUE)
                         )
-                   ) %>%
-    left_join(wt) %>%
-    left_join(species)
+                   ) 
+
+## create a dataframe with decomposition rate by particle size change (ldrate), 
+## decomposition rate by mass loss (wdrate), and CN ratio (CNratio)
+
+decomp.temp <- subset(decomp.sum, year=="0")
+decomp.temp <- decomp.temp[, c("tag", "l_mean")]
+colnames(decomp.temp)[2] <- "li_mean"
+decomp.temp1 <- subset(decomp.sum, year!="0")
+decomp.temp1 <- decomp.temp1[, c("tag", "year", "l_mean")]
+colnames(decomp.temp1)[3] <- "lf_mean"
+decomp.rate <- decomp.temp %>% left_join(decomp.temp1)
+decomp.rate$ldrate <- -log(decomp.rate$lf_mean/decomp.rate$li_mean)/decomp.rate$year
+decomp.allrates <- decomp.rate %>% left_join(wt) %>% left_join(CN)
+
 
 # just year zero with flam trial results by species
 ## flamdecomp <- decomp.sum %>% filter(year==0) %>% select(l_mean, t_mean, display.name) 
