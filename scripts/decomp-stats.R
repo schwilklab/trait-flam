@@ -6,12 +6,7 @@
 
 source("read-decomp.R")
 
-rates <- read.csv("../data/decomp/decomp_rates_lw.csv", na.strings = c("","NA"), 
-                  stringsAsFactors=FALSE)
-rates1 <- na.omit(rates)
-allrates <- rates1 %>% left_join(CN)
-
-allrates2.sum <- allrates %>%
+allrates.sum <- decomp.allrates %>%
                     select(spcode, ldrate, ltdrate, wdrate, CNratio) %>%
                     group_by(spcode) %>% summarise(ldrate.mean = mean(ldrate),
                                                    ldrate.sd = sd(ldrate),
@@ -24,28 +19,28 @@ allrates2.sum <- allrates %>%
                                                     )
 
 # Regression analysis#
-allratesfit <- lm(ldrate ~ wdrate + CNratio, data=allrates)
+allratesfit <- lm(ldrate ~ wdrate + CNratio, data=decomp.allrates)
 summary(allratesfit)
 
 # Checking the relationships graphically
 library(ggplot2)
-ggplot(allrates, aes(wdrate, ldrate)) + geom_point() +
+ggplot(decomp.allrates, aes(wdrate, ldrate)) + geom_point() +
   geom_smooth(method="lm", se=FALSE)
-ggplot(allrates, aes(CNratio, ldrate)) + geom_point() +
+ggplot(decomp.allrates, aes(CNratio, ldrate)) + geom_point() +
   geom_smooth(method="lm", se=FALSE)
-ggplot(allrates, aes(CNratio, wdrate)) + geom_point() +
+ggplot(decomp.allrates, aes(CNratio, wdrate)) + geom_point() +
   geom_smooth(method="lm", se=FALSE)
 
 # Correlation analysis (old) #
-corr.data <- allrates[c(8, 11, 14, 21)]
-cor.mat <- cor(corr.data)
+#corr.data <- decomp.allrates[c(8, 11, 14, 21)]
+#cor.mat <- cor(corr.data)
 
-library(corrplot)
-corrplot(cor.mat, method = "circle")
-corrplot(cor.mat, method = "number")
+#library(corrplot)
+#corrplot(cor.mat, method = "circle")
+#corrplot(cor.mat, method = "number")
 
 # Modelling #
-decomp_rates_lai <- allrates %>% left_join(LAI, by=c("year", "alt", "asp"))
+decomp_rates_lai <- decomp.allrates %>% left_join(LAI, by=c("year", "alt", "asp"))
 
 library(lme4)
 
