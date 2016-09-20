@@ -2,8 +2,8 @@
 
 ## 1. Read in files, combine, create factors
 ## 2. Create summary statistics data frame
-## 3. Exports five data frames, "decomp", "decomp.sum", "decomp.sum2",
-##                                    "flamdecomp", and "flamdecomp.sum"
+## 3. Exports six data frames, "decomp", "decomp.sum", "decomp.sum2", "decomp.allrates",
+##                                    "flamdecomp", and "flamdecomp.sum.y0"
 
 source("read-flam.R")
 library(dplyr)
@@ -38,6 +38,17 @@ q90 <- function(x) { quantile(x, .90, na.rm=TRUE)}
 q10 <- function(x) { quantile(x, .10, na.rm=TRUE)} 
 N <- function(x) {sum(!is.na(x))}
 
+wt <- read.csv("../data/decomp/Decomp_weight.csv", na.strings = c("","NA"),
+               stringsAsFactors=FALSE)
+wt <- filter(wt, tag!=126)
+wt$wdrate <- -log(wt$wf/wt$wi)/wt$year
+CN <- read.csv("../data/decomp/CNratio.csv", na.strings = c("","NA"), 
+               stringsAsFactors=FALSE)
+CN$CNratio <- CN$C/CN$N/CN$mass
+
+LAI <- read.csv("../data/decomp/SEKI_LAI.csv", na.strings = c("","NA"), 
+                stringsAsFactors=FALSE)
+
 # summarize by litter bag
 decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
     summarize_each(funs(mean(., na.rm=TRUE),
@@ -47,9 +58,16 @@ decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
                         IQR(., na.rm=TRUE), # IQR(l) Interquartile range (3Q-1Q)
                         kurtosis(., na.rm=TRUE)
                         )
-                   ) %>%
-    left_join(wt) %>%
-    left_join(species)
+                   )
+
+
+## create a dataframe with decomposition rate by particle size change (ldrate),
+## decomposition rate by mass loss (wdrate), and CN ratio (CNratio)
+decomp.allrates <- decomp.sum %>% group_by(tag) %>%
+  mutate(ldrate = -log(l_mean/lag(l_mean))/year) %>%
+  na.omit() %>% # throw out year==0 rows
+  left_join(wt) %>%
+  left_join(CN)
 
 # just year zero with flam trial results by species
 ## flamdecomp <- decomp.sum %>% filter(year==0) %>% select(l_mean, t_mean, display.name) 
@@ -59,10 +77,10 @@ decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
 
 flamdecomp <- merge(flam.sp.avg, decomp.sum, all.x=TRUE)
 
-flamdecomp.sum <- flamdecomp %>%
-    select(spcode, display.name, year, bulk.mean, bulk.se, spread.mean, spread.se,
+flamdecomp.sum.y0 <- flamdecomp %>% filter(year==0) %>%
+    select(display.name, bulk.mean, bulk.se, spread.mean, spread.se,
            l_mean, w_mean, t_mean, larea_mean) %>%
-    group_by(display.name, spcode, year) %>% summarise(bulk.mean = mean(bulk.mean),
+    group_by(display.name) %>% summarise(bulk.mean = mean(bulk.mean),
                                          bulk.se = mean(bulk.se),
                                          spread.mean = mean(spread.mean),
                                          spread.se = mean(spread.se),
