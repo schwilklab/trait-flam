@@ -51,7 +51,8 @@ library(ggrepel)
 
 ggplot(pred.y1sum, aes(lt_mean, pred_spread_mean)) +
   geom_point(size=3) +
-  geom_errorbar(aes(ymin=pred_spread_mean-pred_spread_sd, ymax=pred_spread_mean+pred_spread_sd),size=0.5)+
+  geom_errorbar(aes(ymin=pred_spread_mean-pred_spread_sd, ymax=pred_spread_mean+pred_spread_sd),
+		size=0.5)+
   scale_x_continuous("Particle length / thickness", limits=c(0.0,400)) +
   scale_y_continuous("Spread rate (cm/s)", limits=c(0.0,0.45)) +
   scale_color_manual(values = c( "gray50", "black")) +
@@ -59,3 +60,18 @@ ggplot(pred.y1sum, aes(lt_mean, pred_spread_mean)) +
   annotate("text",label="B", x=400, y=0.45, size=8)
 
 ggsave("../results/plots/spread_vs_lt_y1.pdf")
+
+#plotting 2 datasets in one plot
+ggplot(flamdecomp.sum.y0, aes(lt_mean, spread.mean)) +
+  geom_point(size=3) +
+  geom_pointrange(data=flamdecomp.sum.y0, aes(ymin=spread.mean-spread.se, ymax=spread.mean+spread.se), 
+                  size=0.5)+
+  scale_x_continuous("Particle length / thickness", limits=c(0.0,400)) +
+  scale_y_continuous("Spread rate (cm/s)") +
+  scale_color_manual(values = c( "gray50", "black")) +
+  theme_bw(base_size = 16) + geom_text(aes(label=display.name),
+                                       hjust=-0.1, vjust=0.5, fontface="italic", size=6) +
+  geom_point(data=pred.y1sum, aes(lt_mean, pred_spread_mean), shape=1, size=3) + #works up until this point
+  geom_text_repel(data=pred.y1sum, aes(label=display.name), fontface="italic", size=6) +
+  geom_errorbar(data=pred.y1sum, 
+	aes(ymin=pred_spread_mean-pred_spread_sd, ymax=pred_spread_mean+pred_spread_sd),size=0.5)

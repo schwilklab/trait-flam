@@ -3,7 +3,7 @@
 ## 1. Read in files, combine, create factors
 ## 2. Create summary statistics data frame
 ## 3. Exports six data frames, "decomp", "decomp.sum", "decomp.sum2", "decomp.allrates",
-##                                    "flamdecomp", and "flamdecomp.sum.y0"
+##            			  "decomp.genus", "flamdecomp", and "flamdecomp.sum.y0"
 
 source("read-flam.R")
 library(dplyr)
@@ -31,6 +31,8 @@ decomp <- filter(decomp, ! (tag==126 & year > 0))
 decomp$larea <- decomp$l * decomp$w
 decomp$lvol <- decomp$larea * decomp$t
 decomp$lt <- decomp$l/decomp$t
+
+decomp.genus <- decomp %>% left_join(species)
 
 # Using ddply to summarize by different measures
 
@@ -63,11 +65,13 @@ decomp.sum <- decomp %>% group_by(tag, spcode, year, alt, asp) %>%
 
 ## create a dataframe with decomposition rate by particle size change (ldrate),
 ## decomposition rate by mass loss (wdrate), and CN ratio (CNratio)
+
 decomp.allrates <- decomp.sum %>% group_by(tag) %>%
   mutate(ldrate = -log(l_mean/lag(l_mean))/year) %>%
   na.omit() %>% # throw out year==0 rows
   left_join(wt) %>%
-  left_join(CN)
+  left_join(CN) %>%
+  left_join(species)
 
 # just year zero with flam trial results by species
 ## flamdecomp <- decomp.sum %>% filter(year==0) %>% select(l_mean, t_mean, display.name) 
