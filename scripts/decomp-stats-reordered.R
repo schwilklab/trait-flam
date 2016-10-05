@@ -1,11 +1,9 @@
 ## decomp-stats-reordered.R
 
 
-## 0. Model decomposition to tease out the effect of alt, asp, on leaf length
-##     change.
 ## 1. Model leaf length change for all species and all years to characterize 
 ##    that change and investigate significant differences among species and 
-##    in between years. Do post-hoc test on contrasts.
+##    in between years, with elevation and aspect. Do post-hoc test on contrasts.
 ## 2. Test on pines vs non-pines to confirm different behaviour
 ## 3. Model and do correlation analysis on mass loss rate, CN and leaf length change
 
@@ -15,23 +13,12 @@
 
 source("read-decomp.R")
 
-# Result #0: elevation and aspect have no influence on decomposition and will not
-#           be included in further models
-
-decomp_1 <- lmer(ldrate ~ asp + (1|spcode), data=decomp.allrates, 
-                 REML=FALSE)
-decomp_2 <- lmer(ldrate ~ alt + asp + (1|spcode), data=decomp.allrates, 
-                 REML=FALSE)
-decomp_3 <- lmer(ldrate ~ (1|spcode), data=decomp.allrates, 
-                 REML=FALSE)
-anova(decomp_1,decomp_2, decomp_3)
-
 # Result #1: Description of change in particle size (length) over time for 8 species
 #           p-value with test statistic, pairwise post-hoc test on interaction term
 decomp1 <- decomp
 decomp1$year <- factor(decomp1$year)
 library(lme4)
-lmod <- lmer(l~spcode*year+(1|tag), data=decomp1)
+lmod <- lmer(l~spcode*year + asp + alt + (1|tag), data=decomp1)
 summary(lmod)
 library(car)
 Anova(lmod, white.adjust=TRUE)
