@@ -13,26 +13,21 @@ library(dplyr)
 library(lme4)
 library(AICcmodavg)
 
-# DWS: you should fit on original flam data in a nested model. By fitting on
-# means you are overestimating certainty. But may be fine for now
+flamdecompfilter <- flamdecomp[ , c(1, 2, 5, 6, 21:41)]
+flamdecompfilterY0 <- filter(flamdecompfilter, year == 0)
+flamdecompfilterQ <- filter(flamdecompfilterY0, spcode %in% 
+                              c("Abco", "Abma", "Cade", "Pije", "Pila", "Pipo", "Segi"))
 
-lmfit <- lm(spread.mean ~ larea_mean*t_mean, data=flamdecomp.sum.y0)
+lmfit <- lm(spread.mean ~ larea_mean*t_mean, data=flamdecompfilterQ)
 summary(lmfit)
 
-# just "thinness"
-lmfit2 <- lm(spread.mean~ I(l_mean / t_mean), data=flamdecomp.sum.y0)
+lmfit2 <- lm(spread.mean~ I(l_mean / t_mean), data=flamdecompfilterQ)
 summary(lmfit2)
 
-# compare
-aictab(list(lmfit, lmfit2))
+lmfit3 <- lm(spread.mean~ l_mean, data=flamdecompfilterQ)
+summary(lmfit3)
 
-# so simple model wins.
-# does this mean bulk density is function of length over thickness?
-ggplot(flamdecomp.sum.y0, aes(l_mean/t_mean, bulk.mean)) + geom_point() +
-    geom_smooth(method="lm", se=FALSE)
-ggplot(flamdecomp.sum.y0, aes(l_mean/t_mean, spread.mean)) + geom_point()
-ggplot(flamdecomp.sum.y0, aes(bulk.mean, spread.mean)) + geom_point()
-# yes.
+aictab(list(lmfit, lmfit2, lmfit3))
 
 # Creating new dataframe with the predicted spread rate after decomposition (year 1)
 
@@ -45,26 +40,36 @@ pred.y1$lt_mean <- pred.y1$l_mean/pred.y1$t_mean
 
 
 pred.y1sum <- pred.y1 %>% select(spcode, pred_spread, l_mean, w_mean, larea_mean, t_mean, lt_mean) %>%
-    group_by(spcode) %>% summarise(pred_spread_mean = mean(pred_spread),
-                                   pred_spread_sd = sd(pred_spread),
-                                   larea_mean = mean(larea_mean),
-                                   larea_mean_sd = sd(larea_mean),
-                                   t_mean = mean(t_mean),
-                                   t_mean_sd = sd(t_mean),
-                                   l_mean = mean(l_mean),
-                                   l_mean_sd = sd(l_mean),
-                                   w_mean = mean(w_mean),
-                                   w_mean_sd = sd(w_mean),
-                                   lt_mean= mean(lt_mean),
-                                   lt_sd  = sd(lt_mean)
-    )
+  group_by(spcode) %>% summarise(l_mean = mean(l_mean),
+                                 l_mean_sd = sd(l_mean),
+                                 spread_mean = mean(pred_spread),
+                                 spread_sd = sd(pred_spread),
+                                 larea_mean = mean(larea_mean),
+                                 larea_mean_sd = sd(larea_mean),
+                                 t_mean = mean(t_mean),
+                                 t_mean_sd = sd(t_mean),
+                                 w_mean = mean(w_mean),
+                                 w_mean_sd = sd(w_mean),
+                                 lt_mean= mean(lt_mean),
+                                 lt_sd  = sd(lt_mean)
+  )
 
+# Selecting only the columns of interest and preparing the dataframes to merge 
+# later to produce the joint plot
+pred.y1sum <- pred.y1sum[, c(1, 2, 4, 5)]
+pred.y1sum$year <- 1
 pred.y1sum <- pred.y1sum %>% left_join(species)
 
-#flamdecomp.sum$pred.spread <- predict(lmfit2) # pred fitted values
 
-## flamdecomp.sum <- left_join(flamdecomp.sum, select(pred.y1, spcode, pred.spread_mean, pred.spread_sd), by="spcode")
+flamdecompfilterY0.sum <- flamdecompfilterY0 %>% 
+                            select(spcode, l_mean, spread.mean, spread.se) %>%
+                            group_by(spcode) %>% 
+                            summarise(l_mean = mean(l_mean),
+                                      spread_mean = mean(spread.mean),
+                                      spread_sd = mean(spread.se))
 
+flamdecompfilterY0.sum$year <- 0
+flamdecompfilterY0.sum <- flamdecompfilterY0.sum %>% left_join(species)
 
-
-
+# Merging the 2 dataframes for the joint plot
+flamdecomppredjoin <- rbind(flamdecompfilterY0.sum, pred.y1sum)
