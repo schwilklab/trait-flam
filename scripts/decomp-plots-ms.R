@@ -33,21 +33,52 @@ ggsave("../results/plots/Decomp_L_violin_bw.pdf", width=15, height=10)
 
 #plotting 2 datasets in one plot
 
-ggplot(flamdecomp.sum.y0, aes(l_mean, spread.mean)) +
+library(directlabels)
+fig2 <- ggplot(flamdecomppredjoin, aes(l_mean, spread_mean, group=year)) +
   geom_point(size=3) +
-  geom_pointrange(data=flamdecomp.sum.y0, aes(ymin=spread.mean-spread.se, ymax=spread.mean+spread.se), 
-                  size=0.5)+
+  geom_pointrange(aes(ymin=spread_mean-spread_sd,
+                      ymax=spread_mean+spread_sd),
+                  size=0.5) +
+  scale_x_continuous("Leaf Particle length (mm)", limits=c(0.0,200)) +
+  scale_y_continuous("Spread rate (cm/s)") +
+  scale_color_manual(values = c( "gray50", "black")) +
+  theme_bw(base_size = 16) +
+  geom_line(aes(group=display.name)) + 
+  geom_dl(aes(label=display.name), method = list("smart.grid", cex = 1))
+
+fig2
+
+ggsave("../results/plots/spread_vs_l_both.pdf", width=15, height=10)
+
+## Dylan's code:
+
+fig2 <- ggplot(flamdecomp.sum.y0, aes(l_mean, spread.mean)) +
+  geom_point(size=3) +
+  geom_pointrange(data=flamdecomp.sum.y0,
+                  aes(ymin=spread.mean-spread.se,
+                      ymax=spread.mean+spread.se),
+                  size=0.5) +
   scale_x_continuous("Leaf Particle length (mm)", limits=c(0.0,230)) +
   scale_y_continuous("Spread rate (cm/s)") +
   scale_color_manual(values = c( "gray50", "black")) +
-  theme_bw(base_size = 16) + geom_text(aes(label=display.name),
-                                       hjust=-0.1, vjust=0.5, fontface="italic", size=5) +
-  geom_point(data=pred.y1sum, aes(l_mean, pred_spread_mean), shape=1, size=3) + #works up until this point
-  geom_text_repel(data=pred.y1sum, aes(label=display.name), fontface="italic", size=5) +
-  geom_errorbar(data=pred.y1sum, 
-                aes(ymin=pred_spread_mean-pred_spread_sd, ymax=pred_spread_mean+pred_spread_sd),size=0.5)
+  theme_bw(base_size = 16) +
+  geom_text(aes(label=display.name),
+            hjust=-0.1, vjust=0.5, fontface="italic", size=5)
 
-ggsave("../results/plots/spread_vs_l_both.pdf", width=15, height=10)
+fig2
+## add predicted:
+fig2 <- fig2 +
+  geom_point(data=pred.y1sum, aes(l_mean, pred_spread_mean), shape=1, size=3) +
+  ggrepel::geom_text_repel(data=pred.y1sum, aes(l_mean, pred_spread_mean, label=display.name),
+                           fontface="italic", size=5)
+
+fig2 <- fig2 + geom_pointrange(data=pred.y1sum,
+                aes(y=pred_spread_mean, ymin=pred_spread_mean - pred_spread_sd,
+                    ymax=pred_spread_mean + pred_spread_sd),
+                size=1)
+fig2
+
+ggsave("../results/plots/spread_vs_l_both.pdf", plot=fig2, width=15, height=10)
 
 # leaf length over thickness and spread rate for Year 0
 
