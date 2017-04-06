@@ -1,7 +1,9 @@
 ## Creates the figures for the decomposition ms
 
-source("decomp-flam.R")
+source("decomp-flam.R") # needed for Fig 2
 source("theme-opts.R")
+
+library(directlabels) # for text labels on Fig 2
 
 ## Figure 1: Boxplots
 
@@ -30,10 +32,7 @@ ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
 ggsave("../results/plots/Decomp_L_violin_bw.pdf", width=15, height=10)
 
 ## Figure 2: Spread rate vs. Leaf length
-
-#plotting 2 datasets in one plot
-
-library(directlabels)
+#  plotting 2 datasets in one plot
 
 fig2 <- ggplot(flamdecomppredjoin, aes(lt_mean, spread_mean, group=year)) +
   geom_point(aes(colour = factor(year)), size=5, show.legend = FALSE) +
@@ -63,7 +62,7 @@ flamdecomppredjoin1 <- subset(flamdecomppredjoin, year==1) # to use lines()
 # This code would create the lines corresponding to the prediction intervals, 
 # but it's not working as it says that plot.new has not been called yet.
 
-fig2 + lines(flamdecomppredjoin1$lt_mean, pred.cipispsum$pilwr_mean, col="grey66") +
+fig2 + geom_linerange(flamdecomppredjoin1, aes(pilwr_mean,  $lt_mean, pred.cipispsum$pilwr_mean, col="grey66") +
   lines(flamdecomppredjoin1$lt_mean, pred.cipispsum$piupr_mean, col="grey66")
 
 ####################
