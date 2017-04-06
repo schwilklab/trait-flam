@@ -48,6 +48,35 @@ pred.y1sum <- pred.y1 %>% select(spcode, pred_spread, l_mean, t_mean, lt_mean) %
                                  lt_sd  = sd(lt_mean)
   )
 
+# Obtaining the prediction and confidence intervals at 95% from the prediction
+# and merging the resulting data into a single dataframe
+
+pred.ci <- predict(lmfit2, newdata=pred.y1, interval="confidence", level=.95, se.fit=TRUE)
+
+pred.pi <- predict(lmfit2, newdata=pred.y1, interval="prediction", level=.95, se.fit=TRUE)
+
+pred.cidf <- as.data.frame(pred.ci)
+names(pred.cidf) <- c("value_fit", "ci_lwr", "ci_upr", "ci_se.fit", "ci_df", "ci_residual.scale")
+
+pred.pidf <- as.data.frame(pred.pi)
+names(pred.pidf) <- c("value_fit2", "pi_lwr", "pi_upr", "pi_se.fit", "pi_df", "pi_residual.scale")
+
+pred.cipi <- cbind(pred.cidf, pred.pidf)
+pred.cipisp <- cbind(pred.y1, pred.cipi)
+
+pred.cipispsum <- pred.cipisp %>% select(spcode, pred_spread, lt_mean, ci_lwr, ci_upr, ci_se.fit, pi_lwr, pi_upr, pi_se.fit) %>%
+  group_by(spcode) %>% summarise(spread_mean = mean(pred_spread),
+                                 spread_sd = sd(pred_spread),
+                                 lt_mean= mean(lt_mean),
+                                 lt_sd  = sd(lt_mean),
+                                 cilwr_mean= mean(ci_lwr),
+                                 ciupr_mean= mean(ci_upr),
+                                 cise_mean= mean(ci_se.fit),
+                                 pilwr_mean= mean(pi_lwr),
+                                 piupr_mean= mean(pi_upr),
+                                 pise_mean= mean(pi_se.fit)
+  )
+
 # Selecting only the columns of interest and preparing the dataframes to merge 
 # later to produce the joint plot
 pred.y1sum <- pred.y1sum[, c(1, 2, 4, 5, 8)]
