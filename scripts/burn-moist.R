@@ -4,44 +4,47 @@
 # 2. Analyses ignition probability (figure code in plots)
 # 3. Analyses flammability and moisture content
 
+library(dplyr)
 # read data
 burnt <- read.csv("../data/moisture/burn_moisture_trials_new.csv")
 #burnt$spcode <- factor(burnt$spcode)
+source("read-flam.R") # for species table
+burnt <- left_join(burnt, species)
 
 ############################################################
 ## Relationships between moisture content and flammability
 ############################################################
 
-modspread <- lm(spread ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modspread <- lm(spread ~ actualMC_dry + T_C + rh + genus, data=burnt) 
 summary(modspread)
 
-modt2ignit <- lm(t2ignit ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modt2ignit <- lm(t2ignit ~ actualMC_dry + T_C + rh+ genus, data=burnt) 
 summary(modt2ignit)
 
-modsustain <- lm(sustain ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modsustain <- lm(sustain ~ actualMC_dry + T_C + rh+ genus, data=burnt) 
 summary(modsustain)
 
-modcombust <- lm(combust ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modcombust <- lm(combust ~ actualMC_dry + T_C + rh+ genus, data=burnt)
 summary(modcombust)
 
-modconsum <- lm(consum ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modconsum <- lm(consum ~ actualMC_dry + T_C + rh+ genus, data=burnt) 
 summary(modconsum)
 
 library(agricolae)
 
-tuk <- HSD.test(modspread, "spcode", group=T)
+tuk <- HSD.test(modspread, "genus", group=T)
 tuk
 
-tuk <- HSD.test(modt2ignit, "spcode", group=T)
+tuk <- HSD.test(modt2ignit, "genus", group=T)
 tuk
 
-tuk <- HSD.test(modsustain, "spcode", group=T)
+tuk <- HSD.test(modsustain, "genus", group=T)
 tuk
 
-tuk <- HSD.test(modcombust, "spcode", group=T)
+tuk <- HSD.test(modcombust, "genus", group=T)
 tuk
 
-tuk <- HSD.test(modconsum, "spcode", group=T)
+tuk <- HSD.test(modconsum, "genus", group=T)
 tuk
 
 ##################################
