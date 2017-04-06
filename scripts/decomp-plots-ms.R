@@ -35,13 +35,13 @@ ggsave("../results/plots/Decomp_L_violin_bw.pdf", width=15, height=10)
 #  plotting 2 datasets in one plot
 
 fig2 <- ggplot(flamdecomp, aes(lt_mean, spread_mean, group=year)) +
-  ## geom_line(aes(group=display.name), size = 1.5, colour="grey66", 
-  ##           arrow=arrow(angle = 15, ends="first",type = "closed")) + 
+  geom_line(aes(group=display.name), size = 1.5, colour="grey66", 
+             arrow=arrow(angle = 15, ends="first",type = "closed")) + 
   geom_linerange(aes(ymin=spread_lc, ymax=spread_uc), size=0.5) +
   geom_point(aes(colour = factor(year)), size=4, show.legend = FALSE) +
   scale_x_continuous("Leaf particle length/thickness (mm/mm)", limits=c(0.0,450)) +
   scale_y_continuous("Flame spread rate (actual and predicted; cm/s)") +
-  geom_dl(aes(label=display.name), method = list("smart.grid", cex = 1)) +
+#  geom_dl(aes(label=display.name), method = list("smart.grid", cex = 1)) +
   pubtheme +
   scale_color_manual(values = c("black", "gray50"))
 
