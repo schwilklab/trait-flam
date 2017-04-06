@@ -1,12 +1,16 @@
 ## dry-down.R
 
-source("theme-opts.R")
-source("read-flam.R") # for species table
-source("read-decomp.R") # for leaf trait data
+# 1. Read in data
+# 2. Investigate species differences in dry-down intercepts and rates
+# 3. Create summary statistics
+# 4. Investigate how leaf traits influence dry-down
 
 library(lme4)
 library(plyr)
 library (tidyr)
+
+source("read-flam.R") # for species table
+source("read-decomp.R") # for leaf trait data
 
 # function to make nice table of model coefficients and standard errors:
 model.coefs <- function(the.mod) {
@@ -23,33 +27,10 @@ model.coefs <- function(the.mod) {
 mc <- read.csv("../data/moisture/dry_down_long.csv", stringsAsFactors=FALSE)
 mc <- left_join(mc, species)
 
-xbreaks <- seq(0, 144, 12)
-ybreaks <- seq(0, 700, 50)
-
-p <- ggplot(mc, aes(hour, MC_dry, colour=display.name)) +
-	    geom_point(size=1.5) +
-	    scale_colour_brewer(palette="Reds", name="") +
-	    xlab("Hours since dry-down") + ylab("Moisture by dry weight (%)") +
-	    scale_x_continuous(breaks=xbreaks) +
-	    scale_y_continuous(breaks=ybreaks) +
-	    pubtheme
-
-p.exp <- p + geom_smooth(method="glm", family=gaussian(link="log"), se=FALSE, size=1)
-p.exp
-ggsave("../results/plots/moisture.png", width=9, height=5, dpi=ppi)
-
-# and cut off the y axis due to oaks holding a ton of water:
-p.exp + ylim(c(0,350))
-ggsave("../results/plots/moisture2.png", width=9, height=5, dpi=ppi)
-
 
 ###############################################################################
 ## Investigate species differences in dry down intercepts and rates
 ###############################################################################
-ggplot(mc, aes(hour, log10(MC_dry), colour=display.name)) +
-    geom_point() +
-    #scale_colour_brewer(palette="Reds", name="") +
-    geom_smooth(method="lm", se=FALSE, size=1)
 
 mc$logMC_dry <-  log(mc$MC_dry)
 
@@ -100,9 +81,8 @@ mcdis <- mc2 %>% group_by(spcode, rep) %>% do(coefunc(.))
 
 newmc <- merge(mc2.sum, mcdis, by="spcode")
 
+###################################################################
 ## Getting the leaf trait data
-
-source("./read-decomp.R")
 
 decomp.sum3 <- decomp[, c(2, 5:11)] %>% group_by(spcode, year) %>%
                   summarize_each(funs(mean(., na.rm=TRUE),
@@ -114,7 +94,9 @@ newmctr <- merge(decomp.sum4[, c(1, 3:14)], mcdis, by="spcode", sort=F)
 
 newmctr.avg <- newmctr %>% group_by(spcode) %>%
                 summarise(dimean = mean(di),
+                          di.sd = sd(di),
                           maxMCmean = mean(maxMC),
+                          maxMC.sd = sd(maxMC),
                           l.mean = mean(l_mean),
                           l.sd = mean(l_sd),
                       		w.mean = mean(w_mean), 
@@ -131,48 +113,18 @@ newmctr.avg <- newmctr %>% group_by(spcode) %>%
 flam.sp.avg <- flam.sp.avg[, c(1, 3:4)]
 newmctrbd <- merge(newmctr.avg, flam.sp.avg, by="spcode")
 
-## Plotting against traits ##
+###########################################################
+# Establishing the influence of leaf traits on dry-down
+###########################################################
 
-ggplot(newmctr.avg, aes(lt_mean, dimean)) +
-  geom_point(size=3) +
-  scale_x_continuous("Particle length / thickness") +
-  scale_y_continuous("Desiccation index") + 
-  #geom_errorbarh(aes(xmin = lt_mean-lt_sd,xmax = lt_mean+lt_sd))+
-  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
-  pubtheme
+modmaxMCbulk <- lm(maxMCmean ~ bulk.mean, data=newmctrbd)
+summary(modmaxMCbulk)
 
-ggsave("../myresults/di_lt.pdf", width=9, height=6, dpi=ppi)
-ggsave("../myresults/di_lt.png", width=9, height=6, dpi=ppi)
+modmaxMClt <- lm(maxMCmean ~ lt.mean, data=newmctrbd)
+summary(modmaxMClt)
 
-ggplot(newmctr.avg, aes(lt_mean, maxMCmean)) +
-  geom_point(size=3) +
-  scale_x_continuous("Particle length / thickness") +
-  scale_y_continuous("Maximum water retention (log)") + 
-  #geom_errorbarh(aes(xmin = lt_mean-lt_sd,xmax = lt_mean+lt_sd)) +
-  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
-  pubtheme
+moddibulk <- lm(dimean ~ bulk.mean, data=newmctrbd)
+summary(moddibulk)
 
-ggsave("../myresults/maxMC_lt.pdf", width=9, height=6, dpi=ppi)
-ggsave("../myresults/maxMC_lt.png", width=9, height=6, dpi=ppi)  
-
-ggplot(newmctrbd, aes(bulk.mean, dimean)) +
-  geom_point(size=3) +
-  scale_x_continuous("Litter bulk density (", gcm^-3,")") +
-  scale_y_continuous("Desiccation index") + 
-  #geom_errorbarh(aes(xmin = t_mean-t_sd,xmax = t_mean+t_sd))+
-  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
-  pubtheme
-
-ggsave("../myresults/di_bd.pdf", width=9, height=6, dpi=ppi)
-ggsave("../myresults/di_bd.png", width=9, height=6, dpi=ppi)
-
-ggplot(newmctrbd, aes(bulk.mean, maxMCmean)) +
-  geom_point(size=3) +
-  scale_x_continuous("Litter bulk density (", gcm^-3,")") +
-  scale_y_continuous("Maximum water retention (log)") + 
-  #geom_errorbarh(aes(xmin = t_mean-t_sd,xmax = t_mean+t_sd)) +
-  geom_smooth(method="lm",se = F, color = "black", size=1.0) +
-  pubtheme
-
-ggsave("../myresults/maxMC_bd.pdf", width=9, height=6, dpi=ppi)
-ggsave("../myresults/maxMC_bd.png", width=9, height=6, dpi=ppi)
+moddilt <- lm(dimean ~ lt.mean, data=newmctrbd)
+summary(moddilt)
