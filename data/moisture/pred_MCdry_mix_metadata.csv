@@ -1,0 +1,5 @@
+variable,type ,units,description
+hour,numerical,,number of hours since drying began
+spcode,string,,4 letter code uniquely identifying single species / 12 letter code uniquely identifying a mixture
+predMC_dry,numerical,,moisture content calculated as the average of the moisture content of the 3 species that compose the mixture
+type,string,,indicates whether spcode refers to a monoculture or a mixture
