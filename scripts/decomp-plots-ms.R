@@ -43,10 +43,9 @@ fig2
 ggsave("../results/plots/spread_vs_lt_both.pdf", width=15, height=10, dpi=ppi)
 
 # Panelled Fig 2
-library(plyr)
 flamdecomp$year <- as.factor(flamdecomp$year)
-flamdecomp$year <- revalue(flamdecomp$year, c("0"="Year 0"))
-flamdecomp$year <- revalue(flamdecomp$year, c("1"="Year 1"))
+flamdecomp$year <- recode(flamdecomp$year, "0" = "Year 0",  "1" = "Year 1")
+
 
 fig2.1 <- ggplot(flamdecomp, aes(lt_mean, spread_mean, group=year)) +
   geom_linerange(aes(ymin=spread_lc, ymax=spread_uc), size=0.5) +
