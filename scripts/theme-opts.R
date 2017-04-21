@@ -26,7 +26,6 @@ pubtheme <- theme_grey() +
         panel.border = element_rect(size = 1.6, fill=NA),
         axis.text.x  = element_text(family=fontfamily, size=smsize, color="black"),
         axis.text.y  = element_text(family=fontfamily, size=smsize, color = "black"),
-        strip.background = element_rect(fill="gray90"),
         ## strip.text.x = element_text(family=fontfamily, size = smsize, face="italic"),
         ## strip.text.y = element_text(family=fontfamily, size = smsize, face="italic"),
         legend.title = element_text(family=fontfamily, size=textsize),
