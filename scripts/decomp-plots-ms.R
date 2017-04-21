@@ -5,6 +5,8 @@ source("theme-opts.R")
 
 library(directlabels) # for text labels on Fig 2
 
+decompsp <- decomp %>% left_join(species)
+
 ## Figure 1: violin plots
 
 ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
