@@ -46,6 +46,11 @@ ggsave("../results/plots/spread_vs_lt_both.pdf", width=15, height=10, dpi=ppi)
 flamdecomp$year <- as.factor(flamdecomp$year)
 flamdecomp$year <- recode(flamdecomp$year, "0" = "Year 0",  "1" = "Year 1")
 
+# apply jitter just to year 1 values. Need 8.
+x_jitter <- c(0, 6, 0, 0, 0, 0, 0, -7)
+#y_jitter <- rnorm(8, 0, 0.02)
+
+flamdecomp$lt_mean[flamdecomp$year=="Year 1"] <- flamdecomp$lt_mean[flamdecomp$year=="Year 1"] + x_jitter
 
 fig2.1 <- ggplot(flamdecomp, aes(lt_mean, spread_mean, group=year)) +
   geom_linerange(aes(ymin=spread_lc, ymax=spread_uc), size=0.5) +
@@ -65,4 +70,3 @@ fig2.1
 
 ggsave("../results/plots/spread_vs_lt_facet.pdf", width=15, height=10, dpi=ppi)
 ggsave("../results/plots/spread_vs_lt_facet.png", width=9, height=6, dpi=ppi)
-
