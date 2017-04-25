@@ -13,9 +13,10 @@ textsize <- 12
 smsize <- textsize-2
 pt2mm <- 0.35146
 smsize.mm <- smsize*pt2mm
-fontfamily = "Arial"
-col2 <- 17.5 # cm
-col1 <- 8.0 # cm
+fontfamily = "Arial"  # Some journals want this, others happy with open source fonts
+col2 <- 17.5 # cm  -- adjust for journal specfic column sizes.
+col1 <- 8.0 # cm -- make sure to indicate units when using ggsave!
+ppi <- 300 # for raster formats, not recommended
 
 pubtheme <- theme_grey() +
   theme(axis.title.y = element_text(family=fontfamily,
@@ -26,7 +27,6 @@ pubtheme <- theme_grey() +
         panel.border = element_rect(size = 1.6, fill=NA),
         axis.text.x  = element_text(family=fontfamily, size=smsize, color="black"),
         axis.text.y  = element_text(family=fontfamily, size=smsize, color = "black"),
-        strip.background = element_rect(fill="gray90"),
         ## strip.text.x = element_text(family=fontfamily, size = smsize, face="italic"),
         ## strip.text.y = element_text(family=fontfamily, size = smsize, face="italic"),
         legend.title = element_text(family=fontfamily, size=textsize),
@@ -48,8 +48,6 @@ stat_sum_single <- function(fun, geom="point", ...) {
 }
 
 
-
-ppi <- 300
 spbreaks <- c("Abco", "Abma", "Cade", "Pije", "Pila", "Pipo", "Quke", "Segi")
 
 mspbreaks <- c("AbPiQu", "AbCaQu", "CaPiQu", "AbCaPi")
