@@ -5,6 +5,8 @@ source("theme-opts.R")
 
 library(directlabels) # for text labels on Fig 2
 
+decompsp <- decomp %>% left_join(species)
+
 ## Figure 1: violin plots
 
 ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
@@ -12,17 +14,13 @@ ggplot(decompsp, aes(display.name, l, fill=factor(year))) +
   xlab("Species") +
   ylab("Leaf Particle Length (mm)") +
   scale_fill_brewer(palette="Greys", direction=-1, name="Year") +
-  theme_bw() +
-  theme(axis.title.x = element_text(size=18),
-        axis.text.x  = element_text(size=14),
-        axis.title.y = element_text(size=18),
-        axis.text.y  = element_text(size=16),
-        legend.title = element_text(size=16),
-        legend.text = element_text(size=16)) +
-  theme(axis.text.x  = element_text(face="italic"))  
+  pubtheme +
+  theme(axis.text.x  = element_text(face="italic", angle=45, vjust=1, hjust=1))
 
-ggsave("../results/plots/Decomp_L_violin_bw.pdf", width=15, height=10)
-ggsave("../results/plots/Decomp_L_violin_bw.png", width=9, height=6, dpi=2*ppi)
+ggsave("../results/plots/Decomp_L_violin_bw.pdf", width=col2, height=col2/2,
+       units="cm")
+ggsave("../results/plots/Decomp_L_violin_bw.png", width=col2, height=col2/2,
+       units= "cm", dpi=ppi)
 
 ## Figure 2: Spread rate vs. Leaf length
 #  plotting 2 datasets in one plot
@@ -40,30 +38,33 @@ fig2 <- ggplot(flamdecomp, aes(lt_mean, spread_mean, group=year)) +
 
 fig2
 
-ggsave("../results/plots/spread_vs_lt_both.pdf", width=15, height=10, dpi=ppi)
+ggsave("../results/plots/spread_vs_lt_both.pdf", width=col2, height=col2/2,
+       units="cm")
+ggsave("../results/plots/spread_vs_lt_both.png", width=col2, height=col2/2,
+       units="cm", dpi=ppi)
 
 # Panelled Fig 2
-library(plyr)
 flamdecomp$year <- as.factor(flamdecomp$year)
-flamdecomp$year <- revalue(flamdecomp$year, c("0"="Year 0"))
-flamdecomp$year <- revalue(flamdecomp$year, c("1"="Year 1"))
+flamdecomp$year <- recode(flamdecomp$year, "0" = "Year 0",  "1" = "Year 1")
+
+# apply jitter just to year 1 values. Need to move just 2.
+x_jitter <- c(0,0,0,0,0,0,0,0,0,6,0,0,0,0,0,-7)
+
+flamdecomp <- flamdecomp %>% ungroup() %>%
+  mutate(lt_mean = lt_mean + x_jitter)
+
+#flamdecomp$lt_mean[flamdecomp$year=="Year 1"] <- flamdecomp$lt_mean[flamdecomp$year=="Year 1"] + x_jitter
 
 fig2.1 <- ggplot(flamdecomp, aes(lt_mean, spread_mean, group=year)) +
   geom_linerange(aes(ymin=spread_lc, ymax=spread_uc), size=0.5) +
-  geom_point(aes(colour = factor(year)), size=4, show.legend = FALSE) +
+  geom_point(aes(colour = factor(year)), size=4, alpha=0.8, show.legend = FALSE) +
   scale_x_reverse("Leaf particle length/thickness (mm/mm)", limits=c(450, 0)) +
-  scale_y_continuous("Flame spread rate (actual and predicted; cm/s)") +
-  theme_bw() +
-  theme(axis.title.x = element_text(size=14),
-        axis.text.x  = element_text(size=12),
-        axis.title.y = element_text(size=14),
-        axis.text.y  = element_text(size=12),
-        legend.title = element_text(size=12),
-        legend.text = element_text(size=12)) +
-  scale_color_manual(values = c("black", "gray50")) + facet_grid(. ~ year)
+  scale_y_continuous("Flame spread rate (cm/s)") +
+  facet_grid(. ~ year) +
+  pubtheme +
+  scale_color_manual(values = c("black", "gray50"))
 
 fig2.1
 
-ggsave("../results/plots/spread_vs_lt_facet.pdf", width=15, height=10, dpi=ppi)
-ggsave("../results/plots/spread_vs_lt_facet.png", width=9, height=6, dpi=ppi)
-
+ggsave("../results/plots/spread_vs_lt_facet.pdf", width=col2, height=col2/2, units= "cm")
+ggsave("../results/plots/spread_vs_lt_facet.png", width=col2, height=col2, units="cm", dpi=ppi)
