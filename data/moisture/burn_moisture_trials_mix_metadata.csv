@@ -1,0 +1,14 @@
+variable,type ,units,description
+spcode,string,,4 letter code uniquely identifying single species / 12 letter code uniquely identifying a mixture
+hour,numerical,,number of hours since drying began
+day,numerical,,day of the burn
+month,numerical,,month of the burn
+time,numerical,,hour of the burn
+t2ignit,numerical,s,"time to ignition, measured as the # of seconds it takes for steady flame"
+sustain,numerical,s,"flaming duration, measured as the # of seconds it takes flame to travel through the bed"
+combust,numerical,mm,"maximum flame height, measured as height of the tallest flame"
+consum,numerical,%,"consumability, as percent mass loss"
+spread,numerical,cm,"spread rate, measured by dividing the length of the bed by sustainability"
+rh,numerical,%,relative humidity
+T_C,numerical,°C,air temperature
+type,string,,indicates whether spcode refers to a monoculture or a mixture
