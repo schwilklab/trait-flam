@@ -1,0 +1,8 @@
+variable,type ,units,description
+spcode,string,,4 letter code uniquely identifying single species / 12 letter code uniquely identifying a mixture
+bag_w,numerical,g,weight of the bag
+wet_weight,numerical,g,weight of saturated sample
+dry_weight,numerical,g,weight of dry sample
+MC_dry,numerical,,moisture content calculated based on dry weight
+hour,numerical,,number of hours since drying began
+type,string,,indicates whether spcode refers to a monoculture or a mixture

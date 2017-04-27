@@ -11,24 +11,31 @@ burnt <- read.csv("../data/moisture/burn_moisture_trials_new.csv")
 source("read-flam.R") # for species table
 burnt <- left_join(burnt, species)
 
+burnt$t2ignit[burnt$t2ignit==0] <- 180 #solves the error in ignit plot (had a zero)
+
+# Adding VPD to the data
+
+library(plantecophys)
+
+burnt$vpd <- RHtoVPD(burnt$rh, burnt$T_C)
+
+
 ############################################################
-## Relationships between moisture content and flammability
+## Relationships between time since wetting and flammability
 ############################################################
 
-modspread <- lm(spread ~ actualMC_dry + T_C + rh + genus, data=burnt) 
+modspread <- lm(spread ~ hour*genus + vpd, data=burnt) 
 summary(modspread)
 
-modt2ignit <- lm(t2ignit ~ actualMC_dry + T_C + rh+ genus, data=burnt) 
+modt2ignit <- lm(t2ignit ~ hour*genus + vpd, data=burnt) 
 summary(modt2ignit)
 
-modsustain <- lm(sustain ~ actualMC_dry + T_C + rh+ genus, data=burnt) 
-summary(modsustain)
+#modspread <- lm(spread ~ actualMC_dry*genus + vpd, data=burnt) 
+#summary(modspread)
 
-modcombust <- lm(combust ~ actualMC_dry + T_C + rh+ genus, data=burnt)
-summary(modcombust)
+#modt2ignit <- lm(t2ignit ~ actualMC_dry*genus + vpd, data=burnt) 
+#summary(modt2ignit)
 
-modconsum <- lm(consum ~ actualMC_dry + T_C + rh+ genus, data=burnt) 
-summary(modconsum)
 
 library(agricolae)
 
@@ -36,15 +43,6 @@ tuk <- HSD.test(modspread, "genus", group=T)
 tuk
 
 tuk <- HSD.test(modt2ignit, "genus", group=T)
-tuk
-
-tuk <- HSD.test(modsustain, "genus", group=T)
-tuk
-
-tuk <- HSD.test(modcombust, "genus", group=T)
-tuk
-
-tuk <- HSD.test(modconsum, "genus", group=T)
 tuk
 
 ##################################

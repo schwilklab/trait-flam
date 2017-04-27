@@ -25,14 +25,13 @@ model.coefs <- function(the.mod) {
 
 # read dry-down data
 mc <- read.csv("../data/moisture/dry_down_long.csv", stringsAsFactors=FALSE)
-mc <- left_join(mc, species)
-
 
 ###############################################################################
 ## Investigate species differences in dry down intercepts and rates
 ###############################################################################
 
 mc$logMC_dry <-  log(mc$MC_dry)
+mc <- left_join(mc, species)
 
 # Fit a nested model using lmer
 dry.mod <- lmer(logMC_dry ~ hour*spcode + (1 | rep), data=mc)
@@ -65,11 +64,13 @@ dry.mod.results$param <- revalue(dry.mod.results$param,
 
 # subset by species to get the coefficients (y0 and B) for each curve.
 
-mc2 <- mc %>% separate(rep, c("rep", "subrep"), "_")
-mc2 <- mc2[, c(1, 2, 6, 8, 13, 14)]
+mc <- mc %>% separate(rep, c("rep", "subrep"), "_")
+mc2 <- mc[, c("hour", "rep", "spcode", "MC_dry", "bd")]
 
-mc2.sum <- mc2 %>% group_by(spcode, hour, rep, display.name) %>% 
-  summarise_each(funs(mean(., na.rm=TRUE),sd(., na.rm=TRUE)))
+mc.sum <- mc2 %>% group_by(spcode, hour, rep) %>% 
+  summarise_each(funs(mean(., na.rm=TRUE),sd(., na.rm=TRUE))) 
+
+mc.sum <- left_join(mc.sum, species)
 
 coefunc <- function(mc){
     mod <- lm(log(MC_dry)~hour, data=mc) # you can't ignore your nesting!
@@ -79,18 +80,16 @@ coefunc <- function(mc){
 
 mcdis <- mc2 %>% group_by(spcode, rep) %>% do(coefunc(.)) 
 
-newmc <- merge(mc2.sum, mcdis, by="spcode")
+newmc <- merge(mc.sum, mcdis, by="spcode")
 
 ###################################################################
 ## Getting the leaf trait data
 
 decomp.sum3 <- decomp[, c(2, 5:11)] %>% group_by(spcode, year) %>%
                   summarize_each(funs(mean(., na.rm=TRUE),
-                                      sd(., na.rm=TRUE)))
+                                      sd(., na.rm=TRUE))) %>% filter(year==0)
 
-decomp.sum4 <- decomp.sum3 %>% filter(year==0)
-
-newmctr <- merge(decomp.sum4[, c(1, 3:14)], mcdis, by="spcode", sort=F)
+newmctr <- merge(decomp.sum3[, c(1, 3:14)], newmc, by="spcode", sort=F)
 
 newmctr.avg <- newmctr %>% group_by(spcode) %>%
                 summarise(dimean = mean(di),
@@ -108,23 +107,29 @@ newmctr.avg <- newmctr %>% group_by(spcode) %>%
                           larea.mean = mean(larea_mean),
                           larea.sd = mean(larea_sd),
                           lvol.mean = mean(lvol_mean),
-                          lvol.sd = mean(lvol_sd))
+                          lvol.sd = mean(lvol_sd),
+                      		bd.mean=mean(bd_mean),
+                      		bd.sd = sd(bd_mean))
 
-flam.sp.avg <- flam.sp.avg[, c(1, 3:4)]
-newmctrbd <- merge(newmctr.avg, flam.sp.avg, by="spcode")
+#flam.sp.avg <- flam.sp.avg[, c(1, 3:4)]
+#newmctrbd <- merge(newmctr.avg, flam.sp.avg, by="spcode")
 
 ###########################################################
 # Establishing the influence of leaf traits on dry-down
 ###########################################################
 
-modmaxMCbulk <- lm(maxMCmean ~ bulk.mean, data=newmctrbd)
+modmaxMCbulk <- lm(maxMCmean ~ bd.mean, data=newmctr.avg)
 summary(modmaxMCbulk)
 
-modmaxMClt <- lm(maxMCmean ~ lt.mean, data=newmctrbd)
+modmaxMClt <- lm(maxMCmean ~ lt.mean + bd.mean, data=newmctr.avg)
 summary(modmaxMClt)
 
-moddibulk <- lm(dimean ~ bulk.mean, data=newmctrbd)
+anova(modmaxMCbulk, modmaxMClt)
+
+moddibulk <- lm(dimean ~ bd.mean, data=newmctr.avg)
 summary(moddibulk)
 
-moddilt <- lm(dimean ~ lt.mean, data=newmctrbd)
+moddilt <- lm(dimean ~ lt.mean + bd.mean, data=newmctr.avg)
 summary(moddilt)
+
+anova(moddibulk, moddilt)
