@@ -4,44 +4,45 @@
 # 2. Analyses ignition probability (figure code in plots)
 # 3. Analyses flammability and moisture content
 
+library(dplyr)
 # read data
 burnt <- read.csv("../data/moisture/burn_moisture_trials_new.csv")
 #burnt$spcode <- factor(burnt$spcode)
+source("read-flam.R") # for species table
+burnt <- left_join(burnt, species)
+
+burnt$t2ignit[burnt$t2ignit==0] <- 180 #solves the error in ignit plot (had a zero)
+
+# Adding VPD to the data
+
+library(plantecophys)
+
+burnt$vpd <- RHtoVPD(burnt$rh, burnt$T_C)
+
 
 ############################################################
-## Relationships between moisture content and flammability
+## Relationships between time since wetting and flammability
 ############################################################
 
-modspread <- lm(spread ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modspread <- lm(spread ~ hour*genus + vpd, data=burnt) 
 summary(modspread)
 
-modt2ignit <- lm(t2ignit ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
+modt2ignit <- lm(t2ignit ~ hour*genus + vpd, data=burnt) 
 summary(modt2ignit)
 
-modsustain <- lm(sustain ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
-summary(modsustain)
+#modspread <- lm(spread ~ actualMC_dry*genus + vpd, data=burnt) 
+#summary(modspread)
 
-modcombust <- lm(combust ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
-summary(modcombust)
+#modt2ignit <- lm(t2ignit ~ actualMC_dry*genus + vpd, data=burnt) 
+#summary(modt2ignit)
 
-modconsum <- lm(consum ~ MC_dry + T_C + rh, data=burnt) # add spcode to get species responses
-summary(modconsum)
 
 library(agricolae)
 
-tuk <- HSD.test(modspread, "spcode", group=T)
+tuk <- HSD.test(modspread, "genus", group=T)
 tuk
 
-tuk <- HSD.test(modt2ignit, "spcode", group=T)
-tuk
-
-tuk <- HSD.test(modsustain, "spcode", group=T)
-tuk
-
-tuk <- HSD.test(modcombust, "spcode", group=T)
-tuk
-
-tuk <- HSD.test(modconsum, "spcode", group=T)
+tuk <- HSD.test(modt2ignit, "genus", group=T)
 tuk
 
 ##################################

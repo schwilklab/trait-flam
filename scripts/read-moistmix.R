@@ -37,20 +37,20 @@ mflam <- read.csv("../data/moisture/burn_moisture_trials_mix.csv")
 pred_mflam <- read.csv("../data/moisture/pred_flam_mix2.csv", na.strings = c("","NA"),
                        stringsAsFactors=FALSE)
 
-mflam.sum <- mflam %>% group_by(spcode, hour) %>%
-    				summarise(spread.mean = mean(spread),
-              				spread.sd = sd(spread),
-              				ignit.mean = mean(t2ignit),
-              				ignit.sd = sd(t2ignit),
-              				combus.mean = mean(combust),
-              				combus.sd = sd(combust),
-             		 	  	consum.mean = mean(consum),
-              				consum.sd = sd(consum),
-           		   	  	sustain.mean = mean(sustain),
-           		   	  	sustain.sd = sd(sustain)
-           		       		   )
-
 obs_pred_flam <- merge(pred_mflam, mflam, by=c("hour", "spcode"))
+
+obs_pred_flam.sum <- obs_pred_flam %>% 
+  group_by(hour, spcode) %>% 
+  summarize(pred_spread.mean = mean(pred_spread),
+            pred_spread.sd = sd(pred_spread),
+            pred_ignit.mean = mean(pred_ignit, na.rm=TRUE),
+            pred_ignit.sd = sd(pred_ignit, na.rm=TRUE),
+            spread.mean = mean(spread),
+            spread.sd = sd(spread),
+            ignit.mean = mean(t2ignit),
+            ignit.sd = sd(t2ignit))
+
+## Creating the residuals for non-additivity
 
 obs_pred_flam.res <- obs_pred_flam[, c(1,2)]
 obs_pred_flam.res$spread.res <- obs_pred_flam$spread - obs_pred_flam$pred_spread
@@ -98,22 +98,36 @@ summary(res.mod)
 res2.mod <- lmer(res_MCdry ~ hour + (1|spcode), data=obs_pred_mc)
 summary(res2.mod)
 
-# Residual analysis on flammability
-resspread.mod <- lmer(spread.res ~ (1|spcode) + (1|hour), data=obs_pred_flam.res)
+anova(res.mod, res2.mod)
+
+# Residual analysis on flammability (spread rate and time to ignition)
+resspread.mod <- lmer(spread.res ~ (1|spcode), data=obs_pred_flam.res)
 summary(resspread.mod)
+
+resspread2.mod <- lmer(spread.res ~ hour + (1|spcode), data=obs_pred_flam.res)
+summary(resspread2.mod)
+
+anova(resspread.mod, resspread2.mod)
+
+resignit.mod <- lmer(ignit.res ~ (1|spcode), data=obs_pred_flam.res)
+summary(resignit.mod)
+
+resignit2.mod <- lmer(ignit.res ~ hour + (1|spcode), data=obs_pred_flam.res)
+summary(resignit2.mod)
+
+anova(resignit.mod, resignit2.mod)
+
+#################################################################################
+# Testing how different from 0 the residual zscores are
+#(done for all speceis and all parameters separately) to 
+# evaluate species contrbution to a mixture
 
 x <- scale(obs_pred_flam[, c(3:7, 11:15)])
 y <- as.data.frame(x)
 zdata <- cbind(obs_pred_flam[, c(1,2)], y)
 
 zdata$spread.diff <- zdata$spread - zdata$pred_spread
-zdata$sustain.diff <- zdata$sustain - zdata$pred_sustain
 zdata$ignit.diff <- zdata$t2ignit - zdata$pred_ignit
-zdata$combust.diff <- zdata$combust - zdata$pred_combust
-zdata$consum.diff <- zdata$consum - zdata$pred_consum
-
-# Testing how different from 0 the residual zscores are
-#(done for all speceis and all parameters separately)
 
 Ab.spreaddiff <- zdata$spread.diff[grepl("Ab", zdata$spcode)]
 
@@ -125,6 +139,12 @@ for(i in seq(1:10000)){
 p <- ecdf(rvector)(mean(Ab.spreaddiff))
 
 # Once all p values are calculated, paste them onto the first line and run the second line
-p_values <- c(0.0126, 0, 0.0012, 0.7222, 0, 0.7226, 0, 0.046)
+#Spread
+p_values <- c(0.9042, 0.3471, 0.7343, 0.1123)
+#Ignition
+p_values <- c(1, 0, 0.9993, 0.3365)
+
 pa <- p.adjust(p_values, method="BH") # to control for false discovery rate
 pa
+# spread: 0.9042 0.6942 0.9042 0.4492
+#ignition:  1.000 0.000 1.000 0.673
