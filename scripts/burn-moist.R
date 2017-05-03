@@ -24,12 +24,17 @@ burnt$vpd <- RHtoVPD(burnt$rh, burnt$T_C)
 ## Relationships between time since wetting and flammability
 ############################################################
 
-modspread <- lm(spread ~ hour*genus + vpd, data=burnt) 
+modspread <- lm(spread ~ hour + genus + genus:hour + vpd, data=burnt) 
 summary(modspread)
+anova(modspread)
 
-modt2ignit <- lm(t2ignit ~ hour*genus + vpd, data=burnt) 
+modspread2 <- lm(spread ~ actualMC_dry*hour*genus + vpd, data=filter(burnt, genus!="Calocedrus" & genus!="Sequoiadendron")) 
+summary(modspread2)
+anova(modspread2)
+
+modt2ignit <- lm(t2ignit ~ hour*genus + vpd, data=filter(burnt, genus!="Calocedrus" & genus!="Sequoiadendron")) 
 summary(modt2ignit)
-
+anova(modt2ignit)
 #modspread <- lm(spread ~ actualMC_dry*genus + vpd, data=burnt) 
 #summary(modspread)
 
@@ -39,10 +44,10 @@ summary(modt2ignit)
 
 library(agricolae)
 
-tuk <- HSD.test(modspread, "genus", group=T)
+tuk <- HSD.test(modspread, "genus", group=TRUE)
 tuk
 
-tuk <- HSD.test(modt2ignit, "genus", group=T)
+tuk <- HSD.test(modt2ignit, "genus", group=TRUE)
 tuk
 
 ##################################
