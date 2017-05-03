@@ -1,8 +1,8 @@
 # moistsingles-plots
 
 source("theme-opts.R")
-source("dry-down.r")
-source("burn-moist.r")
+source("dry-down.R")
+source("burn-moist.R")
 
 # This theme is here for now. I am having trouble with pubtheme and embeded fonts. Will open issue
 ritatheme <- theme_grey() +
@@ -21,7 +21,7 @@ ritatheme <- theme_grey() +
         panel.grid.major = element_line(colour = "grey90", size = 0.2),
         panel.grid.minor = element_line(colour = "grey95", size =0.5),
         #    panel.grid.minor = element_blank(),
-        #    panel.grid.major = element_blank(),
+        #    panel.grid.major = element_bank(),
         strip.background = element_rect(fill = "grey80", colour = "grey50")      
   )
 
@@ -199,7 +199,8 @@ ggplot(burnt1, aes(hour, spread, colour=genus)) +
 ###############################################################################
 ## Flammability and moisture content ##
 ## Individual plots by species ##
-ggplot(burnt, aes(MC_dry, t2ignit, colour=spcode)) +
+
+ggplot(burnt, aes(MC_dry, t2ignit, colour=genus)) +
   geom_point(size=1.5) +
   scale_colour_manual(name="Species", breaks=spbreaks, labels=labels2, values=cbcolours1) +
   xlab("Moisture content (%)") + ylab("Seconds to ignition") +
@@ -212,7 +213,7 @@ ggsave("../results/plots/MC_Ignit.png", width=9, height=6, dpi=ppi)
 
 burnt1 <- subset(burnt,ignit=1)
 
-ggplot(burnt1, aes(MC_dry, spread, colour=spcode)) +
+ggplot(burnt1, aes(actualMC_dry, spread, colour=genus)) +
   geom_point(size=2) +
   scale_colour_manual(name="Species", breaks=spbreaks, labels=labels2, values=cbcolours1) +
   xlab("Moisture content (%)") + ylab("Spread rate (mm/s)") +

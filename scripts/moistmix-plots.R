@@ -1,7 +1,7 @@
 # moistmix-plots
 
 source("theme-opts.R")
-source("read-moistmix.r")
+source("read-moistmix.R")
 
 ## Figure 5: Plotting dry-down
 

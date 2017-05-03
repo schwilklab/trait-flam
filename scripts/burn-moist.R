@@ -39,10 +39,10 @@ summary(modt2ignit)
 
 library(agricolae)
 
-tuk <- HSD.test(modspread, "genus", group=T)
+tuk <- HSD.test(modspread, "genus", group=TRUE)
 tuk
 
-tuk <- HSD.test(modt2ignit, "genus", group=T)
+tuk <- HSD.test(modt2ignit, "genus", group=TRUE)
 tuk
 
 ##################################
