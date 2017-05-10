@@ -25,17 +25,24 @@ model.coefs <- function(the.mod) {
 
 # read dry-down data
 mc <- read.csv("../data/moisture/dry_down_long.csv", stringsAsFactors=FALSE)
+# identify trays vs within tray by time subsamples
+mc <- mc %>% separate(rep, c("tray", "subrep"), "_") %>%
+  mutate(tray = str_c(spcode, "_", tray))
+# average subsamples by tray species and hour
+mc <- mc %>% group_by(spcode, hour, tray) %>% summarize(MC_dry=mean(MC_dry), bd = mean(bd))
+mc$logMC_dry <-  log(mc$MC_dry)
+mc <- left_join(mc, species)
+
 
 ###############################################################################
 ## Investigate species differences in dry down intercepts and rates
 ###############################################################################
 
-mc$logMC_dry <-  log(mc$MC_dry)
-mc <- left_join(mc, species)
-
-# Fit a nested model using lmer
-dry.mod <- lmer(logMC_dry ~ hour*spcode + (1 | rep), data=mc)
+# model moisture as a function of time
+dry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 + hour | tray), data=mc)
 summary(dry.mod)
+anova(dry.mod)
+
 
 # test for pairwise differences and number of distinct groups
 library(lsmeans)
@@ -45,42 +52,33 @@ cld(lsmeans(dry.mod, ~ spcode))
 # and 4 intercept groups (but slopes differ so . . .)
 
 ###############################################################################
-## AND Rita wanted to extract coefficents: Here goes.
-
-# Now run without intercept just to make extracting coefficents easier. Is
-# this safe? Coef vals appear same so I think so.
-dry.mod.noint <- lmer(logMC_dry ~ hour*spcode + (1 | rep) -1, data=mc)
-dry.mod.coefs <- model.coefs(dry.mod)
-overall.slope <- dry.mod.coefs$betas[dry.mod.coefs$label=="hour"]
-
-dry.mod.ints <- dry.mod.coefs %>% filter(grepl("^spcode", label )) %>%
-    mutate(spcode = substr(label, 7,10), param = "intercept")
-dry.mod.slopes <- dry.mod.coefs %>% filter(grepl("^hour:", label)) %>%
-    mutate(spcode = substr(label,12,15), param = "slope")
-
-dry.mod.results <- rbind(dry.mod.ints, dry.mod.slopes) %>% select(-label)
-dry.mod.results$param <- revalue(dry.mod.results$param, 
-                                 c("intercept"="maxMC", "slope"="di"))
+##  extract coefficents:
+#dry.mod.results <- model.coefs(dry.mod)
 
 # subset by species to get the coefficients (y0 and B) for each curve.
 
-mc <- mc %>% separate(rep, c("rep", "subrep"), "_")
-mc2 <- mc[, c("hour", "rep", "spcode", "MC_dry", "bd")]
+## mc <- mc %>% separate(rep, c("rep", "subrep"), "_")
+## mc2 <- mc[, c("hour", "rep", "spcode", "MC_dry", "bd")]
 
-mc.sum <- mc2 %>% group_by(spcode, hour, rep) %>% 
-  summarise_each(funs(mean(., na.rm=TRUE),sd(., na.rm=TRUE))) 
+## mc.sum <- mc2 %>% group_by(spcode, hour, rep) %>% 
+##   summarise_each(funs(mean(., na.rm=TRUE),sd(., na.rm=TRUE))) 
 
-mc.sum <- left_join(mc.sum, species)
+## mc.sum <- left_join(mc.sum, species)    
 
-coefunc <- function(mc){
-    mod <- lm(log(MC_dry)~hour, data=mc) # you can't ignore your nesting!
-    res <- coef(mod)
-    return(data.frame(maxMC = res[1], di= res[2]))
+# model to fit for single species
+coefunc <- function(d){
+    mod <- lmer(log(MC_dry)~ hour + (1 + hour | tray ), data=d)
+    res <- summary(mod)$coefficients
+    return(data.frame(maxMC = res[1,1], maxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
 }
 
-mcdis <- mc2 %>% group_by(spcode, rep) %>% do(coefunc(.)) 
+mcdis <- mc %>% group_by(spcode) %>% do(coefunc(.)) 
 
 newmc <- merge(mc.sum, mcdis, by="spcode")
+
+
+
+
 
 ###################################################################
 ## Getting the leaf trait data
