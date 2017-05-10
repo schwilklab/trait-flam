@@ -10,11 +10,51 @@ library(lme4)
 library(plyr)
 library (tidyr)
 library(dplyr) #must come after plyr
+library(stringr)
 
+# Read in mixtures flammability data
+mflam <- read.csv("../data/moisture/burn_moisture_trials_mix.csv")
+
+
+# read in moisture dry down data from single species trials
 # Read in mixtures moisture data
-
 mmc <- read.csv("../data/moisture/dry_down_long_mix.csv")
-pred_mmc <- read.csv("../data/moisture/pred_MCdry_mix.csv")
+#pred_mmc <- read.csv("../data/moisture/pred_MCdry_mix.csv")
+
+
+mmc$mixcode <- mmc$spcode
+
+mmc <- mmc %>% mutate(mixcode = str_replace(mixcode, "Ab", "Abco"),
+                      mixcode = str_replace(mixcode, "Ca", "Cade"),
+                      mixcode = str_replace(mixcode, "Pi", "Pije"),
+                      mixcode = str_replace(mixcode, "Qu", "Quke"),
+                      sp1 = str_sub(mixcode, 1,4),
+                      sp2 = str_sub(mixcode, 5,8),
+                      sp3 = str_sub(mixcode, 9,12))
+
+
+temppredict <- predict(dry.mod, allow.new.levels=TRUE,
+                       newdata=data.frame(spcode=mmc$sp1,
+                                          tray = str_c(mmc$sp1, "_", mmc$rep, "new"),
+                                          hour = mmc$hour))
+
+mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod, allow.new.levels=TRUE,
+                                                newdata=data.frame(spcode=sp1,
+                                                tray = str_c(sp1,"_",rep,"NEW"),
+                                                hour = hour))),
+                      MC_dry_pred2 = exp(predict(dry.mod, allow.new.levels=TRUE,
+                                                newdata=data.frame(spcode=sp2,
+                                                tray = str_c(sp2,"_",rep,"NEW"),
+                                                hour = hour))),
+                      MC_dry_pred3 = exp(predict(dry.mod, allow.new.levels=TRUE,
+                                                newdata=data.frame(spcode=sp3,
+                                                tray = str_c(sp3,"_",rep,"NEW"),
+                                                hour = hour))),
+                      MC_dry_pred = (MC_dry_pred1 + MC_dry_pred2 + MC_dry_pred3)/3
+                      )
+
+
+# end of DWS new code
 
 mmc.sum <- mmc %>% group_by(spcode, hour) %>%
 		summarise(MC_dry.mean=mean(MC_dry), MC_dry.sd = sd(MC_dry))
@@ -31,9 +71,7 @@ obs_pred_mc.sum <- obs_pred_mc %>% group_by(hour, spcode) %>%
                                             res_MCdry.mean = mean(res_MCdry),
                                             res_MCdry.sd = sd(res_MCdry))
 
-# Read in mixtures flammability data
 
-mflam <- read.csv("../data/moisture/burn_moisture_trials_mix.csv")
 pred_mflam <- read.csv("../data/moisture/pred_flam_mix2.csv", na.strings = c("","NA"),
                        stringsAsFactors=FALSE)
 
