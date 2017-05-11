@@ -7,7 +7,9 @@
 
 library(lme4)
 library(plyr)
-library (tidyr)
+library(tidyr)
+library(dplyr) #must come after plyr
+library(stringr)
 
 source("read-flam.R") # for species table
 source("read-decomp.R") # for leaf trait data
@@ -53,32 +55,23 @@ cld(lsmeans(dry.mod, ~ spcode))
 
 ###############################################################################
 ##  extract coefficents:
-#dry.mod.results <- model.coefs(dry.mod)
-
-# subset by species to get the coefficients (y0 and B) for each curve.
-
-## mc <- mc %>% separate(rep, c("rep", "subrep"), "_")
-## mc2 <- mc[, c("hour", "rep", "spcode", "MC_dry", "bd")]
-
-## mc.sum <- mc2 %>% group_by(spcode, hour, rep) %>% 
-##   summarise_each(funs(mean(., na.rm=TRUE),sd(., na.rm=TRUE))) 
-
-## mc.sum <- left_join(mc.sum, species)    
 
 # model to fit for single species
 coefunc <- function(d){
     mod <- lmer(log(MC_dry)~ hour + (1 + hour | tray ), data=d)
     res <- summary(mod)$coefficients
-    return(data.frame(maxMC = res[1,1], maxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
+    return(data.frame(logmaxMC = res[1,1], logmaxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
 }
 
-mcdis <- mc %>% group_by(spcode) %>% do(coefunc(.)) 
+mcdis <- mc %>% group_by(spcode) %>% do(coefunc(.)) %>% mutate(maxMC = exp(logmaxMC), maxMC.se=exp(logmaxMC.se))
 
+mc.sum <- mc %>% group_by(spcode) %>% 
+      summarise(MC_dry.mean=mean(MC_dry),
+                MC_dry.sd=sd(MC_dry),
+                bd.mean=mean(bd),
+                bd.sd=sd(bd)) 
+  
 newmc <- merge(mc.sum, mcdis, by="spcode")
-
-
-
-
 
 ###################################################################
 ## Getting the leaf trait data
@@ -89,45 +82,22 @@ decomp.sum3 <- decomp[, c(2, 5:11)] %>% group_by(spcode, year) %>%
 
 newmctr <- merge(decomp.sum3[, c(1, 3:14)], newmc, by="spcode", sort=F)
 
-newmctr.avg <- newmctr %>% group_by(spcode) %>%
-                summarise(dimean = mean(di),
-                          di.sd = sd(di),
-                          maxMCmean = mean(maxMC),
-                          maxMC.sd = sd(maxMC),
-                          l.mean = mean(l_mean),
-                          l.sd = mean(l_sd),
-                      		w.mean = mean(w_mean), 
-                          w.sd = mean(w_sd),
-                          t.mean = mean(t_mean), 
-                          t.sd = mean(t_sd),
-                          lt.mean = mean(lt_mean), 
-                          lt.sd = mean(lt_sd),
-                          larea.mean = mean(larea_mean),
-                          larea.sd = mean(larea_sd),
-                          lvol.mean = mean(lvol_mean),
-                          lvol.sd = mean(lvol_sd),
-                      		bd.mean=mean(bd_mean),
-                      		bd.sd = sd(bd_mean))
-
-#flam.sp.avg <- flam.sp.avg[, c(1, 3:4)]
-#newmctrbd <- merge(newmctr.avg, flam.sp.avg, by="spcode")
-
 ###########################################################
 # Establishing the influence of leaf traits on dry-down
 ###########################################################
 
-modmaxMCbulk <- lm(maxMCmean ~ bd.mean, data=newmctr.avg)
+modmaxMCbulk <- lm(maxMC ~ bd.mean, data=newmctr)
 summary(modmaxMCbulk)
 
-modmaxMClt <- lm(maxMCmean ~ lt.mean + bd.mean, data=newmctr.avg)
+modmaxMClt <- lm(maxMC ~ lt_mean + bd.mean, data=newmctr)
 summary(modmaxMClt)
 
 anova(modmaxMCbulk, modmaxMClt)
 
-moddibulk <- lm(dimean ~ bd.mean, data=newmctr.avg)
+moddibulk <- lm(di ~ bd.mean, data=newmctr)
 summary(moddibulk)
 
-moddilt <- lm(dimean ~ lt.mean + bd.mean, data=newmctr.avg)
+moddilt <- lm(di ~ lt_mean + bd.mean, data=newmctr)
 summary(moddilt)
 
 anova(moddibulk, moddilt)

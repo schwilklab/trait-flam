@@ -28,19 +28,18 @@ modspread <- lm(spread ~ hour + genus + genus:hour + vpd, data=burnt)
 summary(modspread)
 anova(modspread)
 
-modspread2 <- lm(spread ~ actualMC_dry*hour*genus + vpd, data=filter(burnt, genus!="Calocedrus" & genus!="Sequoiadendron")) 
+modspread2 <- lm(spread ~ hour + genus + genus:hour + vpd, 
+                 data=filter(burnt, genus!="Calocedrus" & genus!="Sequoiadendron")) 
 summary(modspread2)
 anova(modspread2)
 
-modt2ignit <- lm(t2ignit ~ hour*genus + vpd, data=filter(burnt, genus!="Calocedrus" & genus!="Sequoiadendron")) 
+modt2ignit <- lm(t2ignit ~ hour*genus + vpd, data=burnt) 
 summary(modt2ignit)
 anova(modt2ignit)
-#modspread <- lm(spread ~ actualMC_dry*genus + vpd, data=burnt) 
-#summary(modspread)
 
-#modt2ignit <- lm(t2ignit ~ actualMC_dry*genus + vpd, data=burnt) 
-#summary(modt2ignit)
-
+modt2ignit2 <- lm(t2ignit ~ hour*genus + vpd, data=filter(burnt, genus!="Calocedrus" & genus!="Sequoiadendron")) 
+summary(modt2ignit2)
+anova(modt2ignit2)
 
 library(agricolae)
 

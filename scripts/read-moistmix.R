@@ -12,15 +12,13 @@ library (tidyr)
 library(dplyr) #must come after plyr
 library(stringr)
 
-# Read in mixtures flammability data
-mflam <- read.csv("../data/moisture/burn_moisture_trials_mix.csv")
+#############################################################
+# MOISTURE
+#############################################################
+source("dry-down.R") # for dry.mod
 
-
-# read in moisture dry down data from single species trials
 # Read in mixtures moisture data
 mmc <- read.csv("../data/moisture/dry_down_long_mix.csv")
-#pred_mmc <- read.csv("../data/moisture/pred_MCdry_mix.csv")
-
 
 mmc$mixcode <- mmc$spcode
 
@@ -32,11 +30,6 @@ mmc <- mmc %>% mutate(mixcode = str_replace(mixcode, "Ab", "Abco"),
                       sp2 = str_sub(mixcode, 5,8),
                       sp3 = str_sub(mixcode, 9,12))
 
-
-temppredict <- predict(dry.mod, allow.new.levels=TRUE,
-                       newdata=data.frame(spcode=mmc$sp1,
-                                          tray = str_c(mmc$sp1, "_", mmc$rep, "new"),
-                                          hour = mmc$hour))
 
 mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp1,
@@ -53,62 +46,41 @@ mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod, allow.new.levels=TRUE,
                       MC_dry_pred = (MC_dry_pred1 + MC_dry_pred2 + MC_dry_pred3)/3
                       )
 
-
 # end of DWS new code
 
+mmc$res_MC_dry <- mmc$MC_dry - mmc$MC_dry_pred
+
 mmc.sum <- mmc %>% group_by(spcode, hour) %>%
-		summarise(MC_dry.mean=mean(MC_dry), MC_dry.sd = sd(MC_dry))
+		summarise(MC_dry.mean = mean(MC_dry), 
+		          MC_dry.sd = sd(MC_dry),
+		          res_MC_dry.mean = mean(res_MC_dry), 
+		          res_MC_dry.sd = sd(res_MC_dry),
+		          bd.mean = mean(bd), 
+		          bd.sd = sd(bd)
+		          )
 
-obs_pred_mc <- merge(pred_mmc, mmc, by=c("hour", "spcode", "type"))
+mmcpred <-mmc[, c("spcode", "hour", "MC_dry_pred")] 
 
-obs_pred_mc$res_MCdry <- obs_pred_mc$MC_dry - obs_pred_mc$predMC_dry
+mmcpred.sum <- mmcpred %>% group_by(spcode, hour) %>% sample_n(1)
 
-obs_pred_mc.sum <- obs_pred_mc %>% group_by(hour, spcode) %>%
-                                  summarise(predMC_dry.mean = mean(predMC_dry),
-                                            predMC_dry.sd = sd(predMC_dry),
-                                            MC_dry.mean = mean(MC_dry),
-                                            MC_dry.sd = sd(MC_dry),
-                                            res_MCdry.mean = mean(res_MCdry),
-                                            res_MCdry.sd = sd(res_MCdry))
-
-
-pred_mflam <- read.csv("../data/moisture/pred_flam_mix2.csv", na.strings = c("","NA"),
-                       stringsAsFactors=FALSE)
-
-obs_pred_flam <- merge(pred_mflam, mflam, by=c("hour", "spcode"))
-
-obs_pred_flam.sum <- obs_pred_flam %>% 
-  group_by(hour, spcode) %>% 
-  summarize(pred_spread.mean = mean(pred_spread),
-            pred_spread.sd = sd(pred_spread),
-            pred_ignit.mean = mean(pred_ignit, na.rm=TRUE),
-            pred_ignit.sd = sd(pred_ignit, na.rm=TRUE),
-            spread.mean = mean(spread),
-            spread.sd = sd(spread),
-            ignit.mean = mean(t2ignit),
-            ignit.sd = sd(t2ignit))
-
-## Creating the residuals for non-additivity
-
-obs_pred_flam.res <- obs_pred_flam[, c(1,2)]
-obs_pred_flam.res$spread.res <- obs_pred_flam$spread - obs_pred_flam$pred_spread
-obs_pred_flam.res$ignit.res <- obs_pred_flam$t2ignit - obs_pred_flam$pred_ignit
-obs_pred_flam.res$sustain.res <- obs_pred_flam$sustain - obs_pred_flam$pred_sustain
-obs_pred_flam.res$combust.res <- obs_pred_flam$combust - obs_pred_flam$pred_combust
-obs_pred_flam.res$consum.res <- obs_pred_flam$consum - obs_pred_flam$pred_consum
-
-obs_pred_flam.res_sum <- obs_pred_flam.res %>% group_by(hour, spcode) %>%
-                                                summarise_each(funs(mean(., na.rm = TRUE), sd(., na.rm=TRUE)))
+mmc.sum <- mmc.sum %>% left_join(mmcpred.sum, by=c("spcode", "hour"))
 
 ###############################################################################
 ## Investigate species differences in dry down intercepts and rates
 ###############################################################################
 
 mmc$logMC_dry <-  log(mmc$MC_dry)
+mmc <- mmc %>% mutate(tray = str_c(spcode, "_", rep))
 
 # Fit a nested model using lmer
-mdry.mod <- lm(MC_dry ~ hour*spcode, data=mmc)
+mdry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 + hour | tray), data=mmc)
 summary(mdry.mod)
+anova(mdry.mod)
+
+# comparing the above model with one with bulk density added. Second model is better
+mdrybd.mod <- lmer(log(MC_dry) ~ hour*spcode + bd + (1 + hour | tray), data=mmc)
+summary(mdrybd.mod)
+anova(mdry.mod, mdrybd.mod)
 
 # test for pairwise differences and number of distinct groups
 library(lsmeans)
@@ -116,73 +88,106 @@ cld(lstrends(mdry.mod,~ spcode, var = "hour"))
 cld(lsmeans(mdry.mod, ~ spcode))
 
 # subset by species to get the coefficients (y0 and B) for each curve.
-coefuncm <- function(mmc){
-  mod <- lm(MC_dry~hour, data=mmc)
-  res <- coef(mod)
-  return(data.frame(maxMC = res[1], di= res[2]))
+coefuncm <- function(d){
+  mod <- lmer(log(MC_dry)~ hour + (1 + hour | tray ), data=d)
+  res <- summary(mod)$coefficients
+  return(data.frame(logmaxMC = res[1,1], logmaxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
 }
 
-mmcdis <- mmc %>% group_by(spcode) %>% do(coefuncm(.)) 
+mmcdis <- mmc %>% group_by(spcode) %>% do(coefuncm(.)) %>% mutate(maxMC = exp(logmaxMC), maxMC.se=exp(logmaxMC.se))
 
+
+###############################################################################
+#FLAMMABILITY
+##############
+# Read in mixtures flammability data
+mflam <- read.csv("../data/moisture/burn_moisture_trials_mix.csv")
+
+library(plantecophys)
+
+mflam$vpd <- RHtoVPD(mflam$rh, mflam$T_C)
+
+mflam$mixcode <- mflam$spcode
+
+mflam <- mflam %>% mutate(mixcode = str_replace(mixcode, "Ab", "Abco"),
+                      mixcode = str_replace(mixcode, "Ca", "Cade"),
+                      mixcode = str_replace(mixcode, "Pi", "Pije"),
+                      mixcode = str_replace(mixcode, "Qu", "Quke"),
+                      sp1 = str_sub(mixcode, 1,4),
+                      sp2 = str_sub(mixcode, 5,8),
+                      sp3 = str_sub(mixcode, 9,12))
+
+source("burn-moist.R")
+modspreadsp <- lm(spread ~ actualMC_dry*spcode, data=burnt)
+summary(modspreadsp)
+modignitsp <- lm(t2ignit ~ actualMC_dry*spcode, data=burnt)
+
+mflam <- mflam %>% mutate(spread_pred1 = predict(modspreadsp, allow.new.levels=TRUE,
+                                                 newdata=data.frame(spcode=sp1,
+                                                                    actualMC_dry = actualMC_dry)),
+                      spread_pred2 = predict(modspreadsp, allow.new.levels=TRUE,
+                                                 newdata=data.frame(spcode=sp2,
+                                                                    actualMC_dry = actualMC_dry)),
+                      spread_pred3 = predict(modspreadsp, allow.new.levels=TRUE,
+                                                 newdata=data.frame(spcode=sp3,
+                                                                    actualMC_dry = actualMC_dry)),
+                      spread_pred = (spread_pred1 + spread_pred2 + spread_pred3)/3)
+
+mflam <- mflam %>% mutate(ignit_pred1 = predict(modignitsp, allow.new.levels=TRUE,
+                                                 newdata=data.frame(spcode=sp1,
+                                                                    actualMC_dry = actualMC_dry)),
+                          ignit_pred2 = predict(modignitsp, allow.new.levels=TRUE,
+                                                 newdata=data.frame(spcode=sp2,
+                                                                    actualMC_dry = actualMC_dry)),
+                          ignit_pred3 = predict(modignitsp, allow.new.levels=TRUE,
+                                                 newdata=data.frame(spcode=sp3,
+                                                                    actualMC_dry = actualMC_dry)),
+                          ignit_pred = (ignit_pred1 + ignit_pred2 + ignit_pred3)/3)
+
+mflam$res_spread <- mflam$spread - mflam$spread_pred
+mflam$res_ignit <- mflam$t2ignit - mflam$ignit_pred
+
+mflam.sum <- mflam %>% group_by(spcode, hour) %>%
+  summarise(t2ignit.mean = mean(t2ignit),
+            t2ignit.sd = sd(t2ignit),
+            spread.mean = mean(spread),
+            spread.sd = sd(spread),
+            actualMC_dry.mean = mean(actualMC_dry), 
+            actualMC_dry.sd = sd(actualMC_dry) 
+              )
+
+mflampred <-mflam[, c("spcode", "hour", "spread_pred", "ignit_pred")] 
+
+mflampred.sum <- mflampred %>% group_by(spcode, hour) %>% sample_n(1)
+
+mflam.sum <- mflam.sum %>% left_join(mflampred.sum, by=c("spcode", "hour"))
 
 ###############################################################################
 ## Investigate non-additivity
 ###############################################################################
 
 # Residual analysis on moisture
-res.mod <- lmer(res_MCdry ~ (1|spcode), data=obs_pred_mc)
+res.mod <- lmer(res_MC_dry ~ (1|spcode), data=mmc)
 summary(res.mod)
 
-res2.mod <- lmer(res_MCdry ~ hour + (1|spcode), data=obs_pred_mc)
+res2.mod <- lmer(res_MC_dry ~ hour + (1|spcode), data=mmc)
 summary(res2.mod)
 
 anova(res.mod, res2.mod)
 
 # Residual analysis on flammability (spread rate and time to ignition)
-resspread.mod <- lmer(spread.res ~ (1|spcode), data=obs_pred_flam.res)
+resspread.mod <- lmer(res_spread ~ (1|spcode), data=mflam)
 summary(resspread.mod)
 
-resspread2.mod <- lmer(spread.res ~ hour + (1|spcode), data=obs_pred_flam.res)
+resspread2.mod <- lmer(res_spread ~ hour + (1|spcode), data=mflam)
 summary(resspread2.mod)
 
 anova(resspread.mod, resspread2.mod)
 
-resignit.mod <- lmer(ignit.res ~ (1|spcode), data=obs_pred_flam.res)
+resignit.mod <- lmer(res_ignit ~ (1|spcode), data=mflam)
 summary(resignit.mod)
 
-resignit2.mod <- lmer(ignit.res ~ hour + (1|spcode), data=obs_pred_flam.res)
+resignit2.mod <- lmer(res_ignit ~ hour + (1|spcode), data=mflam)
 summary(resignit2.mod)
 
 anova(resignit.mod, resignit2.mod)
-
-#################################################################################
-# Testing how different from 0 the residual zscores are
-#(done for all speceis and all parameters separately) to 
-# evaluate species contrbution to a mixture
-
-x <- scale(obs_pred_flam[, c(3:7, 11:15)])
-y <- as.data.frame(x)
-zdata <- cbind(obs_pred_flam[, c(1,2)], y)
-
-zdata$spread.diff <- zdata$spread - zdata$pred_spread
-zdata$ignit.diff <- zdata$t2ignit - zdata$pred_ignit
-
-Ab.spreaddiff <- zdata$spread.diff[grepl("Ab", zdata$spcode)]
-
-rvector=rep(NA, 10000)
-for(i in seq(1:10000)){
-  x <- mean(sample(zdata$spread.diff, 150))
-  rvector[i] <- x
-}
-p <- ecdf(rvector)(mean(Ab.spreaddiff))
-
-# Once all p values are calculated, paste them onto the first line and run the second line
-#Spread
-p_values <- c(0.9042, 0.3471, 0.7343, 0.1123)
-#Ignition
-p_values <- c(1, 0, 0.9993, 0.3365)
-
-pa <- p.adjust(p_values, method="BH") # to control for false discovery rate
-pa
-# spread: 0.9042 0.6942 0.9042 0.4492
-#ignition:  1.000 0.000 1.000 0.673
