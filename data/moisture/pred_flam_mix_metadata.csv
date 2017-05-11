@@ -1,8 +1,0 @@
-variable,type ,units,description
-MC_dry,numerical,%,moisture content of litter samples calculated on a dry weight basis
-spcode,string,,4 letter code uniquely identifying single species / 12 letter code uniquely identifying a mixture
-pred_ignit,numerical,s,predicted time to ignition calculated as the average time to ignition of the 3 species that compose the mixture
-pred_spread,numerical,cm,predicted spread rate calculated as the average spread rate of the 3 species that compose the mixture
-pred_combust,numerical,mm,predicted maximum flame height calculated as the average maximum flame height of the 3 species that compose the mixture
-pred_sustain,numerical,s,predicted flaming duration calculated as the average flaming duration of the 3 species that compose the mixture
-pred_consum,numerical,%,predicted mass loss calculated as the average mass loss of the 3 species that compose the mixture
