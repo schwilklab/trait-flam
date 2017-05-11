@@ -70,8 +70,29 @@ mycolours <- c("#FF6600", "#CC0000", "#660066", "#000999", "#3366CC", "#00CCFF",
 
 mycolours2 <- c("#228B22", "#FFC125", "#8B4513")
 
+mycolours3 <- c("slateblue1", "green", "turquoise3", "navy", "forestgreen")
+
 cbcolours1 <- c("#88CCEE", "#332288", "#44AA99", "#117733", "#DDCC77", "#CC6677", 
                 "#882255", "#AA4499")
 
 cbcolours2 <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
                 "#D55E00", "#CC79A7")
+ritatheme <- theme_grey() +
+  theme(axis.title.y = element_text(size = 14, angle = 90, vjust=0.3),
+        axis.title.x = element_text(size = 14, vjust=-0.3),
+        axis.ticks = element_line(colour = "black"),
+        panel.background = element_rect(size = 1.6, fill = NA),
+        panel.border = element_rect(size = 1.6, fill=NA),
+        axis.text.x  = element_text(size=13, color="black"),
+        axis.text.y  = element_text(size=13, color = "black"),
+        ## strip.text.x = element_text(family=fontfamily, size = 11, face="italic"),
+        ## strip.text.y = element_text(family=fontfamily, size = 11, face="italic"),
+        legend.title = element_text(size=14),
+        legend.text = element_text(size=13, face="italic"),
+        legend.key = element_rect(fill=NA),
+        panel.grid.major = element_line(colour = "grey90", size = 0.2),
+        panel.grid.minor = element_line(colour = "grey95", size =0.5),
+        #    panel.grid.minor = element_blank(),
+        #    panel.grid.major = element_bank(),
+        strip.background = element_rect(fill = "grey80", colour = "grey50")      
+  )
