@@ -63,19 +63,51 @@ ggplot(burnt, aes(hour, t2ignit, color=genus)) +
 ggsave("../results/plots/hour_Ignit.pdf", width=9, height=6, dpi=ppi)
 ggsave("../results/plots/hour_Ignit.png", width=9, height=6, dpi=ppi)
 
-ggplot(burnt1, aes(hour, spread, colour=genus)) +
+schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#437683", "#18B0D6")
+burnt2 <- droplevels(filter(burnt1, genus %in% c("Abies", "Pinus", "Quercus")))
+ggplot(burnt2, aes(hour, spread, colour=genus)) +
   geom_jitter(size=1.5) +
-  scale_colour_manual(name="Genus", values=mycolours3) +
+  scale_colour_manual(name="Genus", values=schwilkcolors) +
   xlab("Time since wetting (hour)") + ylab("Spread rate (mm/s)") +
-  ritatheme +
-  stat_smooth(data=burnt1, method="lm", se=FALSE, size=1.5)
+  stat_smooth(data= burnt2, method="lm", se=FALSE, size=1.5, na.omit=TRUE) +
+  prestheme +
+  theme(legend.text = element_text(face = "italic"),
+    legend.justification = c("left", "top"),
+        legend.key.height = unit(0.5, "lines"),
+        legend.position = c(0, 1),
+        legend.title=element_blank())
 
-ggsave("../results/plots/hour_Spread.pdf", width=9, height=6, dpi=ppi)
-ggsave("../results/plots/hour_Spread.png", width=9, height=6, dpi=ppi)
+ggsave("../results/plots/hour_Spread.png", width=10, height=7, unit="cm")
+
+## ggplot(burnt2, aes(hour, consum, colour=genus)) +
+##   geom_jitter(size=1.5) +
+##   scale_colour_manual(name="Genus", values=schwilkcolors) +
+##   xlab("Time since wetting (hour)") + ylab("Consumability") +
+##   ritatheme +
+##   stat_smooth(method="lm", se=FALSE, size=1.5)
+## ggsave("../results/plots/hour_consum.png", width=9, height=6, dpi=ppi)
+
+
+
+burnt3 <-  droplevels(filter(burnt1, spcode %in% c("Pije", "Pipo"))) %>% mutate(consum=consum/100.0)
+logmod <- glm(consum ~ hour, data=burnt3)
+summary(logmod)
+burnt3$fitted <- logmod$fitted.values
+
+ggplot(burnt3, aes(hour, consum)) +
+  geom_jitter(size=1.5) +
+#  scale_colour_manual(name="Genus", values=schwilkcolors) +
+  xlab("Time since wetting (hour)") + ylab("Consumability") +
+  prestheme +
+  geom_smooth(method = "glm", 
+  method.args = list(family = "binomial"), 
+  se = FALSE, color="black", size=1.5) 
+ggsave("../results/plots/hour_consum_logistic.png", width=10, height=7, unit="cm")
 
 ###############################################################################
 ## Flammability and moisture content ##
 ## Individual plots by genus ##
+
 
 ggplot(burnt, aes(actualMC_dry, t2ignit, color=genus)) +
   geom_point(size=2) +
