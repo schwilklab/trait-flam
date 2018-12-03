@@ -6,7 +6,7 @@
 # 4. Investigate how leaf traits influence dry-down
 
 library(lme4)
-library(plyr)
+#library(plyr)
 library(tidyr)
 library(dplyr) #must come after plyr
 library(stringr)
