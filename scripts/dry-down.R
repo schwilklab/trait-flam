@@ -41,7 +41,7 @@ mc <- left_join(mc, species)
 ###############################################################################
 
 # model moisture as a function of time
-dry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 + hour | tray), data=mc)
+dry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 | tray), data=mc)
 summary(dry.mod)
 anova(dry.mod)
 
