@@ -45,12 +45,20 @@ dry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 | tray), data=mc)
 summary(dry.mod)
 anova(dry.mod)
 
+library(afex)
+dry.mod <- mixed(log(MC_dry) ~ hour*spcode + (1 | tray), data=mc)
+dry.mod.tab <- summary(dry.mod)$coefficients
+dry.mod.anova.tab <- anova(dry.mod)
+dry.mod.tab
+dry.mod.anova.tab
+
+# pairwise tests:
 
 # test for pairwise differences and number of distinct groups
-library(lsmeans)
-cld(lstrends(dry.mod,~ spcode, var = "hour"))
+#library(lsmeans)
+#cld(lstrends(dry.mod,~ spcode, var = "hour"))
 # so there are three slope groups
-cld(lsmeans(dry.mod, ~ spcode))
+#cld(lsmeans(dry.mod, ~ spcode))
 # and 4 intercept groups (but slopes differ so . . .)
 
 ###############################################################################
