@@ -58,7 +58,7 @@ cld(lsmeans(dry.mod, ~ spcode))
 
 # model to fit for single species
 coefunc <- function(d){
-    mod <- lmer(log(MC_dry)~ hour + (1 + hour | tray ), data=d)
+    mod <- lmer(log(MC_dry)~ hour + (1 | tray ), data=d)
     res <- summary(mod)$coefficients
     return(data.frame(logmaxMC = res[1,1], logmaxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
 }
