@@ -49,7 +49,15 @@ for (ht in c("b", "m", "h")) {
 thermocouples.wide <- plyr::join_all(hobo_list)
 
 # read trial intervals
+
+# There are two slightly different data files from Rita. The first has start
+# times and dates, the second does not but has more observations. I'll merge
+# them to try to figure out what is going on. Unfortunately, there is no ID
+# key in either data set!
 trials <- read.csv("../data/moisture/burn_moisture_trials.csv")
+trials2 <- read.csv("../data/moisture/burn_moisture_trials_new.csv")
+trials3 <- full_join(trials, trials2, by=c("spcode", "MC_dry",  "t2ignit", "rh"))
+
 trials <- mutate(trials, year=2015,
                  start = paste(paste(year, month, day, sep="-"),
                                        paste(time, "0", sep=":")))

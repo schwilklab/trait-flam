@@ -15,15 +15,15 @@ source("read-flam.R") # for species table
 source("read-decomp.R") # for leaf trait data
 
 # function to make nice table of model coefficients and standard errors:
-model.coefs <- function(the.mod) {
-    betas <- fixef(the.mod)
-    Vcov <- vcov(the.mod, useScale = FALSE)
-    se <- sqrt(diag(Vcov))
-    zval <- betas / se
-    pval <- 2 * pnorm(abs(zval), lower.tail = FALSE)
-    r <- cbind(betas, se, zval, pval)
-    return(data.frame(label=rownames(r), r ))
-}
+## model.coefs <- function(the.mod) {
+##     betas <- fixef(the.mod)
+##     Vcov <- vcov(the.mod, useScale = FALSE)
+##     se <- sqrt(diag(Vcov))
+##     zval <- betas / se
+##     pval <- 2 * pnorm(abs(zval), lower.tail = FALSE)
+##     r <- cbind(betas, se, zval, pval)
+##     return(data.frame(label=rownames(r), r ))
+## }
 
 # read dry-down data
 mc <- read.csv("../data/moisture/dry_down_long.csv", stringsAsFactors=FALSE)

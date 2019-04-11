@@ -6,11 +6,11 @@
 # 3. Investigate species differences in dry down intercepts and rates
 # 4. Investigate non-additivity
 
-library(lme4)
-library(plyr)
-library (tidyr)
-library(dplyr) #must come after plyr
-library(stringr)
+#library(lme4)
+#library(plyr)
+#library (tidyr)
+#library(dplyr) #must come after plyr
+#library(stringr)
 
 #############################################################
 # MOISTURE
@@ -31,15 +31,15 @@ mmc <- mmc %>% mutate(mixcode = str_replace(mixcode, "Ab", "Abco"),
                       sp3 = str_sub(mixcode, 9,12))
 
 
-mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod, allow.new.levels=TRUE,
+mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod$full_model, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp1,
                                                 tray = str_c(sp1,"_",rep,"NEW"),
                                                 hour = hour))),
-                      MC_dry_pred2 = exp(predict(dry.mod, allow.new.levels=TRUE,
+                      MC_dry_pred2 = exp(predict(dry.mod$full_model, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp2,
                                                 tray = str_c(sp2,"_",rep,"NEW"),
                                                 hour = hour))),
-                      MC_dry_pred3 = exp(predict(dry.mod, allow.new.levels=TRUE,
+                      MC_dry_pred3 = exp(predict(dry.mod$full_model, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp3,
                                                 tray = str_c(sp3,"_",rep,"NEW"),
                                                 hour = hour))),
@@ -84,8 +84,8 @@ anova(mdry.mod, mdrybd.mod)
 
 # test for pairwise differences and number of distinct groups
 library(lsmeans)
-cld(lstrends(mdry.mod,~ spcode, var = "hour"))
-cld(lsmeans(mdry.mod, ~ spcode))
+#cld(lstrends(mdry.mod,~ spcode, var = "hour"))
+#cld(lsmeans(mdry.mod, ~ spcode))
 
 # subset by species to get the coefficients (y0 and B) for each curve.
 coefuncm <- function(d){
