@@ -5,14 +5,23 @@
 # 3. Create summary statistics
 # 4. Investigate how leaf traits influence dry-down
 
-library(lme4)
-#library(plyr)
 library(tidyr)
-library(dplyr) #must come after plyr
+library(lme4)
+
+library(dplyr)
 library(stringr)
 
-source("read-flam.R") # for species table
+#source("read-flam.R") # for species table
+
+## # read species table
+## species <- read.csv("../data/species.csv", stringsAsFactors=FALSE)
+## splevels = c("S. giganteum", "C. decurrens", "A. magnifica", "A. concolor", "P. ponderosa",
+##              "P. lambertiana", "P. jeffreyi", "Q. kelloggii")
+## species <- mutate(species, display.name = factor(display.name, levels=splevels))
+
+
 source("read-decomp.R") # for leaf trait data
+## DWS: why?
 
 # function to make nice table of model coefficients and standard errors:
 ## model.coefs <- function(the.mod) {
@@ -94,13 +103,15 @@ newmctr <- merge(decomp.sum3[, c(1, 3:14)], newmc, by="spcode", sort=F)
 # Establishing the influence of leaf traits on dry-down
 ###########################################################
 
-modmaxMCbulk <- lm(maxMC ~ bd.mean, data=newmctr)
-summary(modmaxMCbulk)
+# models with eight observations (species means)
 
-modmaxMClt <- lm(maxMC ~ lt_mean + bd.mean, data=newmctr)
+## modmaxMCbulk <- lm(maxMC ~ bd.mean , data=newmctr)
+## summary(modmaxMCbulk)
+
+modmaxMClt <- lm(maxMC ~ bd.mean + lt_mean, data=newmctr)
 summary(modmaxMClt)
 
-anova(modmaxMCbulk, modmaxMClt)
+#anova(modmaxMCbulk, modmaxMClt)
 
 moddibulk <- lm(di ~ bd.mean, data=newmctr)
 summary(moddibulk)

@@ -8,11 +8,21 @@ library(extrafont)
 loadfonts()
 
 # constants and theme for publications
-bestfit <- geom_smooth(method="lm",se = F, color = "black", size=1.5)
+#schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#437683", "#18B0D6")
+
+schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#362908", "#EC4E15")
+
+
+#EC4E15
+#362908
+
+
+
 textsize <- 12
-smsize <- textsize-2
+axissz <- textsize-2
+smsize <- textsize-5
 pt2mm <- 0.35146
-smsize.mm <- smsize*pt2mm
+#smsize.mm <- smsize*pt2mm
 fontfamily = "Arial"  # Some journals want this, others happy with open source fonts
 col2 <- 17.5 # cm  -- adjust for journal specfic column sizes.
 col1 <- 8.0 # cm -- make sure to indicate units when using ggsave!
@@ -25,13 +35,15 @@ pubtheme <- theme_grey() +
         axis.ticks = element_line(colour = "black"),
         panel.background = element_rect(size = 1.6, fill = NA),
         panel.border = element_rect(size = 1.6, fill=NA),
-        axis.text.x  = element_text(family=fontfamily, size=smsize, color="black"),
-        axis.text.y  = element_text(family=fontfamily, size=smsize, color = "black"),
-        ## strip.text.x = element_text(family=fontfamily, size = smsize, face="italic"),
-        ## strip.text.y = element_text(family=fontfamily, size = smsize, face="italic"),
-        legend.title = element_text(family=fontfamily, size=textsize),
-        legend.text = element_text(family=fontfamily, size=smsize, face="italic"),
+        axis.text.x  = element_text(family=fontfamily, size=axissz, color="black"),
+        axis.text.y  = element_text(family=fontfamily, size=axissz, color = "black"),
+        ## strip.text.x = element_text(family=fontfamily, size = axissz, face="italic"),
+        ## strip.text.y = element_text(family=fontfamily, size = axissz, face="italic"),
+        legend.title = element_text(family=fontfamily, size=axissz),
+        legend.text = element_text(family=fontfamily, size=smsize),
         legend.key = element_rect(fill=NA),
+        legend.spacing.y = NULL,  
+        legend.key.height = unit(smsize, "pt"),
         panel.grid.major = element_line(colour = "grey90", size = 0.2),
         panel.grid.minor = element_line(colour = "grey95", size =0.5),
         #    panel.grid.minor = element_blank(),
