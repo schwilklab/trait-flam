@@ -1,0 +1,8 @@
+# ignore latex class stuff from MDPI
+Definitions/*
+# latex:
+*.pdf
+*.out
+*.log
+*.aux
+*.synctex.gz

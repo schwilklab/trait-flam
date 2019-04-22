@@ -1,0 +1,483 @@
+%  LaTeX support: latex@mdpi.com 
+%  In case you need support, please attach all files that are necessary for compiling as well as the log file, and specify the details of your LaTeX setup (which operating system and LaTeX version / tools you are using).
+
+%  =================================================================
+\documentclass[fire,article,submit,moreauthors,pdftex]{Definitions/mdpi} 
+
+%\usepackage[utf8]{inputenc}
+
+% If you would like to post an early version of this manuscript as a preprint, you may use preprint as the journal and change 'submit' to 'accept'. The document class line would be, e.g., \documentclass[preprints,article,accept,moreauthors,pdftex]{mdpi}. This is especially recommended for submission to arXiv, where line numbers should be removed before posting. For preprints.org, the editorial staff will make this change immediately prior to posting.
+
+%--------------------
+% Class Options:
+%--------------------
+%----------
+% journal
+%----------
+% Choose between the following MDPI journals:
+% acoustics, actuators, addictions, admsci, aerospace, agriculture, agriengineering, agronomy, algorithms, animals, antibiotics, antibodies, antioxidants, applsci, arts, asc, asi, atmosphere, atoms, axioms, batteries, bdcc, behavsci , beverages, bioengineering, biology, biomedicines, biomimetics, biomolecules, biosensors, brainsci , buildings, cancers, carbon , catalysts, cells, ceramics, challenges, chemengineering, chemistry, chemosensors, children, cleantechnol, climate, clockssleep, cmd, coatings, colloids, computation, computers, condensedmatter, cosmetics, cryptography, crystals, dairy, data, dentistry, designs , diagnostics, diseases, diversity, drones, econometrics, economies, education, electrochem, electronics, energies, entropy, environments, epigenomes, est, fermentation, fibers, fire, fishes, fluids, foods, forecasting, forests, fractalfract, futureinternet, futurephys, galaxies, games, gastrointestdisord, gels, genealogy, genes, geohazards, geosciences, geriatrics, hazardousmatters, healthcare, heritage, highthroughput, horticulturae, humanities, hydrology, ijerph, ijfs, ijgi, ijms, ijns, ijtpp, informatics, information, infrastructures, inorganics, insects, instruments, inventions, iot, j, jcdd, jcm, jcp, jcs, jdb, jfb, jfmk, jimaging, jintelligence, jlpea, jmmp, jmse, jnt, jof, joitmc, jpm, jrfm, jsan, land, languages, laws, life, literature, logistics, lubricants, machines, magnetochemistry, make, marinedrugs, materials, mathematics, mca, medicina, medicines, medsci, membranes, metabolites, metals, microarrays, micromachines, microorganisms, minerals, modelling, molbank, molecules, mps, mti, nanomaterials, ncrna, neuroglia, nitrogen, notspecified, nutrients, ohbm, particles, pathogens, pharmaceuticals, pharmaceutics, pharmacy, philosophies, photonics, physics, plants, plasma, polymers, polysaccharides, preprints , proceedings, processes, proteomes, psych, publications, quantumrep, quaternary, qubs, reactions, recycling, religions, remotesensing, reports, resources, risks, robotics, safety, sci, scipharm, sensors, separations, sexes, signals, sinusitis, smartcities, sna, societies, socsci, soilsystems, sports, standards, stats, surfaces, surgeries, sustainability, symmetry, systems, technologies, test, toxics, toxins, tropicalmed, universe, urbansci, vaccines, vehicles, vetsci, vibration, viruses, vision, water, wem, wevj
+
+%---------
+% article
+%---------
+% The default type of manuscript is "article", but can be replaced by: 
+% abstract, addendum, article, benchmark, book, bookreview, briefreport, casereport, changes, comment, commentary, communication, conceptpaper, conferenceproceedings, correction, conferencereport, expressionofconcern, extendedabstract, meetingreport, creative, datadescriptor, discussion, editorial, essay, erratum, hypothesis, interestingimages, letter, meetingreport, newbookreceived, obituary, opinion, projectreport, reply, retraction, review, perspective, protocol, shortnote, supfile, technicalnote, viewpoint
+% supfile = supplementary materials
+
+%----------
+% submit
+%----------
+% The class option "submit" will be changed to "accept" by the Editorial Office when the paper is accepted. This will only make changes to the frontpage (e.g., the logo of the journal will get visible), the headings, and the copyright information. Also, line numbering will be removed. Journal info and pagination for accepted papers will also be assigned by the Editorial Office.
+
+%------------------
+% moreauthors
+%------------------
+% If there is only one author the class option oneauthor should be used. Otherwise use the class option moreauthors.
+
+%---------
+% pdftex
+%---------
+% The option pdftex is for use with pdfLaTeX. If eps figures are used, remove the option pdftex and use LaTeX and dvi2pdf.
+
+%=================================================================
+\firstpage{1} 
+\makeatletter 
+\setcounter{page}{\@firstpage} 
+\makeatother
+\pubvolume{xx}
+\issuenum{1}
+\articlenumber{5}
+\pubyear{2019}
+\copyrightyear{2019}
+%\externaleditor{Academic Editor: name}
+\history{Received: date; Accepted: date; Published: date}
+%\updates{yes} % If there is an update available, un-comment this line
+
+%% MDPI internal command: uncomment if new journal that already uses continuous page numbers 
+%\continuouspages{yes}
+
+%------------------------------------------------------------------
+% The following line should be uncommented if the LaTeX file is uploaded to arXiv.org
+%\pdfoutput=1
+
+%=================================================================
+% Add packages and commands here. The following packages are loaded in our class file: fontenc, calc, indentfirst, fancyhdr, graphicx, lastpage, ifthen, lineno, float, amsmath, setspace, enumitem, mathpazo, booktabs, titlesec, etoolbox, amsthm, hyphenat, natbib, hyperref, footmisc, geometry, caption, url, mdframed, tabto, soul, multirow, microtype, tikz
+
+%=================================================================
+%% Please use the following mathematics environments: Theorem, Lemma, Corollary, Proposition, Characterization, Property, Problem, Example, ExamplesandDefinitions, Hypothesis, Remark, Definition
+%% For proofs, please use the proof environment (the amsthm package is loaded by the MDPI class).
+
+%=================================================================
+% Full title of the paper (Capitalized)
+\Title{Moisture effects on leaf litter are species-specific and result in non-additive effects flammability in mixed conifer forest}
+
+% Author Orchid ID: enter ID or remove command
+\newcommand{\orcidauthorA}{0000-0000-000-000X} % Add \orcidA{} behind the author's name
+%\newcommand{\orcidauthorB}{0000-0000-000-000X} % Add \orcidB{} behind the author's name
+
+% Authors, for the paper (add full first names)
+\Author{Rita Quinones de Magalhaes $^{1,\dagger,\ddagger}$\orcidA{} and Dylan W. Schwilk $^{2,\ddagger}$}
+
+% Authors, for metadata in PDF
+\AuthorNames{Rita Magalhaes, Dylan W. Schwilk}
+
+% Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
+\address{%
+$^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
+$^{2}$ \quad Texas Tech UnNiversity; dylan.schwilk@ttu.edu}
+
+% Contact information of the corresponding author
+\corres{Correspondence: dylan.schwilk@ttu.edu, DWS}
+
+% Current address and/or shared authorship
+\firstnote{Current address: Affiliation 3} 
+\secondnote{These authors contributed equally to this work.}
+% The commands \thirdnote{} till \eighthnote{} are available for further notes
+
+%\simplesumm{} % Simple summary
+
+%\conference{} % An extended version of a conference paper
+
+% Abstract (Do not insert blank lines, i.e. \\) 
+\abstract{ Moisture content is a strong determinant of forest fuel
+  flammability. But less is known about the mechanisms by which litter traits
+  influence litter moisture dynamics, particularly the processes of moisture
+  absorption and desorption. Characterizing how species’ leaf litter retain and
+  release moisture through time is critical to the assessment of fuel’s
+  availability to burn. Natural forests are often comprised of mixed stands,
+  leading to mixtures of leaf litter on the surface fuelling the fires. Two
+  studies have already established the existence of non-additive effects in the
+  flammability of dry litter, but we lack a mechanistic understanding of
+  moisture synergies in mixed litter and of moisture effects on the
+  flammability of mixed litter. The litter from eight species of the
+  mixed-conifer forest was saturated and allowed to dry to determine moisture
+  absorption and desorption. Burn trials were performed in moist litter beds of
+  single species and of mixtures, to establish flammability response to the
+  dry-down process. Moisture absorption is determined by traits pertaining to
+  leaf geometry while moisture desorption is influenced by emergent properties
+  of the litterbed. Species that produce more aerated litter beds (such as Q.
+  kelloggii and the pines) have faster rates of litter desiccation. My results
+  show a relationship between time since wetting and time to ignition and
+  spread rate, with significant interaction with genus. This indicates a
+  genus-specific behavior of flammability and time since wetting. I found
+  non-additive effects in litter mixtures for both moisture content and
+  flammability. Mixtures containing Q. kelloggii and P. jeffreyi, species that
+  dry faster, produced more flammable behavior (lower time to ignition, faster
+  spread rate, taller flames). Fire behavior of mixtures depended on moisture
+  content, although mixtures without Q. kelloggii had always higher moisture
+  content than predicted by the average fire behavior of the species in the
+  mixture. At lower moisture contents (<75\%) the mixtures exhibit positive
+  non-additive behavior and at higher moisture contents (> 200\%) they exhibit
+  negative non-additive behavior.}
+
+% A single paragraph of about 200 words maximum. For research articles,
+% abstracts should give a pertinent overview of the work. We strongly encourage
+% authors to use the following style of structured abstracts, but without
+% headings: (1) Background: Place the question addressed in a broad context and
+% highlight the purpose of the study; (2) Methods: Describe briefly the main
+% methods or treatments applied; (3) Results: Summarize the article's main
+% findings; and (4) Conclusion: Indicate the main conclusions or
+% interpretations. The abstract should be an objective representation of the
+% article, it must not contain results which are not presented and
+% substantiated in the main text and should not exaggerate the main
+% conclusions.
+
+
+% Keywords
+\keyword{flammability, litter, flame spread rate}
+
+% The fields PACS, MSC, and JEL may be left empty or commented out if not applicable
+%\PACS{J0101}
+%\MSC{}
+%\JEL{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Diversity
+%\LSID{\url{http://}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Applied Sciences:
+%\featuredapplication{Authors are encouraged to provide a concise description of the specific application or a potential application of the work. This section is not mandatory.}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Data:
+%\dataset{DOI number or link to the deposited data set in cases where the data set is published or set to be published separately. If the data set is submitted and will be published as a supplement to this paper in the journal Data, this field will be filled by the editors of the journal. In this case, please make sure to submit the data set as a supplement when entering your manuscript into our manuscript editorial system.}
+
+%\datasetlicense{license under which the data set is made available (CC0, CC-BY, CC-BY-SA, CC-BY-NC, etc.)}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Only for the journal Toxins
+%\keycontribution{The breakthroughs or highlights of the manuscript. Authors can write one or two sentences to describe the most important part of the paper.}
+
+%\setcounter{secnumdepth}{4}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setcounter{section}{-1} %% Remove this when starting to work on the template.
+\section{How to Use this Template}
+The template details the sections that can be used in a manuscript. Note that the order and names of article sections may differ from the requirements of the journal (e.g., the positioning of the Materials and Methods section). Please check the instructions for authors page of the journal to verify the correct order and names. For any questions, please contact the editorial office of the journal or support@mdpi.com. For LaTeX related questions please contact latex@mdpi.com.
+%The order of the section titles is: Introduction, Materials and Methods, Results, Discussion, Conclusions for these journals: aerospace,algorithms,antibodies,antioxidants,atmosphere,axioms,biomedicines,carbon,crystals,designs,diagnostics,environments,fermentation,fluids,forests,fractalfract,informatics,information,inventions,jfmk,jrfm,lubricants,neonatalscreening,neuroglia,particles,pharmaceutics,polymers,processes,technologies,viruses,vision
+
+\section{Introduction}
+% The introduction should briefly place the study in a broad context and highlight why it is important. It should define the purpose of the work and its significance. The current state of the research field should be reviewed carefully and key publications cited. Please highlight controversial and diverging hypotheses when necessary. Finally, briefly mention the main aim of the work and highlight the principal conclusions. As far as possible, please keep the introduction comprehensible to scientists outside your particular field of research. Citing a journal paper \cite{ref-journal}. And now citing a book reference \cite{ref-book}. Please use the command \citep{ref-journal} for the following MDPI journals, which use author-date citation: Administrative Sciences, Arts, Econometrics, Economies, Genealogy, Humanities, IJFS, JRFM, Languages, Laws, Religions, Risks, Social Sciences.
+
+Fuel moisture content is an important, and often driving, determinant of surface fire behavior. Environmental conditions such as temperature, relative humidity, and wind, drive the moisture content of the fuel available to burn [CITE]. In particular, fine dead fuels respond very readily to environmental changes [CITE]. In mixed-conifer forest of the western USA, where the fire regime is characterized by surface fires fuelled by plant litter, leaf traits can influence landscape scale fire behavior (Schwilk \& Caprio 2011). Litter packing (measured as litterbed density or packing ratio) controls the flammability of dry litter fuels in seasonally dry climates (higher litter density reduces flammability) and leaf litter packing is influenced by leaf size and shape (Fonda 1998, Kane et al. 2008, Schwilk \& Caprio 2011, Kreye et al. 2013). Fine fuel moisture content strongly reduces ignition probability and flame spread rate (Gisborne 1936, Fons 1946, Anderson \& Rothermel 1965, Xanthopoulos \& Wakimoto 1993, Dimitrakopoulos \& Papaioannou 2001, Weise et al. 2005, Pellizzaro et al. 2007). However, the mechanism by which both monospecific and mixed litterbeds absorb and desorb moisture is poorly known, and could be characterized by leaf traits, litter traits, or both.
+
+Fuel moisture influences flammability and fire behavior through effects on ignition, spread rate, flame height, fuel consumption, and heat release, due to the high specific heat content of water (Rothermel 1972). Specifically, high moisture contents decrease the likelihood of ignition thereby reducing fire spread (Rothermel 1983, Nelson 2001). Moisture acts as a heat-sink resulting in less energy available for propagation, and the resulting water vapor will both cool the flaming front and dilute flammable gases (Albini 1976, Shafizadeh et al. 1977). Variation in moisture of living fuels has strong effects on flammability, but moisture of dead excised litter fuels can also vary. Moisture of litter fuels varies with climate, with seasons and with short term weather within a season.  Therefore, the rate of drying and flammability at any particular moisture content are key parameters that influence the fuel flammability throughout the fire season.  If species differ in the rate of drying following a precipitation event, this may strongly influence relatively flammability across species at any particular time post-wetting.  Such differential moisture content across time, may contribute to the often high spatial heterogeneity of surface fires (Pickett et al. 1999, Keeley et al. 2009). Fuel moisture dynamics of leaf litter are probably dependent upon forest structure (shading and rain throughfall effects), litter physical structure, and chemical composition of the fuelbeds (Swift et a. 1979, Hille \& Stephens 2005, Nelson \& Hiers 2008, Matthews 2014).
+
+Fuel moisture content through time is controlled by two main processes, absorptive capacity and rate of moisture loss (Kreye et al. 2013). Absorptive capacity represents the potential maximum fuel moisture and is evaluated by the moisture content of litter when saturated. After saturation, the differences in moisture content indicate different abilities to retain moisture. The ability of litter to absorb and desorb water should be dependent on leaf and/or litter geometry, however, which traits control these processes are largely unknown. I propose two different sets of traits responsible for variation in the two processes mentioned: leaf particle geometry and litter bulk density. Litter characteristics such as surface-area-to-volume ratio, litter bulk density (Gibos 2010), mass density, particle size and shape, and chemical traits (Nelson 2001) influence moisture diffusion through litter. Litter packing has two pathways of effect on fire behavior: directly by its effect on oxygen availability for combustion, and indirectly by its effect on dry-down rate, and both these pathways are affected by leaf litter traits (such as leaf size, litter bulk density). Fuelbeds composed of larger leaves with lower moisture retainability and decomposition rates favor drying, thus increasing the probability of ignition and fire spread rate. 
+Species traits may interact such that the flammability of multi-species mixtures is not the average of the constituent species (van Altena et al. 2012, de Magalhães \& Schwilk 2012, Blauw et al. 2015).  Such non-additive effects have been shown to be synergistic in dry litter fuels where the flammability of a mixture is driven by the most flammable species (de Magalhães \& Schwilk 2012, van Altena et al. 2012). In most forests, leaf litter will be a mixture representative of the species in the stand. It is possible that similar non-additive effects may influence litter moisture content, especially if different leaf traits influence adsorptive capacity and drying rate. Recent work by Blauw et al. (2015) suggests that moisture content can contribute to non-additive effects on heathland flammability, but the mechanism of this effect is not known. I investigated non-additive effects on both moisture content and the flammability of litter mixtures varying in time since wetting and in moisture content. I expect that litter mixtures will differ in their bulk density and thus, will dry at different rates.
+
+I investigated species trait effects on litter moisture dynamics and consequent litter flammability across eight tree species in a temperate fire-prone forest in California. I investigated the relationship between traits such as leaf thinness and litter bulk density with the processes of moisture absorption and desorption. I determined the rate of moisture loss, the moisture of extinction (the threshold representing the moisture value above which fire will not ignite or spread) and the influence of moisture on the flammability of eight species from a mixed-conifer forest in California. I performed burn trials on leaf litter at various moisture levels and determined how time since wetting influenced time to ignition and flame spread rate. The burn trials were also performed with mixtures to evaluate if species contribute equally to litter moisture dynamics or if there are non-additive effects. I studied whether the non-additive effects on flammability reported in previous studies (de Magalhães \& Schwilk 2012, van Altena et al. 2012) occur under ecologically-relevant moisture levels and whether fuel moisture effects strengthen or mask such non-additivity.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Materials and Methods}
+
+\subsection{Site description and species selection}
+
+Field sites for this study were located in Sequoia and Kings Canyon National Parks, California, USA (36 36N, 118 42 W) between 1600 and 2400 m elevation in mixed-conifer forest. I chose eight tree species that are representative of this type of forest: \emph{Pinus jeffreyi} Grev. \& Balf., \emph{Pinus lambertiana} Dougl., \emph{Pinus ponderosa} Dougl. ex Laws., \emph{Abies concolor} (Gord. \& Glend.) Lindl. ex Hildebr., \emph{Abies magnifica} A. Murr., \emph{Calocedrus decurrens} (Torr.) Florin, \emph{Quercus kelloggii} Newb., and \emph{Sequoiadendron giganteum} (Lindl.) J. Buchholz. In this study, I consider litter the top layer of leaves and small twigs less than 0.625 cm diameter (= 1-hour fuel, Fosberg 1970) that have fallen in the previous year (mostly undecomposed). I collected the leaf litter in the summer (mid-June to mid-July) in 2011 and in 2012 from 21 separate sites across the study area. Effort was made to collect from different populations (minimum of four, each population separated from the others by 9 to 32 km) for each species to control for plastic and ecotypic effects. An exception to this involved the litter from A. magnifica which is restricted to the higher elevations and could only be collected from one area, due to logistical constraints. Within that area, \emph{A. magnifica} litter was collected from over 10 different individuals. For the remaining species, the collection involved 2-4 individual trees at each site, separated by at least 10 m. The litter was collect about 2 m away from the trunk to obtain a more uniform sample, because bark and heavier branches tend to fall closer to the tree trunk.
+
+\subsection{Moisture absorption and desorption}
+
+
+I produced dry-down curves to determine maximum water retainability (moisture absorption) and the rate of moisture content loss (moisture desorption) for each species and for four distinct mixtures. These curves allowed me to determine the rate at which a species loses moisture (approximated as exponential decay), and determine maximum water content following saturation and gravity draining.  Samples from the eight species (six replicates per species) and four mixtures (5 replicates) were placed in baskets constructed of aluminium screen. I used 450 g of litter (dry weight) per trial, and controlled for depth, by changing the size of the basket. Weight was measured by using a balance sensitive to 0.1 g (model XS16001L, Mettler Toledo, Columbus, OH). Samples were immersed in clear plastic storage bins filled with water (Figure 2.1) for 24 hours to fully saturate them. After saturation, the baskets were removed from the water, allowed to drain for 3 minutes, and samples weighed to measure maximum moisture content. The samples were then allowed to dry in a partially controlled environment kept at 21 C temperature and 30\% relative humidity, assessed via an iButton sensor (Maxim Integrated) placed over the samples.  During the dry-down process three subsamples were taken at 24 hour intervals and weighed. These subsamples were then oven dried for 24 hours at 100 C and re-weighed to assess moisture content. This was repeated until the final sample from a basket was less than10\% moisture.
+
+
+ The dry-down curves indicated that the eight species varied in their moisture behavior (Figure 2). To determine a subset of species to use in the mixture trials, I performed analysis of contrast using lsmeans (package: lsmeans; Lenth 2016) to determine similarity between the species, which fell into four groups. I then selected one species from each group to include in the mixtures resulting in four distinct 3-species mixtures. 
+
+Leaf trait data
+We investigated the influence of leaf thinness and litter bulk density on the moisture dynamics of the species in this study. Leaf thinness data (leaf length over thickness) was obtained for subsamples of the litter collected for this project.  Bulk density of the litter was obtained for each basket during the dry-down experiment by dividing the dry mass (450 g) by the estimated litter volume (basket width x length x litter depth).
+
+\subsection{Flammability assessment}
+
+I performed flammability tests across multiple moisture levels on monospecific litter beds and on mixed litter beds replicated 5 times. I measured flammability using a 150 cm long burn table, 15 cm wide and 15 cm tall, in which leaf litter was placed and the table gently shaken to allow settling. In my experience, this design allows fire behaviour to reach constant flame spread rates (de Magalhães and Schwilk 2012).  Two tall metal rulers equally spaced along the apparatus allow visual determination of maximum flame height and nine type K thermocouples attached to data loggers measured temperature every second at three distances from the ignition point and at three different depths below the litter surface. Litter was ignited with a single ignition source (propane torch; maximum adiabatic flame temperature of 1899 C, http://www.benzomatic.com/products/fuel.aspx) at one end of the apparatus and allowed to burn until extinction. If a species at a specific moisture level failed to ignite after three attempts, no further attempts were made.  A timer was used to record time to ignition and duration of flaming combustion. The flammability trials followed the methodology detailed on de Magalhães and Schwilk (2012). 
+
+During flammability trials, I measured time to ignition (s), duration of flaming combustion (s), spread rate (mm/s), calculated by dividing the length of the burned surface by the time it takes the flaming front to reach the end of the apparatus, maximal flame height (mm), and mass loss (\%), calculated as the difference between fuel mass before and after flame extinction (Anderson 1970, Cornelissen et al. 2003, Ormeño et al. 2009). I also measured duration above 100 C, or the length of time temperature exceeded 100 C, and temperature integration, which integrates duration of combustion and temperature above 100 C and serves as a proxy for heat release (de Magalhães and Schwilk 2012, Cornwell et al. 2015). By performing the flammability tests at several moisture levels I were able to determine moisture of extinction (a threshold representing the moisture value above which litter will not ignite or spread) for all species in this study, using a logistic regression.
+
+Burn trials occurred in a cement structure used to simulate house fires at the Fire Department of the City of Lubbock.  Though not completely air tight, this structure minimizes wind and helps regulate temperature and relative humidity. Temperature and relative humidity were measured before every trial using a Kestrel 3000 (Nielsen-Kellerman, Boothwyn, PA). To minimize temperature and relative humidity variation, I conducted trials between 10 am and 3 pm. 
+
+\subsection{Statistical analyses}
+
+
+Dry-down curves (Figure 2.2) were created based on all data points collected, fitted with an exponential curve to each species:
+
+%m = mmax e-λt								Eq. 1
+
+
+Were m is moisture content at time t, and $\lambda$ is the exponential decay constant. I used a liner mixed-effects model taking the natural logarithm of moisture content, with time since wetting and species as fixed effects and nested within replicate. I extracted the coefficients of the fitted model to describe maximum water retainability (mmax; g of water per g of dry mass) and desiccation index ($\lambda$) for each species. I used post-hoc Tukey tests (package: lsmeans; Lenth 2016) to discriminate species’ behavior in terms of maximum water retainability and desiccation index. I analysed the influence of leaf size and litter bulk density on moisture dynamics (maximum water retainability and desiccation index) using linear nested models and used anova to determine which traits influenced the two processes. The effect of time since wetting on flammability was modelled using linear regression with the interaction between time since wetting and genus specified and with average vapor pressure deficit in the burning room during that trial as predictor. Differences across species were tested with post-hoc Tukey tests. A binomial logistic regression was fitted to the probability of ignition to obtain moisture of extinction.
+I investigated non-additive effects on moisture and on flammability by testing if moisture content and flammability of mixtures were predicted by the average of the constituent species. I created the predicted values using the models that determine the relationship between moisture content/flammability and time since wetting for individual species, and then averaging the results obtained for the species in a mixture. This procedure was done for both moisture content and flammability parameter values of the constituent species. The expectation from the null model is that the difference between observed and predicted values of flammability will be zero. The null model is created by averaging the moisture content and the flammability of the individual species comprising the mixture for each time since wetting measured. I tested whether there were significant departures from the null (zero) with a mixed effects linear model (package: lme4; Bates et al. 2015). All analyses were conducted in R v.3.3.1 (R Core Team 2016).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+\subsection{Leaf traits influence on moisture dynamics }
+
+There are marked differences in the extent of moisture species retain, seen as the maximum moisture content at time 0 (y-axis intercept, Fig. 2.2). Q. kelloggii, the only broadleaf, is the species that retains more moisture. Tukey tests on the linear mixed-effects model discriminated the species into three different maximum water retention groups: 1) Q. kelloggii; 2) P. lambertiana and C. decurrens; and 3) A. magnifica, S. giganteum, A. concolor and P. jeffreyi. P. ponderosa could not be discriminated between the last two groups. There are also marked differences in the desiccation rate of the eight species and the Tukey tests discriminated species into three groups: 1) Pinus; 2) the Cupressaceae; and 3) Q. kelloggii in between. C. decurrens is among the species with the lowest moisture retainability and is the species with the slower desiccation. Species with lower litter bulk density, such as Q. kelloggii and the pines, have higher desiccation rates than all other species.
+
+The regression between maximum water retention and leaf litter traits showed that maximum water retention was significantly affected by a measure of leaf size (particle length/thickness; p=0.0369) but not by a characteristic of the litter bed (bulk density), indicating that the ability to absorb water is particle-dependent and a feature of a leaf’s morphology and/or chemistry (Table 2.1). Desiccation rate was significantly affected by litter bulk density but not leaf thinness (p=0.8794), indicating that desiccation rate is controlled by the emergent properties of the fuelbed. This is explained by the fact that more aerated fuel beds will facilitate evaporation, due to increased diffusion of water molecules from the leaf surface.
+
+\subsection{Time since wetting and its effect on flammability}
+
+Time since wetting was modelled against time to ignition and spread rate using genus as a fixed effect, because in a previous study (de Magalhães and Schwilk 2012) I observed that species flammability grouped around genus. Both models showed significant effects
+
+of time since wetting and genus on time to ignition and spread rate (F10, 171=24.51, p < 2.2e-16 and F10, 171=55. 85, p<2.2e-16 respectively; Figures 2.3 and 2.4). There were also significant interactions of time since wetting and genus on the response variables (time to ignition and spread rate; both p < 2.2e-16). For time since ignition, the negative relationship is driven by Sequoiadendron and Calocedrus, as evidenced by the steeper slopes of the curves. However, if I removed Sequoiadendron and Calocedrus from the models, the interaction of time since wetting and genus disappears for time to ignition (p=0.1643) but is still significant for spread rate (p = 2.05e-6). After drying for 72 hours, Q. kelloggi is always more flammable and more responsive to changes in moisture content, while C. decurrens and S. giganteum are not (Figures 2.3 and 2.4).
+
+
+
+We used binomial logistic regression to model the relationship between moisture content and the probability of ignition to determine moisture of extinction for the eight species. Q. kelloggii ignited at all moisture levels tested (10--65\%) while C. decurrens and A. concolor failed to do so across most moisture levels. I assumed the inflection point on the curve at 50\% to allow for the determination of moisture of extinction for the remaining species (15\% for A. concolor and S. giganteum, 20\% for A. magnifica, 35\% for P. lambertiana, and 60\% for P. ponderosa and P. jeffreyi).
+
+
+\subsection{Effects of moisture and flammability in litter mixtures}
+
+Moisture effects on litter mixtures
+
+The mixture that does not contain Q. kelloggii (AbCaPi; Fig. 2.5) absorbs less moisture. This result is to be expected considering the result obtained from the single species trials, and reveals that Q. kelloggii, as the species that absorbs more moisture, drives the water retainability behavior of the mixtures it appears in. In terms of maximum water retainability, the mixtures discriminate into three groups: 1) mixture without Q. kelloggii (AbCaPi), 2) mixtures with both A. concolor and Q. kelloggii (AbCaQu and AbPiQu), and 3) mixture without A. concolor (CaPiQu). There is no discrimination between the mixtures in terms of slopes. Though the mixtures with both C. decurrens and P. jeffreyi (AbCaPi and CaPiQu) are significantly different from one another, the remaining two mixtures (AbCaQu and AbPiQu) cannot be distinguished from one another nor from AbCaPi and CaPiQu. The moisture content of a mixture at any given time was also dependent upon the bulk density of the mixture (anova analysis resulted in a better model if bulk density was included as a fixed effect, p=0.01135).
+
+
+Time since wetting effect on mixture flammability
+
+In general, the flammability of mixtures was higher as time since wetting went up as expected (Table 2.2). The absence of Q. kelloggii in a mixture, in general, lead to slower flame spread rates, longer flaming combustion, and longer ignition times. The combination of both Q. kelloggii and P. jeffreyi in a mixture generated taller flames and shorter flaming combustion.
+
+Non-additivity in moisture content
+
+We examined the relationship between observed moisture content of a mixture, and the moisture content predicted based on the constituent species to determine the existence of non-additive effects in moisture content (Fig. 2.6). The mixture that does not contain Q. kelloggii (AbCaPi) consistently retains more moisture that what would be predicted by the average of its constituent species. In general, mixtures start the drying process drier than expected and after 48 hours are wetter than expected, indicating lower moisture absorption and slower desiccation rates. The non-additive behavior is dependent on the moisture content of the mixture. When moisture content is above 200\%, I observe negative non-additivity for all mixtures containing Q. kelloggii. There is additive behavior when moisture content is between 75 and 150\%, and positive non-additivity below 75\% moisture content.
+
+Non-additivity in flammability
+
+We determined the presence of non-additivity in the flammability of litter mixtures by comparing the flammability of the mixtures to a null model created by the arithmetic average of the predicted individual flammability of each species in the mixture (Figs. 2.7 and 2.8). Both spread rate and time to ignition exhibited non-additivity, mediated by time since wetting. Observed spread rate values for the mixtures were higher than predicted by the null model, though the non-additivity was stronger for mixtures that contained Q. kelloggii. This result is likely driven by the bulk density of the mixtures, which was lower than predicted, making the mixtures’ litter beds more aerated. Non-additivity in time to ignition is strongly influenced by the presence of C. decurrens in the mixture. This species failed to ignite several times in the individual trials and was assigned the maximum number of seconds for the ignition attempt, 180.
+
+
+
+This section may be divided by subheadings. It should provide a concise and precise description of the experimental results, their interpretation as well as the experimental conclusions that can be drawn.
+\begin{quote}
+This section may be divided by subheadings. It should provide a concise and precise description of the experimental results, their interpretation as well as the experimental conclusions that can be drawn.
+\end{quote}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Subsection}
+\unskip
+\subsubsection{Subsubsection}
+
+Bulleted lists look like this:
+\begin{itemize}[leftmargin=*,labelsep=5.8mm]
+\item	First bullet
+\item	Second bullet
+\item	Third bullet
+\end{itemize}
+
+Numbered lists can be added as follows:
+\begin{enumerate}[leftmargin=*,labelsep=4.9mm]
+\item	First item 
+\item	Second item
+\item	Third item
+\end{enumerate}
+
+The text continues here.
+
+\subsection{Figures, Tables and Schemes}
+
+All figures and tables should be cited in the main text as Figure 1, Table 1, etc.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=2 cm]{Definitions/logo-mdpi}
+\caption{This is a figure, Schemes follow the same formatting. If there are multiple panels, they should be listed as: (\textbf{a}) Description of what is contained in the first panel. (\textbf{b}) Description of what is contained in the second panel. Figures should be placed in the main text near to the first time they are cited. A caption on a single line should be centered.}
+\end{figure}   
+ 
+Text
+
+Text
+
+\begin{table}[H]
+\caption{This is a table caption. Tables should be placed in the main text near to the first time they are cited.}
+\centering
+%% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
+\begin{tabular}{ccc}
+\toprule
+\textbf{Title 1}	& \textbf{Title 2}	& \textbf{Title 3}\\
+\midrule
+entry 1		& data			& data\\
+entry 2		& data			& data\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Text
+
+Text
+
+%\begin{listing}[H]
+%\caption{Title of the listing}
+%\rule{\textwidth}{1pt}
+%\raggedright Text of the listing. In font size footnotesize, small, or normalsize. Preferred format: left aligned and single spaced. Preferred border format: top border line and bottom border line.
+%\rule{\textwidth}{1pt}
+%\end{listing}
+
+
+\subsection{Formatting of Mathematical Components}
+
+This is an example of an equation:
+
+\begin{equation}
+a + b = c
+\end{equation}
+%% If the documentclass option "submit" is chosen, please insert a blank line before and after any math environment (equation and eqnarray environments). This ensures correct linenumbering. The blank line should be removed when the documentclass option is changed to "accept" because the text following an equation should not be a new paragraph. 
+
+Please punctuate equations as regular text. Theorem-type environments (including propositions, lemmas, corollaries etc.) can be formatted as follows:
+%% Example of a theorem:
+\begin{Theorem}
+Example text of a theorem.
+\end{Theorem}
+
+The text continues here. Proofs must be formatted as follows:
+
+%% Example of a proof:
+\begin{proof}[Proof of Theorem 1]
+Text of the proof. Note that the phrase `of Theorem 1' is optional if it is clear which theorem is being referred to.
+\end{proof}
+The text continues here.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+
+Leaf traits influence on moisture dynamics 
+The species in this study displayed different patterns of both moisture absorption and desorption (with Q. kelloggii and the pines exhibiting higher values for both), which were controlled by different litter traits (leaf thinness and litter bulk density, respectively). Q. kelloggii was the species that absorbed the most moisture, followed by the pines. The species that have a greater absorptive capacity are also the species that are usually more flammable when dry. This indicates that following a rain event, the most flammable species in my study would not be available as fuel immediately, but cannot be discounted as potential fuel. A species capacity to absorb moisture is controlled by leaf particle geometry, specifically the ratio between leaf length and leaf thickness, and not litter bed arrangement. The eight species differed in their desorption capacity. Q. kelloggii and the pines had higher desiccation rates, while C. decurrens exhibited lower desiccation rates. The ANOVA results indicate that leaf thinness best explains variation in maximum water retention, while litter bulk density best explains variation in desiccation rates. This result parallels bulk density results for these and other species (van Wagtendonk, Benedict and Sydoriak 1998; Stephens, Finney and Schantz 2004) de Magalhães and Schwilk 2012). So, the overall dry-down process of litter is being controlled by both traits intrinsic to the leaf particles (leaf geometry) and traits intrinsic to the litter bed (bulk density). Decomposition can also affect moisture content in litter. Van Wagner (1969), investigating fuel weathering, found that pine needles had a variation in moisture content 3 to 6 times greater when they lacked their protective wax coating when compared to intact needles.  
+Time since wetting and flammability
+I was interested in investigating how flammability, particularly time to ignition and spread rate, changed with time since wetting, as this is a more meaningful interpretation of moisture influences on flammability. After a rain event the litters of different species will exhibit different moisture contents. My results show that both time to ignition and spread rate were significantly affected by time since wetting, and the interaction of time since wetting and genus was also significant. This indicates that there is a species-specific response to flammability based on time since wetting, and the differences are due to different moisture contents at each time interval. Therefore, mere moisture content will not inform on the fire behavior measures of a litter bed. Species composition of the litter must be considered, and time since the last rain event should allow the determination of the potential flammability of an area. 
+Time since wetting, as expected, lowered the flammability of the eight species in this study and its effect overwhelms the effect of volatile content. Q. kelloggii and the pines are more flammable at higher moisture contents when compared to volatile-rich species such as C. decurrens, Abies spp. or S. giganteum (Chapter 4 of this dissertation). This effect is influenced by litter bulk density and is likely to persist in fuel mixtures where the constituent species have different desiccation indices and therefore will have different moisture contents. I have determined moisture of extinction for the eight species in this
+
+tudy. As expected, species that have higher flammability values (Pinus spp.) had higher moisture of extinction than species with lower flammability (Abies spp. and S. giganteum). I used a higher cut-off moisture for the burn trials than the moisture of extinction found in the literature (65\% vs. 27-30\%; Rothermel 1972, Dickinson et al. 2016) in order to be conservative, as moisture content studies as sparse. However, Q. kelloggii was still flammable at ~80-90\% moisture content (values at 72 hours used for the species mixtures), which I did not anticipate. Due to its high moisture content, Q. kelloggii was not burnt at 24 and 48 hours since wetting, which explains the gap shown in the Figures. Though I cannot comment on the exact behavior of Q. kelloggii at 24 and 48 hours, it is unlikely to be more flammable than the pines. This result indicates that though Q. kelloggii might be too wet to start a fire right after a rain event, Q. kelloggii litter dries faster than the other species in this study and will become very flammable within two days. 
+Effects of moisture and flammability in litter mixtures
+
+I tested the dry-down process and flammability of four unique three-species litter mixtures. These mixtures contained species representative of all dry-down behavior types observed in single species trials, as assessed by the Tukey test. As expected from the single species results, mixtures that contained Q. kelloggii absorbed more water during the saturation period, but there was no difference in desiccation rate among the mixtures. However, when investigating the non-additivity in moisture content, the mixture that did not contain Q. kelloggii retained more moisture than would be predicted by the null model (arithmetic average of the three constituent species in the mixture). In general, non-additivity varied with moisture content, with positive non-additive behavior at lower moisture contents (<75\%, 72-96 hours since wetting occurred) and negative non-additive behavior at very high moisture contents (>200\%, 0 hours since wetting occurred). This result indicates that immediately after a rain event, the moisture content of a mixture will be lower than expected, however these high values for moisture content are unlikely to be found in natural litters. As the mixture dries, the dry-down behavior will approximate the null model, and three to four days after the rain event the dry-down behavior will become non-additive again. The positive non-additivity seems influenced by litter bed characteristics, since the strongest non-additivity was observed for the mixture with two species that have less dense litter: Q. kelloggii and P. jeffreyi (CaPiQu).
+
+The flammability results for the mixtures followed closely the results obtained for the individual species. Mixtures containing Q. kelloggii and P. jeffreyi had faster spread rates and lower times to ignition, resulting in higher overall flammability. These results are influenced by the lower bulk densities of litter mixtures containing those two species. There was a non-additive effect of moisture on flammability for the four mixtures in this study, reinforcing results shown for dry litter (de Magalhães and Schwilk 2012, van Altena et al. 2012). Spread rate and time to ignition had significant non-additivity, and were strongly influenced by the species present in the mixture. Presence of C. decurrens in a mixture marked a big difference between the null model and the prediction. This was due to several failed ignitions for this species when burned individually, which conditioned the predicted values, while all the mixtures ignited. There were marked differences in the non-additivity results from this study and the results from a previous study investigating dry litter samples. The presence of non-additive effects in moisture content leads to non-additive effects in the flammability of moist litter beds. When accounting for this effect, the non-additivity on the flammability of moist litter beds is subtler, when compared to species effects. This result, together with previously published work, suggests that litter flammability is prone to non-additive effects, reinforcing the idea that we cannot approach flammability by lumping species into fuel categories, as is common in fire behavior models. Community flammability is dependent on and particular to its constituent species and cannot be addressed by simply averaging the flammability of all species it comprises. This dynamic view is likely to be increasingly relevant considering ongoing climate change, which predicts changes in community assembly.
+
+I have found non-additive effects (both positive and negative) in moisture content and in the flammability of wet litter mixtures of mixed-conifer forest. These results complement the efforts of Blauw et al. (2015) for moist litter and add to the literature investigating non-additivity in litter flammability (de Magalhães and Schwilk 2012, van Altena et al. 2012). However, these studies are limited in the scope of the species studied and suggest that non-additivity needs to be investigated at a larger scale, within different systems and comparatively across a larger number of species. Moisture content is considered the single most important driver of litter flammability and the results from my study indicate how leaf and litter traits affect moisture dynamics, and how moisture effects on litter flammability are species-specific. A trait-based perspective provides a better mechanistic understanding of moisture dynamics of litter fuel flammability and fire behavior and is especially important for predicting and understanding fire in plant communities that are changing.
+
+
+% Authors should discuss the results and how they can be interpreted in perspective of previous studies and of the working hypotheses. The findings and their implications should be discussed in the broadest context possible. Future research directions may also be highlighted.
+
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Conclusions}
+
+% This section is not mandatory, but can be added to the manuscript if the discussion is unusually long or complex.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \section{Patents}
+% This section is not mandatory, but may be added if there are patents resulting from the work reported in this manuscript.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\vspace{6pt} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% optional
+%\supplementary{The following are available online at \linksupplementary{s1}, Figure S1: title, Table S1: title, Video S1: title.}
+
+% Only for the journal Methods and Protocols:
+% If you wish to submit a video article, please do so with any other supplementary material.
+% \supplementary{The following are available at \linksupplementary{s1}, Figure S1: title, Table S1: title, Video S1: title. A supporting video article is available at doi: link.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\authorcontributions{For research articles with several authors, a short paragraph specifying their individual contributions must be provided. The following statements should be used ``conceptualization, X.X. and Y.Y.; methodology, X.X.; software, X.X.; validation, X.X., Y.Y. and Z.Z.; formal analysis, X.X.; investigation, X.X.; resources, X.X.; data curation, X.X.; writing--original draft preparation, X.X.; writing--review and editing, X.X.; visualization, X.X.; supervision, X.X.; project administration, X.X.; funding acquisition, Y.Y.'', please turn to the  \href{http://img.mdpi.org/data/contributor-role-instruction.pdf}{CRediT taxonomy} for the term explanation. Authorship must be limited to those who have contributed substantially to the work reported.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\funding{Please add: ``This research received no external funding'' or ``This research was funded by NAME OF FUNDER grant number XXX.'' and  and ``The APC was funded by XXX''. Check carefully that the details given are accurate and use the standard spelling of funding agency names at \url{https://search.crossref.org/funding}, any errors may affect your future funding.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\acknowledgments{In this section you can acknowledge any support given which is not covered by the author contribution or funding sections. This may include administrative and technical support, or donations in kind (e.g., materials used for experiments).}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\conflictsofinterest{Declare conflicts of interest or state ``The authors declare no conflict of interest.'' Authors must identify and declare any personal circumstances or interest that may be perceived as inappropriately influencing the representation or interpretation of reported research results. Any role of the funders in the design of the study; in the collection, analyses or interpretation of data; in the writing of the manuscript, or in the decision to publish the results must be declared in this section. If there is no role, please state ``The funders had no role in the design of the study; in the collection, analyses, or interpretation of data; in the writing of the manuscript, or in the decision to publish the results''.} 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% optional
+\abbreviations{The following abbreviations are used in this manuscript:\\
+
+\noindent 
+\begin{tabular}{@{}ll}
+MDPI & Multidisciplinary Digital Publishing Institute\\
+DOAJ & Directory of open access journals\\
+TLA & Three letter acronym\\
+LD & linear dichroism
+\end{tabular}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% optional
+\appendixtitles{no} %Leave argument "no" if all appendix headings stay EMPTY (then no dot is printed after "Appendix A"). If the appendix sections contain a heading then change the argument to "yes".
+\appendix
+\section{}
+\unskip
+\subsection{}
+The appendix is an optional section that can contain details and data supplemental to the main text. For example, explanations of experimental details that would disrupt the flow of the main text, but nonetheless remain crucial to understanding and reproducing the research shown; figures of replicates for experiments of which representative data is shown in the main text can be added here if brief, or as Supplementary data. Mathematical proofs of results not central to the paper can be added as an appendix.
+
+\section{}
+All appendix sections must be cited in the main text. In the appendixes, Figures, Tables, etc. should be labeled starting with `A', e.g., Figure A1, Figure A2, etc. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Citations and References in Supplementary files are permitted provided that they also appear in the reference list here. 
+
+%=====================================
+% References, variant A: internal bibliography
+%=====================================
+\reftitle{References}
+\begin{thebibliography}{999}
+% Reference 1
+\bibitem[Author1(year)]{ref-journal}
+Author1, T. The title of the cited article. {\em Journal Abbreviation} {\bf 2008}, {\em 10}, 142--149.
+% Reference 2
+\bibitem[Author2(year)]{ref-book}
+Author2, L. The title of the cited contribution. In {\em The Book Title}; Editor1, F., Editor2, A., Eds.; Publishing House: City, Country, 2007; pp. 32--58.
+\end{thebibliography}
+
+% The following MDPI journals use author-date citation: Arts, Econometrics, Economies, Genealogy, Humanities, IJFS, JRFM, Laws, Religions, Risks, Social Sciences. For those journals, please follow the formatting guidelines on http://www.mdpi.com/authors/references
+% To cite two works by the same author: \citeauthor{ref-journal-1a} (\citeyear{ref-journal-1a}, \citeyear{ref-journal-1b}). This produces: Whittaker (1967, 1975)
+% To cite two works by the same author with specific pages: \citeauthor{ref-journal-3a} (\citeyear{ref-journal-3a}, p. 328; \citeyear{ref-journal-3b}, p.475). This produces: Wong (1999, p. 328; 2000, p. 475)
+
+%=====================================
+% References, variant B: external bibliography
+%=====================================
+%\externalbibliography{yes}
+%\bibliography{your_external_BibTeX_file}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% optional
+\sampleavailability{Samples of the compounds ...... are available from the authors.}
+
+%% for journal Sci
+%\reviewreports{\\
+%Reviewer 1 comments and authors’ response\\
+%Reviewer 2 comments and authors’ response\\
+%Reviewer 3 comments and authors’ response
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+
