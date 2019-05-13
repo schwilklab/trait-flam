@@ -2,7 +2,7 @@
 .Rhistory
 .history
 *.bbl
-*.nlg
+*.blg
 *.rip
 
 # Example code in package build process
