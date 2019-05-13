@@ -31,21 +31,21 @@ ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
 
 ggsave(file.path(RESULTS, "fig1_drydown-curves.pdf"), width=col1, height=col1, units="cm")
 
-ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
-  geom_point(size=1.2, alpha=0.7, stroke=0) +
-  geom_smooth(method="lm", se=FALSE, size =0.6) +
-  scale_colour_manual(values=schwilkcolors) +
-  xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
-  scale_x_continuous(breaks=xbreaks) +
-  scale_y_log10() +
-  pubtheme.nogridlines +
-  theme(legend.position=c(0.75, 0.86),
-        legend.title=element_blank(),
-        legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
+## ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
+##   geom_point(size=1.2, alpha=0.7, stroke=0) +
+##   geom_smooth(method="lm", se=FALSE, size =0.6) +
+##   scale_colour_manual(values=schwilkcolors) +
+##   xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
+##   scale_x_continuous(breaks=xbreaks) +
+##   scale_y_log10() +
+##   pubtheme.nogridlines +
+##   theme(legend.position=c(0.75, 0.86),
+##         legend.title=element_blank(),
+##         legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 
-ggsave(file.path(RESULTS, "fig1_drydown-curves_logged.pdf"), width=col1, height=col1, units="cm")
+## ggsave(file.path(RESULTS, "fig1_drydown-curves_logged.pdf"), width=col1, height=col1, units="cm")
 
-# stats for fig 1
+## # stats for fig 1
 tab1 <- nice(dry.mixed)
 names(tab1)[4] <- "p value"
 #tab1 <- tab1[ ,2:4]
@@ -54,7 +54,7 @@ tab1 <- xtable(tab1)
 print(tab1, file=file.path(RESULTS, "drydown-tab.ltx"),  booktabs=TRUE, floating=FALSE,
       include.rownames=FALSE)
 
-
+# SI table
 tabS1 <- summary(dry.mod)$coefficient
 print(xtable(tabS1), file=file.path(RESULTS, "drydown-coef-tab.ltx"),  booktabs=TRUE, floating=FALSE)
 
@@ -66,7 +66,7 @@ print(xtable(tabS2), file=file.path(RESULTS, "drydown-emmeans.ltx"),  booktabs=T
 ## Figure S1
 dry.mod <- lmer(log(MC_dry) ~ hour*display.name + (1 | tray), data=mc)
 dry.emm <- emmeans(dry.mod, "display.name")
-figS1 <- plot(dry.emm, comparisons=TRUE) +
+figS1 <- plot(dry.emm) + #, comparisons=TRUE) +
   xlab("Estimated marginal mean (log water content)") +
   ylab("Species") +
   pubtheme.nogridlines +
@@ -75,7 +75,7 @@ figS1
 ggsave(file.path(RESULTS, "figS1_max_water_emmeans.pdf"), width=col2, height=col1, units="cm")
 
 dry.trends <- emtrends(dry.mod, "display.name", var="hour")
-figS2 <- plot(dry.trends, comparisons=TRUE) +
+figS2 <- plot(dry.trends) + #, comparisons=TRUE) +
   xlab(expression(paste("Estimated marginal mean dessication rate (", hr^-1, ")"))) +
   ylab("Species") +
   pubtheme.nogridlines +
@@ -84,74 +84,87 @@ figS2
 ggsave(file.path(RESULTS, "figS2_dessication_emmeans.pdf"), width=col2, height=col1, units="cm")
 
 
+
 ### Traits and drydown:
 
-newmctr <- left_join(newmctr, species)
+# 2011 trait data:
+oldtraits <- read.csv("../data/moisture/traits.csv", stringsAsFactors=FALSE)
 
-## ## lt and max retention
-## ggplot(newmctr, aes(lt_mean, logmaxMC)) +
-##   geom_point(size=1.2, alpha=0.7, stroke=0) +
-##   geom_errorbar(aes(ymin=logmaxMC+logmaxMC.se, ymax=logmaxMC-logmaxMC.se))+
-##   geom_errorbarh(aes(xmin=lt_mean+(lt_sd/sqrt(6)), xmax=lt_mean-(lt_sd/sqrt(6))))+
-##   scale_colour_manual(values=schwilkcolors) +
-##   xlab("Leaf length/thickness ratio") + ylab("Moisture by dry weight ln(%)") +
-##  # scale_y_continuous(trans="log10") +
-##   pubtheme.nogridlines +
-##   theme(legend.position=c(0.75, 0.86),
-##         legend.title=element_blank(),
-##         legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
-##  #       legend.key.height=unit(smsize,"pt"))
-
+#mtrait <- left_join(newmctr, species)
+mtrait <- left_join(mc.sum, flam.sp.avg)
+mtrait <- left_join(mtrait, oldtraits)
 
 ## bulk density and max retention
-ggplot(newmctr, aes(bd.mean, logmaxMC)) +
-  geom_point(size=1.2, alpha=0.7, stroke=0) +
-  geom_errorbar(aes(ymin=logmaxMC+logmaxMC.se, ymax=logmaxMC-logmaxMC.se))+
-  geom_errorbarh(aes(xmin=bd.mean+(bd.sd/sqrt(6)), xmax=bd.mean-(bd.sd/sqrt(6))))+
-  geom_label_repel(aes(label=display.name),
-                  nudge_x=0.02,
-                  nudge_y=0.5,
-                   fontface="italic") +
-  scale_colour_manual(values=schwilkcolors) +
-  xlab("Bulk density") + ylab("Maximum moisture retention by dry weight ln(%)") +
-  pubtheme.nogridlines
-
-## ## bulk density and max retention
-## ggplot(newmctr, aes(bd.mean, maxMC)) +
+## ggplot(mtrait, aes(bulk.mean, maxMC)) +
 ##   geom_point(size=1.2, alpha=0.7, stroke=0) +
 ##   geom_errorbar(aes(ymin=maxMC+maxMC.se, ymax=maxMC-maxMC.se))+
-##   geom_errorbarh(aes(xmin=bd.mean+(bd.sd/sqrt(6)), xmax=bd.mean-(bd.sd/sqrt(6))))+
+##   geom_errorbarh(aes(xmin=bulk.mean+(bulk.sd/sqrt(6)), xmax=bulk.mean-(bulk.sd/sqrt(6))))+
 ##   geom_label_repel(aes(label=display.name),
 ##                   nudge_x=0.02,
-##                   nudge_y=0.05,
-##                   fontface="italic") +
-##   scale_y_log10() + 
+##                   nudge_y=0.5,
+##                    fontface="italic") +
 ##   scale_colour_manual(values=schwilkcolors) +
-##   xlab("Bulk density") + ylab("Maximum moisture retention by dry weight ln(%)") +
+##   scale_y_log10() +
+##   xlab(expression(paste("Bulk density (", g/cm^3, ")")) ) +
+##   ylab("Maximum moisture retention by dry weight ln(%)") +
 ##   pubtheme.nogridlines
 
 
+## leaf area and max retention
+ggplot(mtrait, aes(SLA, maxMC)) +
+  geom_point(size=3) +
+#  geom_errorbar(aes(ymin=maxMC+maxMC.se, ymax=maxMC-maxMC.se))+
+#  geom_errorbarh(aes(xmin=leaf.area.mean+(leaf.area.sd/sqrt(6)), xmax=leaf.area.mean-(leaf.area.sd/sqrt(6))))+
+  geom_label_repel(aes(label=display.name),
+                  nudge_x=0.02,
+                  nudge_y=-0.05,
+                  fontface="italic") +
+#  scale_y_log10() + 
+#  scale_colour_manual(values=schwilkcolors) +
+  xlab(expression(paste("Specific leaf area (", cm^3/g, ")" ))) +
+  ylab("Maximum moisture retention by dry weight ln(%)") +
+  pubtheme.nogridlines
+ggsave(file.path(RESULTS, "fig3-SLA-maxMC.pdf"), width=col2, height=col1*1.5, units="cm")
+
+
 ## bulk density and dessication
-ggplot(newmctr, aes(bd.mean, abs(di))) +
-  geom_point(size=2, alpha=0.7, stroke=0) +
-  geom_errorbar(aes(ymin=abs(di)+di.se, ymax=abs(di)-di.se))+
-  geom_errorbarh(aes(xmin=bd.mean+(bd.sd/sqrt(6)), xmax=bd.mean-(bd.sd/sqrt(6))))+
+ggplot(mtrait, aes(bd.mean, abs(di))) +
+  geom_point(size=3, stroke=0) +
+#  geom_errorbar(aes(ymin=abs(di)+di.se, ymax=abs(di)-di.se))+
+#  geom_errorbarh(aes(xmin=bd.mean+(bd.sd/sqrt(6)), xmax=bd.mean-(bd.sd/sqrt(6))))+
   scale_colour_manual(values=schwilkcolors) +
   xlab(expression(paste("Bulk density (", g/cm^3,")"))) +
   ylab(expression(paste("Desiccation rate (", hr^-1, ")"))) +
  geom_label_repel(aes(label=display.name),
-                  nudge_x=0.025,
-                  nudge_y=0.004,
-                  fontface="italic",
-                  linehight=1) +
+                  nudge_x=0.005,
+                  nudge_y=-0.001,
+                  fontface="italic") +
   pubtheme.nogridlines
-ggsave(file.path(RESULTS, "fig3_di_by_bd.pdf"), width=col2, height=col1*1.5, units="cm")
+
+ggsave(file.path(RESULTS, "fig4_di_by_bd.pdf"), width=col2, height=col1*1.5, units="cm")
 
 # simple model:
+cor(mtrait$bulk.mean, mtrait$SLA)
 
-di.mod <- lm(di ~ bd.mean, data=newmctr)
+mc.mod <- lm(maxMC ~  SLA * density, data=mutate(mtrait, density=bulk.mean))
+summary(mc.mod)
+anova(mc.mod)
+
+di.mod <- lm(di ~   density * SLA, data=mutate(mtrait, density=bulk.mean))
 summary(di.mod)
 anova(di.mod)
+
+# stats for figures above  TODO
+tab2 <- anova(mc.mod)
+names(tab2)[5] <- "p value"
+print(xtable(tab2), file=file.path(RESULTS, "mc-anova.ltx"),  booktabs=TRUE, floating=FALSE,
+      include.rownames=FALSE)
+
+
+tab3 <- anova(di.mod)
+names(tab3)[5] <- "p value"
+print(xtable(tab3), file=file.path(RESULTS, "di-anova.ltx"),  booktabs=TRUE, floating=FALSE,
+      include.rownames=FALSE)
 
 
 ###############################################################################

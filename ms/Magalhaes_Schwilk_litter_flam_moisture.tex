@@ -75,29 +75,27 @@
 
 %=================================================================
 % Full title of the paper (Capitalized)
-\Title{Moisture effects on leaf litter are species-specific and result in non-additive effects flammability in mixed conifer forest}
+\Title{Moisture effects on leaf litter are species-specific and result in non-additive flammability in mixed conifer forest}
 
 % Author Orchid ID: enter ID or remove command
 \newcommand{\orcidauthorA}{0000-0000-000-000X} % Add \orcidA{} behind the author's name
 %\newcommand{\orcidauthorB}{0000-0000-000-000X} % Add \orcidB{} behind the author's name
 
 % Authors, for the paper (add full first names)
-\Author{Rita Quinones de Magalhaes $^{1,\dagger,\ddagger}$\orcidA{} and Dylan W. Schwilk $^{2,\ddagger}$}
+\Author{Rita Quinones de Magalhaes $^{\dagger}$ and Dylan W. Schwilk}
 
 % Authors, for metadata in PDF
-\AuthorNames{Rita Magalhaes, Dylan W. Schwilk}
+\AuthorNames{Rita Magalh\~{a}es, Dylan W. Schwilk}
 
 % Affiliations / Addresses (Add [1] after \address if there is only one affiliation.)
-\address{%
-$^{1}$ \quad Affiliation 1; e-mail@e-mail.com\\
-$^{2}$ \quad Texas Tech University; dylan.schwilk@ttu.edu}
+\address[1]{Texas Tech University}
 
 % Contact information of the corresponding author
 \corres{Correspondence: dylan.schwilk@ttu.edu, DWS}
 
 % Current address and/or shared authorship
-\firstnote{Current address: Affiliation 3} 
-\secondnote{These authors contributed equally to this work.}
+\firstnote{Current address: Rochester Institute of Technology, Rochester, NY 14623} 
+%\secondnote{These authors contributed equally to this work.}
 % The commands \thirdnote{} till \eighthnote{} are available for further notes
 
 %\simplesumm{} % Simple summary
@@ -261,7 +259,11 @@ m = m_{max} e^{-\lambda t}
 
 Where $m$ is moisture content at time $t$, and $\lambda$ is the exponential decay coefficient. To estimate these c oefficents we fit a linear mixed-effects model by first taking the natural logarithm of moisture content, with time since wetting and species as fixed effects nested within replicate basket. We extracted the coefficients of the fitted model to describe maximum water retainability ($m_{max}$; g of water per g of dry mass) and desiccation rate ($\lambda$) for each species. All analyses were conducted in R \cite{RCoreTeam-2019}. We fit models with R packages `lme4' \cite{Bates_Machler_etal-2015} and `afex' \cite{Singmann_Bolker_etal-2017}.  Approximate degrees of freedom and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997} which is recommended by Luke \cite{Luke-2017} as producing acceptable Type 1 error rates.
 
-We tested if litter bulk density influenced moisture dynamics (maximum water retainability and desiccation rate) by fitting linear models with species means as observations.
+We tested if one leaf trait (specific leaf area) and one litter trait (litter
+bulk density) influenced moisture dynamics (maximum water retainability and
+desiccation rate) by fitting linear models with species means as observations.
+For each response variable we fit a single linear model with two predictors and
+an interaction term.
 
 The effect of time since wetting on flammability was modelled using linear regression with the interaction between time since wetting and genus as fixed effects and average vapor pressure deficit in the burning room during that trial as a nuisance covariate. Differences across species were tested with post-hoc Tukey tests. A binomial logistic regression was fitted to the probability of ignition to obtain moisture of extinction.
 
@@ -271,15 +273,15 @@ We investigated non-additive effects on moisture and on flammability by testing 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
 
-\subsection{Leaf traits influence on moisture dynamics }
+\subsection{Species specific moisture dynamics and leaf traits}
 
 There are marked differences in the extent of moisture species retain initially following wetting and draining by gravity (all p < 0.0001, Fig. \ref{fig1-drydown} and Table \ref{tab1-drydown}). \emph{Q. kelloggii}, the only broadleaf, is the species that retains the most moisture but has had a rapid dessication rate (. Calculating estimated marginal means following the linear mixed-effects model discriminated the species into three different maximum water retention groups: 1) \emph{Q. kelloggii}; 2) \emph{P. lambertiana} and \emph{C. decurrens}; and 3) \emph{A. magnifica}, \emph{S. giganteum}, \emph{A. concolor}, \emph{P. jeffreyi} and \emph{P. ponderosa}.  There are also differences in desiccation rates across the eight species and estimated mixed linear model slopes discriminated species into three groups from lowest to most rapid: 1) (\emph{C.decurrens}, 2) \emph{Abies spp} and \emph{S. gianteum}, and 3) \emph{Q. kelloggii} and \emph{Pinus spp}.
 
 \begin{figure}[H]
   \centering
-  \label{fig-drydown}
+  \label{fig1-drydown}
 \includegraphics[width=8cm]{figs_tables/fig1_drydown-curves.pdf}
-\caption{Dry down curves for eight litter types. Lines show best-fit exponential decay curves fit to moisture content on a dry mass basis. Litter samples we saturated by immersion for 24 hours and then allowed to drain by gravity for 3 min before initial weighing. Colors indicate genera and there were significant differences in both }
+\caption[Dry down curves for eight litter types.]{Lines show best-fit exponential decay curves fit to moisture content on a dry mass basis. Litter samples we saturated by immersion for 24 hours and then allowed to drain by gravity for 3 min before initial weighing. Colors indicate genera and there were significant differences in both }
 \end{figure}
 
 
@@ -291,20 +293,45 @@ There are marked differences in the extent of moisture species retain initially 
 \input{figs_tables/drydown-tab.ltx}
 \end{table}
 
-Across these eight species litter bulk density had a negative effect on desiccation rate (Fig. \ref{fig-bd-di}, linear model p = 0.011).
+Across these eight species specific leaf area had a positive effect on maximum water retention (Fig. \ref{maxmc}, linear model p = 0.003 and litter bulk density had a negative effect on desiccation rate (Fig. \ref{fig-bd-di}, linear model p = 0.029). Anova tables are shown in in Fig. \ref{tab-mc-anova} and Fig. \ref{tab-di-anova}.
+
+\begin{figure}[H]
+  \centering
+  \label{fig-maxmc-di}
+\includegraphics[width=16cm]{figs_tables/fig3-SLA-maxMC.pdf}
+\caption[Maximum water retention by specific leaf area]{Maximum water retention by specific leaf area (SLA) across eight species.  TODO }
+\end{figure}
+
+\begin{table}[H]
+  \caption{Linear model results for maximum moisture content as a function of specific leaf area and litter bulk density.}
+  \label{tab2-mc-anova}
+\centering
+%% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
+\input{figs_tables/mc-anova.ltx}
+\end{table}
+
 
 \begin{figure}[H]
   \centering
   \label{fig-bd-di}
-\includegraphics[width=8cm]{figs_tables/fig3_di_by_bd.pdf}
-\caption{ }
+\includegraphics[width=16cm]{figs_tables/fig4_di_by_bd.pdf}
+\caption[Litter density effect on dessication rate.]{  TODO }
 \end{figure}
 
+\begin{table}[H]
+  \caption{Linear model results for estimated dessication rate ($hr^{-1}$) as a function of specific leaf area and litter bulk density.}
+  \label{tab2-di-anova}
+\centering
+%% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
+\input{figs_tables/di-anova.ltx}
+\end{table}
 
-\subsection{Time since wetting and its effect on flammability}
+
+\subsection{Time since wetting effect on flammability}
 
 
 Time to ignition and spread rate were modeled against time since wetting and using genus as a fixed effect.
+
 
 [TODO]?  redo in terms of groups.
 
@@ -340,37 +367,6 @@ This section may be divided by subheadings. It should provide a concise and prec
 \begin{quote}
 This section may be divided by subheadings. It should provide a concise and precise description of the experimental results, their interpretation as well as the experimental conclusions that can be drawn.
 \end{quote}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Subsection}
-\unskip
-\subsubsection{Subsubsection}
-
-Bulleted lists look like this:
-\begin{itemize}[leftmargin=*,labelsep=5.8mm]
-\item	First bullet
-\item	Second bullet
-\item	Third bullet
-\end{itemize}
-
-Numbered lists can be added as follows:
-\begin{enumerate}[leftmargin=*,labelsep=4.9mm]
-\item	First item 
-\item	Second item
-\item	Third item
-\end{enumerate}
-
-The text continues here.
-
-\subsection{Figures, Tables and Schemes}
-
-All figures and tables should be cited in the main text as Figure 1, Table 1, etc.
-
-
-
-Text
-
-Text
 
 %\begin{listing}[H]
 %\caption{Title of the listing}
@@ -408,9 +404,9 @@ Time since wetting, as expected, lowered the flammability of the eight species i
 
 We tested the dry-down process and flammability of four unique three-species litter mixtures. These mixtures contained species representative of all dry-down behavior types observed in single species trials, as assessed by the Tukey test. As expected from the single species results, mixtures that contained Q. kelloggii absorbed more water during the saturation period, but there was no difference in desiccation rate among the mixtures. However, when investigating the non-additivity in moisture content, the mixture that did not contain Q. kelloggii retained more moisture than would be predicted by the null model (arithmetic average of the three constituent species in the mixture). In general, non-additivity varied with moisture content, with positive non-additive behavior at lower moisture contents (<75\%, 72-96 hours since wetting occurred) and negative non-additive behavior at very high moisture contents (>200\%, 0 hours since wetting occurred). This result indicates that immediately after a rain event, the moisture content of a mixture will be lower than expected, however these high values for moisture content are unlikely to be found in natural litters. As the mixture dries, the dry-down behavior will approximate the null model, and three to four days after the rain event the dry-down behavior will become non-additive again. The positive non-additivity seems influenced by litter bed characteristics, since the strongest non-additivity was observed for the mixture with two species that have less dense litter: Q. kelloggii and P. jeffreyi (CaPiQu).
 
-The flammability results for the mixtures followed closely the results obtained for the individual species. Mixtures containing Q. kelloggii and P. jeffreyi had faster spread rates and lower times to ignition, resulting in higher overall flammability. These results are influenced by the lower bulk densities of litter mixtures containing those two species. There was a non-additive effect of moisture on flammability for the four mixtures in this study, reinforcing results shown for dry litter \citep{Magalhaes+Schwilk-2012, VanAltena+Logtestjin+etal-2012, }. Spread rate and time to ignition had significant non-additivity, and were strongly influenced by the species present in the mixture. Presence of C. decurrens in a mixture marked a big difference between the null model and the prediction. This was due to several failed ignitions for this species when burned individually, which conditioned the predicted values, while all the mixtures ignited. There were marked differences in the non-additivity results from this study and the results from a previous study investigating dry litter samples. The presence of non-additive effects in moisture content leads to non-additive effects in the flammability of moist litter beds. When accounting for this effect, the non-additivity on the flammability of moist litter beds is subtler, when compared to species effects. This result, together with previously published work, suggests that litter flammability is prone to non-additive effects, reinforcing the idea that we cannot approach flammability by lumping species into fuel categories, as is common in fire behavior models. Community flammability is dependent on and particular to its constituent species and cannot be addressed by simply averaging the flammability of all species it comprises. This dynamic view is likely to be increasingly relevant considering ongoing climate change, which predicts changes in community assembly.
+The flammability results for the mixtures followed closely the results obtained for the individual species. Mixtures containing Q. kelloggii and P. jeffreyi had faster spread rates and lower times to ignition, resulting in higher overall flammability. These results are influenced by the lower bulk densities of litter mixtures containing those two species. There was a non-additive effect of moisture on flammability for the four mixtures in this study, reinforcing results shown for dry litter \citep{Magalhaes+Schwilk-2012, VanAltena+Logtestjin+etal-2012}. Spread rate and time to ignition had significant non-additivity, and were strongly influenced by the species present in the mixture. Presence of C. decurrens in a mixture marked a big difference between the null model and the prediction. This was due to several failed ignitions for this species when burned individually, which conditioned the predicted values, while all the mixtures ignited. There were marked differences in the non-additivity results from this study and the results from a previous study investigating dry litter samples. The presence of non-additive effects in moisture content leads to non-additive effects in the flammability of moist litter beds. When accounting for this effect, the non-additivity on the flammability of moist litter beds is subtler, when compared to species effects. This result, together with previously published work, suggests that litter flammability is prone to non-additive effects, reinforcing the idea that we cannot approach flammability by lumping species into fuel categories, as is common in fire behavior models. Community flammability is dependent on and particular to its constituent species and cannot be addressed by simply averaging the flammability of all species it comprises. This dynamic view is likely to be increasingly relevant considering ongoing climate change, which predicts changes in community assembly.
 
-I have found non-additive effects (both positive and negative) in moisture content and in the flammability of wet litter mixtures of mixed-conifer forest. These results complement the efforts of Blauw et al. (2015) for moist litter and add to the literature investigating non-additivity in litter flammability (de Magalhães and Schwilk 2012, van Altena et al. 2012). However, these studies are limited in the scope of the species studied and suggest that non-additivity needs to be investigated at a larger scale, within different systems and comparatively across a larger number of species. Moisture content is considered the single most important driver of litter flammability and the results from my study indicate how leaf and litter traits affect moisture dynamics, and how moisture effects on litter flammability are species-specific. A trait-based perspective provides a better mechanistic understanding of moisture dynamics of litter fuel flammability and fire behavior and is especially important for predicting and understanding fire in plant communities that are changing.
+% I have found non-additive effects (both positive and negative) in moisture content and in the flammability of wet litter mixtures of mixed-conifer forest. These results complement the efforts of Blauw et al. (2015) for moist litter and add to the literature investigating non-additivity in litter flammability (de Magalhães and Schwilk 2012, van Altena et al. 2012). However, these studies are limited in the scope of the species studied and suggest that non-additivity needs to be investigated at a larger scale, within different systems and comparatively across a larger number of species. Moisture content is considered the single most important driver of litter flammability and the results from my study indicate how leaf and litter traits affect moisture dynamics, and how moisture effects on litter flammability are species-specific. A trait-based perspective provides a better mechanistic understanding of moisture dynamics of litter fuel flammability and fire behavior and is especially important for predicting and understanding fire in plant communities that are changing.
 
 
 % Authors should discuss the results and how they can be interpreted in perspective of previous studies and of the working hypotheses. The findings and their implications should be discussed in the broadest context possible. Future research directions may also be highlighted.

@@ -95,13 +95,14 @@ coefunc <- function(d){
     return(data.frame(logmaxMC = res[1,1], logmaxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
 }
 
+mc.sum <- mc %>% group_by(spcode) %>% 
+      summarise(bd.mean=mean(bd), bd.sd=sd(bd)) 
+
 mcdis <- mc %>% group_by(spcode) %>% do(coefunc(.)) %>% mutate(maxMC = exp(logmaxMC), maxMC.se=exp(logmaxMC.se))
 
-mc.sum <- mc %>% group_by(spcode) %>% 
-      summarise(MC_dry.mean=mean(MC_dry),
-                MC_dry.sd=sd(MC_dry),
-                bd.mean=mean(bd),
-                bd.sd=sd(bd)) 
+mc.sum <- left_join(mc.sum, mcdis)
+
+
   
 newmc <- merge(mc.sum, mcdis, by="spcode")
 
@@ -124,8 +125,8 @@ newmctr <- merge(decomp.sum3[, c(1, 3:14)], newmc, by="spcode", sort=F)
 
 # models with eight observations (species means)
 
-modmaxMCbulk <- lm(maxMC ~ bd.mean , data=newmctr)
-summary(modmaxMCbulk)
+#modmaxMCbulk <- lm(maxMC ~ bd.mean , data=newmctr)
+#summary(modmaxMCbulk)
 
 ## modmaxMClt <- lmer(MC_dry.mean ~ bd * lt_mean + (1 | spcode), data=newmctr_allrows)
 ## summary(modmaxMClt)
@@ -134,10 +135,10 @@ summary(modmaxMCbulk)
 
 #anova(modmaxMCbulk, modmaxMClt)
 
-moddibulk <- lm(di ~ bd.mean, data=newmctr)
-summary(moddibulk)
+#moddibulk <- lm(di ~ bd.mean, data=newmctr)
+#summary(moddibulk)
 
-moddilt <- lm(di ~ lt_mean + bd.mean, data=newmctr)
-summary(moddilt)
+#moddilt <- lm(di ~ lt_mean + bd.mean, data=newmctr)
+#summary(moddilt)
 
-anova(moddibulk, moddilt)
+#anova(moddibulk, moddilt)
