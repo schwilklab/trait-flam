@@ -1,0 +1,51 @@
+%% SI
+\documentclass[letterpaper]{article}
+
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{fullpage}
+
+
+\title{Magalhaes and Schwilk Supplementary Materials}
+\author{Rita Quinones de Magalhaes and Dylan W. Schwilk}
+%\date{\today}
+
+% Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
+% before or after the \begin{document} command 
+% BUT the \maketitle command MUST come AFTER the \begin{document} command! 
+
+\begin{document}
+
+\maketitle
+
+\section{Tables}
+
+\begin{table}[h]
+  \caption{Mixed model coefficients for drydown curves. Table shows linear model results of model fit to  natural log of dry-mass based fuel moisture content as a function of time and species.} 
+  \label{tabS1}
+\centering
+\input{figs_tables/drydown-coef-tab.ltx}
+\end{table}
+
+\section{Figures}
+
+\begin{figure}[h]
+  \centering
+  \label{fig-S1}
+
+  \includegraphics[width=17cm]{figs_tables/figS1_max_water_emmeans.pdf}
+\caption{Estimated marginal means by species for maximum water retainability based on mixed model results.}
+
+\end{figure}
+
+
+\begin{figure}[h]
+  \centering
+  \label{fig-S2}
+\includegraphics[width=17cm]{figs_tables/figS2_dessication_emmeans.pdf}
+\caption{Estimated marginal means by species for dessication rate based on mixed model results.}
+\end{figure}
+
+
+
+\end{document}
