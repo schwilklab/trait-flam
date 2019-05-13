@@ -54,18 +54,33 @@ dry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 | tray), data=mc)
 summary(dry.mod)
 anova(dry.mod)
 
-library(afex)
-dry.mod <- mixed(log(MC_dry) ~ hour*spcode + (1 | tray), data=mc)
-dry.mod.tab <- summary(dry.mod)$coefficients
-dry.mod.anova.tab <- anova(dry.mod)
-dry.mod.tab
-dry.mod.anova.tab
-
 # pairwise tests:
 
 # test for pairwise differences and number of distinct groups
-#library(lsmeans)
-#cld(lstrends(dry.mod,~ spcode, var = "hour"))
+## library(emmeans)
+## dry.emm <- emmeans(dry.mod, ~ hour | spcode)
+## CLD(dry.mod)
+
+library(afex)
+dry.mixed <- mixed(log(MC_dry) ~ hour*spcode + (1 | tray), data=mc, method="KR")
+dry.mixed.tab <- summary(dry.mod)$coefficients
+dry.mixed.anova.tab <- dry.mixed
+dry.mixed.tab
+dry.mixed.anova.tab
+
+
+dry.mixed.genus <- mixed(log(MC_dry) ~ hour*genus + (hour | spcode) + (1 | tray), data=mc, method="KR")
+
+
+dry.emm <- emmeans(dry.mod, "spcode")
+plot(dry.emm, comparisons=TRUE)
+
+dry.trends <- emtrends(dry.mod, "spcode", var="hour")
+plot(dry.trends, comparisons=TRUE)
+
+#emmip(dry.trends,  spcode ~  hour, cov.reduce= hour)
+
+
 # so there are three slope groups
 #cld(lsmeans(dry.mod, ~ spcode))
 # and 4 intercept groups (but slopes differ so . . .)
@@ -99,17 +114,23 @@ decomp.sum3 <- decomp[, c(2, 5:11)] %>% group_by(spcode, year) %>%
 
 newmctr <- merge(decomp.sum3[, c(1, 3:14)], newmc, by="spcode", sort=F)
 
+## newmctr_allrows <- right_join(decomp.sum3[, c(1, 3:14)], mc, by="spcode")
+## newmctr_allrows <- right_join(mc.sum, newmctr_allrows, by="spcode")
+
+
 ###########################################################
 # Establishing the influence of leaf traits on dry-down
 ###########################################################
 
 # models with eight observations (species means)
 
-## modmaxMCbulk <- lm(maxMC ~ bd.mean , data=newmctr)
-## summary(modmaxMCbulk)
+modmaxMCbulk <- lm(maxMC ~ bd.mean , data=newmctr)
+summary(modmaxMCbulk)
 
-modmaxMClt <- lm(maxMC ~ bd.mean + lt_mean, data=newmctr)
-summary(modmaxMClt)
+## modmaxMClt <- lmer(MC_dry.mean ~ bd * lt_mean + (1 | spcode), data=newmctr_allrows)
+## summary(modmaxMClt)
+
+
 
 #anova(modmaxMCbulk, modmaxMClt)
 

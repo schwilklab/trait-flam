@@ -41,13 +41,13 @@ modt2ignit2 <- lm(t2ignit ~ hour*genus + vpd, data=filter(burnt, genus!="Caloced
 summary(modt2ignit2)
 anova(modt2ignit2)
 
-library(agricolae)
+## library(agricolae)
 
-tuk <- HSD.test(modspread, "genus", group=TRUE)
-tuk
+## tuk <- HSD.test(modspread, "genus", group=TRUE)
+## tuk
 
-tuk <- HSD.test(modt2ignit, "genus", group=TRUE)
-tuk
+## tuk <- HSD.test(modt2ignit, "genus", group=TRUE)
+## tuk
 
 ##################################
 ## Binomial analysis of ignition

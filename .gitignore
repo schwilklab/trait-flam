@@ -1,6 +1,9 @@
 # History files
 .Rhistory
 .history
+*.bbl
+*.nlg
+*.rip
 
 # Example code in package build process
 *-Ex.R
