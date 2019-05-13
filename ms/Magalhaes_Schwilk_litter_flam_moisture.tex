@@ -231,11 +231,11 @@ for 24 hours at 100 C and re-weighed to assess moisture content. This was
 repeated until the final sample from a basket was less than10\% moisture.
 
 
-The dry-down curves indicated that the eight species varied in their moisture behavior [FIG 2?]. To determine a subset of species to use in the mixture trials, we performed analysis of contrasts using lsmeans package in R  (TODO Lenth 2016) to determine similarity between the species, which fell into four groups. I then selected one species from each group to include in the mixtures resulting in four distinct 3-species mixtures. 
+% The dry-down curves indicated that the eight species varied in their moisture behavior (Fig \ref{fig-drydown}). To determine a subset of species to use in the mixture trials, we performed analysis of contrasts using lsmeans package in R (TODO Lenth 2016) to guide choosing a subset of species for the litter mixtures. Based on the marginal means analysis, we chose four species to maximize variation in water retention and drying rate. Creating all possible three species mixtures from these four species resulted in four distinct three-species mixtures. 
 
- Leaf trait data
- 
-We investigated the influence of leaf thinness and litter bulk density on the moisture dynamics of the species in this study. Leaf thinness data (leaf length over thickness) was obtained for subsamples of the litter collected for this project.  Bulk density of the litter was obtained for each basket during the dry-down experiment by dividing the dry mass (450 g) by the estimated litter volume (basket width x length x litter depth).
+% Leaf trait data
+
+With only eight species in this study, our power to test leaf trait effects on the observed moisture dynamics is low, so we decided a priori to test the effect of one leaf trait likely to influence moisture absoorption, specific leaf area, and one litter trait known to directly effect flammability and likely to influence drying rate, litter bulk density. Specific leaf area was taken from leaf fresh leaf area and leaf dry mass from X individuals per species and was collected as part of an ealier study in 2011 (CITE).  Litter bulk density was obtained in this  experiment for each basket by dividing the dry mass (450 g) by the estimated litter volume (basket width x length x litter depth).
 
 \subsection{Flammability assessment}
 
@@ -265,7 +265,7 @@ desiccation rate) by fitting linear models with species means as observations.
 For each response variable we fit a single linear model with two predictors and
 an interaction term.
 
-The effect of time since wetting on flammability was modelled using linear regression with the interaction between time since wetting and genus as fixed effects and average vapor pressure deficit in the burning room during that trial as a nuisance covariate. Differences across species were tested with post-hoc Tukey tests. A binomial logistic regression was fitted to the probability of ignition to obtain moisture of extinction.
+The effect of time since wetting on flammability parameters was modelled using linear regression with the interaction between time since wetting and genus as fixed effects and average vapor pressure deficit in the burning room during that trial as a nuisance covariate. Differences across species were tested with post-hoc Tukey tests. A binomial logistic regression was fitted to the probability of ignition to obtain moisture of extinction.
 
 We investigated non-additive effects on moisture and on flammability by testing if moisture content and flammability of mixtures were predicted by the average of the constituent species. To choose mixtures we first grouped the species according to their maximum water retainability and dessication rate according to estimated marginal means by species using the R package `emmeans' \cite{Lenth-2019}. This resulted in four broad groups of species and we then selected one representative species from each litter type group and produced all four possible three-species litter mixtures using those four species. For each mixture and time since wetting, we predicted moisture content and flame spread rate using the models fit to single species data described above and then calculated an expected moisture content and spread rate as the average of these three values for the mixture. This procedure was done for both moisture content and flammability parameter values of the constituent species. The expectation from the null model was that the difference between observed and predicted values of flammability will be zero. We tested if there were significant departures from the null (zero) with a mixed effects linear model.
 
