@@ -1,6 +1,5 @@
 # Figures for moisture manuscript
-# 2019-05-13
-
+# 2019-05-16
 
 library(xtable)
 library(ggrepel)
@@ -31,19 +30,19 @@ ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
 
 ggsave(file.path(RESULTS, "fig1_drydown-curves.pdf"), width=col1, height=col1, units="cm")
 
-## ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
-##   geom_point(size=1.2, alpha=0.7, stroke=0) +
-##   geom_smooth(method="lm", se=FALSE, size =0.6) +
-##   scale_colour_manual(values=schwilkcolors) +
-##   xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
-##   scale_x_continuous(breaks=xbreaks) +
-##   scale_y_log10() +
-##   pubtheme.nogridlines +
-##   theme(legend.position=c(0.75, 0.86),
-##         legend.title=element_blank(),
-##         legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
+ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
+  geom_point(size=1.2, alpha=0.7, stroke=0) +
+  geom_smooth(method="lm", se=FALSE, size =0.6) +
+  scale_colour_manual(values=schwilkcolors) +
+  xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
+  scale_x_continuous(breaks=xbreaks) +
+  scale_y_log10() +
+  pubtheme.nogridlines +
+  theme(legend.position=c(0.75, 0.86),
+        legend.title=element_blank(),
+        legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 
-## ggsave(file.path(RESULTS, "fig1_drydown-curves_logged.pdf"), width=col1, height=col1, units="cm")
+ggsave(file.path(RESULTS, "fig2_drydown-curves_logged.pdf"), width=col1, height=col1, units="cm")
 
 ## # stats for fig 1
 tab1 <- nice(dry.mixed)
@@ -61,7 +60,6 @@ print(xtable(tabS1), file=file.path(RESULTS, "drydown-coef-tab.ltx"),  booktabs=
 tabS2 <- dry.emm
 print(xtable(tabS2), file=file.path(RESULTS, "drydown-emmeans.ltx"),  booktabs=TRUE, floating=FALSE,
       include.rownames=FALSE)
-
 
 ## Figure S1
 dry.mod <- lmer(log(MC_dry) ~ hour*display.name + (1 | tray), data=mc)
@@ -173,12 +171,120 @@ print(xtable(tab3), file=file.path(RESULTS, "di-anova.ltx"),  booktabs=TRUE, flo
 ## Flammability and time since wetting by genus
 #################################################
 oldflam <- read.csv("../data/burn-trials/flamdt.csv") %>% left_join(species) %>%
-  mutate(hour=120, vpd=2.44)
+  mutate(hour=144, vpd=2.44, t2ignit=ignit, combust=combus) #, actualMC_dry=5)
 b <- oldflam %>% filter(nchar(as.character(spcode)) < 5) %>% bind_rows(burnt)
 
+# fix coding errors in data:
+b <- b %>% mutate(didburn = !(ignit==0 & spread==0 & consum <0.000000001),
+                  consum = case_when(consum==100 ~ 0, TRUE ~ consum),
+                  taxon = case_when(genus=="Sequoiadendron" |
+                                      genus=="Calocedrus" ~ "Cupressaceae", TRUE ~ genus))
+b.burned <- filter(b, didburn)
 
-ggplot(subset(b, ignit!=0),
-       aes(hour, spread, color=genus)) +
+b.burned.scaled <- b.burned %>%  mutate_if(is.numeric, scale)
+
+
+###############################################################################
+## Flammability and moisture content ##
+## Individual plots by genus ##
+
+# ignition
+ggplot(b, aes(actualMC_dry, t2ignit, color=taxon)) +
+  geom_point(size=1.5, alpha=0.7, stroke=0) +
+  scale_colour_manual(values=schwilkcolors) +
+  xlab("Moisture content (%)") + ylab("Seconds to ignition") + 
+  scale_y_log10() +
+  pubtheme.nogridlines +
+  stat_smooth(data=b, method="lm", se=FALSE, size=0.8) +
+  theme(legend.position=c(.23, .86),
+        legend.spacing.y=unit(0,"cm"),
+        legend.text = element_text(family=fontfamily,
+                                   size=smsize-1, face="italic"),
+        legend.title=element_blank())
+ggsave(file.path(RESULTS, "actualMC_ignit.pdf"), width=col1, height=col1, unit="cm")
+
+ignit.moist.mod <- lmer(t2ignit ~ actualMC_dry + taxon + taxon:hour +
+                          vpd + (1 | spcode), data=b.burned.scaled) 
+summary(ignit.moist.mod)
+anova(modignit1)
+
+ignit.moist.mod.mixed <- lm(t2ignit ~ actualMC_dry + taxon + taxon:hour + vpd,
+                            data=b.burned.scaled) 
+anova(ignit.moist.mod.mixed)
+
+## tab5 <- nice(modignit.mixed)
+## names(tab5)[4] <- "p value"
+## print(xtable(tab5), file=file.path(RESULTS, "ignit-anova.ltx"),  booktabs=TRUE, floating=FALSE,
+##       include.rownames=FALSE)
+
+## tabS4 <- summary(modignit)$coefficient
+## print(xtable(tabS4), file=file.path(RESULTS, "ignit-coef-tab.ltx"),  booktabs=TRUE, floating=FALSE)
+
+# spread rate
+
+ggplot(b.burned, aes(actualMC_dry, spread, color=taxon)) +
+  geom_point(size=1.5, alpha=0.7, stroke=0) +
+  scale_colour_manual(values=schwilkcolors) +
+  xlab("Moisture content (%)") + ylab("Spread rate (mm/s)") +
+  pubtheme.nogridlines +
+  stat_smooth(data=b.burned, method="lm", se=FALSE, size=0.8, drop=TRUE) +
+  theme(legend.position=c(.75, .86),
+        legend.spacing.y=unit(0,"cm"),
+        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
+        legend.title=element_blank())
+ggsave(file.path(RESULTS, "actualMC_spread.pdf"), width=col1, height=col1, unit="cm")
+
+
+spread.moist.mod <- lm(spread ~ actualMC_dry + taxon + taxon:hour + vpd,
+                         data=b)
+
+#                         data=filter(b.burned, taxon != "Cupressaceae")) 
+summary(spread.moist.mod)
+anova(spread.moist.mod)
+
+tab.spread.moist <- anova(spread.moist.mod)
+names(tab.spread.moist)[5] <- "p value"
+print(xtable(tab.spread.moist), file=file.path(RESULTS, "spread-moist-anova.ltx"),
+      booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
+
+tab.spread.moist.coef <- summary(spread.moist.mod)
+print(xtable(tab.spread.moist.coef), file=file.path(RESULTS, "spread-moist-coef.ltx"),  booktabs=TRUE, floating=FALSE)
+
+
+# flame height
+ggplot(b.burned, aes(actualMC_dry, combust, color=taxon)) +
+  geom_point(size=1.5, alpha=0.7, stroke=0) +
+  scale_colour_manual(values=schwilkcolors) +
+  xlab("Moisture content (%)") + ylab("Flame height (mm)") + 
+  pubtheme.nogridlines +
+  stat_smooth(data=b.burned, method="lm", se=FALSE, size=0.8) +
+  theme(legend.position=c(.23, .86),
+        legend.spacing.y=unit(0,"cm"),
+        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
+        legend.title=element_blank())
+ggsave(file.path(RESULTS, "actualMC_flameheight.pdf"), width=col1, height=col1, unit="cm")
+
+
+# Consumability
+ggplot(b.burned, aes(actualMC_dry, consum, color=taxon)) +
+  geom_point(size=1.5, alpha=0.7, stroke=0) +
+  scale_colour_manual(values=schwilkcolors) +
+  xlab("Moisture content (%)") + ylab("Fuel consumed (%)") + 
+  pubtheme.nogridlines +
+  stat_smooth(data=b.burned, method="lm", se=FALSE, size=0.8) +
+  theme(legend.position=c(.8, .86),
+        legend.spacing.y=unit(0,"cm"),
+        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
+        legend.title=element_blank())
+ggsave(file.path(RESULTS, "actualMC_consume.pdf"), width=col1, height=col1, unit="cm")
+
+
+
+### Flammability by time since wetting
+
+
+# spread rate by time
+ggplot(b.burned, aes(hour, spread, color=taxon)) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0) +
   geom_smooth(method="lm", se=FALSE, size=1.2) +
   scale_colour_manual(values=schwilkcolors, drop=TRUE) +
@@ -188,17 +294,28 @@ ggplot(subset(b, ignit!=0),
   pubtheme.nogridlines +
   theme(legend.position=c(.3, .86),
         legend.title=element_blank())
+ggsave(file.path(RESULTS, "fig5_spread_by_time.pdf"), width=col1, height=col1, units="cm")
 
-ggsave(file.path(RESULTS, "fig4_spread_by_time.pdf"), width=col1, height=col1, units="cm")
+spread.time.mod <- lmer(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.burned.scaled) 
+summary(spread.time.mod)
+anova(spread.time.mod)
 
-modspread <- lmer(spread ~ hour + genus + genus:hour + vpd + (1 | spcode), data=b) 
-summary(modspread)
-anova(modspread)
+spread.mod.mixed <- mixed(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.burned.scaled) 
+anova(spread.mod.mixed)
 
-modspread.mixed <- mixed(spread ~ hour + genus + genus:hour + vpd + (1 | spcode), data=b) 
-anova(modspread.mixed)
+## spread.time.mod.lm <- lm(spread ~ hour + taxon + taxon:hour + vpd, data=b.burned) 
+## anova(spread.time.mod.lm)
 
-ggplot(na.omit(burnt), aes(hour, t2ignit, color=genus)) +
+tab.spread.time <- nice(spread.mod.mixed)
+names(tab.spread.time)[4] <- "p value"
+print(xtable(tab.spread.time), file=file.path(RESULTS, "spreadrate-anova.ltx"),
+      booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
+
+tab.spread.time.coef <- summary(spread.mod.mixed)$coefficient
+print(xtable(tab.spread.time.coef), file=file.path(RESULTS, "spreadrate-coef-tab.ltx"),  booktabs=TRUE, floating=FALSE)
+
+# ignition by time since wetting
+ggplot(b, aes(hour, t2ignit, color=taxon)) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0) +
   geom_smooth(method="lm", se=FALSE, size=1.2) +
   scale_colour_manual(values=schwilkcolors) +
@@ -211,35 +328,18 @@ ggplot(na.omit(burnt), aes(hour, t2ignit, color=genus)) +
     legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 ggsave(file.path(RESULTS, "fig2_ignit_by_time.pdf"), width=col1, height=col1, units="cm")
 
+ignit.time.mod <- lmer(t2ignit ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b) 
+summary(ignit.time.mod)
+anova(ignit.time.mod)
 
+ignite.time.mod.mixed <- mixed(t2ignit ~ hour + taxon + taxon:hour + (1 | spcode), data=b) 
+anova(ignit.time.mod.mixed)
 
-###############################################################################
-## Flammability and moisture content ##
-## Individual plots by genus ##
+tab.ignit.time <- nice(ignite.time.mod.mixed)
+names(tab.ignit.time)[4] <- "p value"
+print(xtable(tab.ignit.time), file=file.path(RESULTS, "ignit-time-anova.ltx"),
+      booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
-ggplot(burnt, aes(actualMC_dry, t2ignit, color=genus)) +
-  geom_point(size=1.5, alpha=0.7, stroke=0) +
-  scale_colour_manual(values=schwilkcolors) +
-  xlab("Moisture content (%)") + ylab("Seconds to ignition") + 
-  scale_y_log10() +
-  pubtheme.nogridlines +
-  stat_smooth(data=burnt, method="lm", se=FALSE, size=0.8) +
-  theme(legend.position=c(.23, .86),
-        legend.spacing.y=unit(0,"cm"),
-        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        legend.title=element_blank())
-ggsave(file.path(RESULTS, "actualMC_ignit.pdf"), width=col1, height=col1, unit="cm")
-
-
-ggplot(burnt1, aes(actualMC_dry, spread, color=genus)) +
-  geom_point(size=1.5, alpha=0.7, stroke=0) +
-  scale_colour_manual(values=schwilkcolors) +
-  xlab("Moisture content (%)") + ylab("Spread rate (mm/s)") +
-  pubtheme.nogridlines +
-  stat_smooth(data=burnt, method="lm", se=FALSE, size=0.8, drop=TRUE) +
-  theme(legend.position=c(.75, .86),
-        legend.spacing.y=unit(0,"cm"),
-        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        legend.title=element_blank())
-ggsave(file.path(RESULTS, "actualMC_spread.pdf"), width=col1, height=col1, unit="cm")
-
+tab.ignit.time.coef <- summary(ignit.time.mod)$coefficient
+print(xtable(tab.ignit.time.coef), file=file.path(RESULTS, "ignit-coef-tab.ltx"),
+      booktabs=TRUE, floating=FALSE)
