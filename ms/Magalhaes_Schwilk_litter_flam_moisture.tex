@@ -235,21 +235,58 @@ repeated until the final sample from a basket was less than10\% moisture.
 
 % Leaf trait data
 
-With only eight species in this study, our power to test leaf trait effects on the observed moisture dynamics is low, so we decided a priori to test the effect of one leaf trait likely to influence moisture absoorption, specific leaf area, and one litter trait known to directly effect flammability and likely to influence drying rate, litter bulk density. Specific leaf area was taken from leaf fresh leaf area and leaf dry mass from X individuals per species and was collected as part of an ealier study in 2011 (CITE).  Litter bulk density was obtained in this  experiment for each basket by dividing the dry mass (450 g) by the estimated litter volume (basket width x length x litter depth).
+With only eight species in this study, our power to test leaf trait effects on the observed moisture dynamics is low, so we decided a priori to test the effect of one leaf trait likely to influence moisture absoorption, specific leaf area, and one litter trait known to directly effect flammability and likely to influence drying rate, litter bulk density. Specific leaf area was taken from leaf fresh leaf area and leaf dry mass from X individuals per species and was collected as part of an ealier study \cite{Magalhaes+Schwilk-2012}.  Litter bulk density was obtained in this experiment for each basket by dividing the dry mass (450 g) by the estimated litter volume (basket width x length x litter depth).
 
 \subsection{Flammability assessment}
 
-We performed flammability tests across multiple moisture levels on monospecific litter beds and on mixed litter beds with each species or mixture replicated 5 times at each moisture level. Flammability was assessed using a 150 cm long burn table, 15 cm wide and 15 cm tall, in which leaf litter was placed and the table gently shaken to allow settling. This design allows fire behaviour to reach constant flame spread rates \cite{Magalhaes+Schwilk-2012}. Two graduated metal rulers   equally spaced along the apparatus allowed visual determination of maximum flame height.
-Litter was ignited with a propane torch; maximum adiabatic flame temperature of 1899 C, http://www.benzomatic.com/products/fuel.aspx) at one end of the apparatus and allowed to burn until extinction. If a species at a specific moisture level failed to ignite after three attempts, no further attempts were made.  A timer was used to record time to ignition and duration of flaming combustion. The flammability trials followed the methodology detailed in de Magalhães and Schwilk \cite{Magalhaes+Schwilk-2012}. 
+We performed flammability tests across multiple moisture levels on monospecific
+litter beds and on mixed litter beds with each species or mixture replicated 5
+times at each moisture level. We used the initial dry-down experiment to guide
+our timeing so as to attempt to burn samples over the full range of moisture
+contents from 100\% to below 10\% moisture. To expand our data on the dry end
+of this gradient, we supplemented these data with data from an earlier
+experiment on well-dried litter \cite{Magalhaes+Schwilk-2012}. This
+supplemental data added five replicates per species at an oven dried moisture
+content of $<$ 5\%. We assigned these replicates a time since wetting value of
+144 hours equivalent to the longest time since drying for the wetted samples.
+Flammability was assessed using a 150 cm long burn table, 15 cm wide and 15 cm
+tall, in which leaf litter was placed and the table gently shaken to allow
+settling. This design allows fire to reach constant flame spread rates
+\cite{Magalhaes+Schwilk-2012}. Two graduated metal rulers equally spaced along
+the apparatus allowed visual determination of maximum flame height. Litter was
+ignited with a propane torch; maximum adiabatic flame temperature of 1899 C,
+http://www.benzomatic.com/products/fuel.aspx) at one end of the apparatus and
+allowed to burn until extinction. If a species at a specific moisture level
+failed to ignite after three attempts, no further attempts were made. A timer
+was used to record time to ignition and duration of flaming combustion. The
+flammability trials followed the methodology detailed in de Magalhães and
+Schwilk \cite{Magalhaes+Schwilk-2012}.
 
 % and nine type-K thermocouples attached to data loggers measured temperature every second at three distances from the ignition point and at three different depths below the litter surface.
  
-During flammability trials, we recorded time to ignition (s), duration of flaming combustion (s), spread rate (mm/s), calculated by dividing the length of the burned surface by the time it takes the flaming front to reach the end of the apparatus, maximal flame height (mm), and mass loss (\%), calculated as the difference between fuel mass before and after flame extinction. I also measured duration above 100 C, or the length of time temperature exceeded 100 C, and temperature integration, which integrates duration of combustion and temperature above 100 C and serves as a proxy for heat release (de Magalhães and Schwilk 2012, Cornwell et al. 2015). By performing the flammability tests at several moisture levels I were able to determine moisture of extinction (a threshold representing the moisture value above which litter will not ignite or spread) for all species in this study, using a logistic regression.
+During flammability trials, we recorded time to ignition (s), duration of
+flaming combustion (s), spread rate (mm/s), calculated by dividing the length
+of the burned surface by the time it takes the flaming front to reach the end
+of the apparatus, maximal flame height (mm), and mass loss (\%), calculated as
+the difference between fuel mass before and after flame extinction. Our
+thermocouple system failed or data was lost for two days of burning trials,
+therefore we have omitted those data from this analysis. Our past work
+\cite{Magalhaes+Schwilk-2012} demonstrated that flame spread rate captures one
+important axis of flammability variation \citep{Schwilk-2015,
+  Pausas+Keeley+etal-2017} and percent fuel consumed captures a portion of the
+second major axis of flammability variation (although not as well as
+integrating temperature over time does). Our analysis, therefore, focused on
+these two relatively orthogonal measures of flammability.
 
-Burn trials occurred in a cement structure used to simulate house fires at the Fire Department of the City of Lubbock.This structure minimizes wind and helps regulate temperature and relative humidity. Temperature and relative humidity were measured before every trial using a Kestrel 3000 (Nielsen-Kellerman, Boothwyn, PA). To minimize temperature and relative humidity variation, all trials were conducted on clear days between 10 am and 3 pm. 
+Burn trials occurred in a cement structure used to simulate house fires at the
+Fire Department of the City of Lubbock. This structure minimizes wind and helps
+regulate temperature and relative humidity. Temperature and relative humidity
+were measured before every trial using a Kestrel 3000 (Nielsen-Kellerman,
+Boothwyn, PA). To minimize temperature and relative humidity variation, all
+trials were conducted on clear days between 10 am and 3 pm.
+
 
 \subsection{Statistical analyses}
-
 
 Dry-down curves were created based on the drying experiment, fitted with an exponential decay curve to each species.:
 
@@ -278,23 +315,22 @@ an interaction term.
 
 Our past work \cite{Magalhaes+Schwilk-2012} demonstrated that dry litter
 flammability across these eight species was driven by leaf traits and litter
-packing and therefore species within a genus tended to behave similarly with
-the two scale-leaved genera in the Cupressaceae, \emph{Calocedrus} and
-\emph{Sequoiadendron} also behaving similarly. Therefore, we used taxon
-(\emph{Abies}, Cupressaceae, \emph{Quercus}, and \emph{Pinus}) as a fixed in
-our models of moisture effects on flammability parameters. The effect of time
-since wetting on flammability parameters was modelled using linear regression
-with the interaction between time since wetting and genus as fixed effects and
+packing. Due to similar leaf traits, species within a genus tended to behave
+similarly and the two scale-leaved genera in the Cupressaceae,
+\emph{Calocedrus} and \emph{Sequoiadendron} also behaved similarly to one
+another. Therefore, we used taxonomic groups (\emph{Abies}, Cupressaceae,
+\emph{Quercus}, and \emph{Pinus}) as our flammability functional groups and
+treated these as fixed effects in our models. The effect of fuel moisture and
+time since wetting on flammability parameters were modeled using mixed effect
+models with fuel moisture or time since wetting and taxon as fixed effects and
 average vapor pressure deficit in the burning room during that trial as a
-nuisance covariate. Differences across species were tested with post-hoc Tukey
-tests. A binomial logistic regression was fitted to the probability of ignition
-to obtain moisture of extinction.
+nuisance covariate.
 
-We investigated non-additive effects on moisture and on flammability by testing
-if moisture content and flammability of mixtures were predicted by the average
-of the constituent species. To choose mixtures we first grouped the species
-according to their maximum water retainability and dessication rate according
-to estimated marginal means by species using the R package `emmeans'
+We investigated possible non-additive effects on moisture and on flammability
+by testing if moisture content and flammability of mixtures were predicted by
+the average of the constituent species. To choose mixtures we first grouped the
+species according to their maximum water retainability and dessication rate
+according to estimated marginal means by species using the R package `emmeans'
 \cite{Lenth-2019}. This resulted in four broad groups of species and we then
 selected one representative species from each litter type group and produced
 all four possible three-species litter mixtures using those four species. For
@@ -313,38 +349,56 @@ significant departures from the null (zero) with a mixed effects linear model.
 
 \subsection{Species specific moisture dynamics and leaf traits}
 
-There are marked differences in the extent of moisture species retain initially following wetting and draining by gravity (all p < 0.0001, Fig. \ref{fig:drydown} and Table \ref{tab:drydown}). \emph{Q. kelloggii}, the only broadleaf, is the species that retains the most moisture initially.  \emph{Quercus}, however, like the pines has a rapid dessication rate (Fig. \ref{fig:drydown-logged}). Calculating estimated marginal means following the linear mixed-effects model discriminated the species into three different maximum water retention groups: 1) \emph{Q. kelloggii}; 2) \emph{P. lambertiana} and \emph{C. decurrens}; and 3) \emph{A. magnifica}, \emph{S. giganteum}, \emph{A. concolor}, \emph{P. jeffreyi} and \emph{P. ponderosa} (SI 1).  There are also differences in desiccation rates across the eight species and estimated mixed linear model slopes discriminated species into three groups from lowest to most rapid: 1) (\emph{C.decurrens}, 2) \emph{Abies spp} and \emph{S. gianteum}, and 3) \emph{Q. kelloggii} and \emph{Pinus spp} (SI 2).
+There are marked differences in the extent of moisture species retain initially
+following wetting and draining by gravity (all p < 0.0001, Fig.
+\ref{fig:drydown} and Table \ref{tab:drydown}). \emph{Q. kelloggii}, the only
+broadleaf, is the species that retains the most moisture initially.
+\emph{Quercus}, however, like the pines has a rapid dessication rate (Fig.
+\ref{fig:drydown-logged}). Calculating estimated marginal means following the
+linear mixed-effects model discriminated the species into three different
+maximum water retention groups: 1) \emph{Q. kelloggii}; 2) \emph{P.
+  lambertiana} and \emph{C. decurrens}; and 3) \emph{A. magnifica}, \emph{S.
+  giganteum}, \emph{A. concolor}, \emph{P. jeffreyi} and \emph{P. ponderosa}
+(SI Fig. 1). There are also differences in desiccation rates across the eight
+species and estimated mixed linear model slopes discriminated species into
+three groups from lowest to most rapid: 1) (\emph{C.decurrens}, 2) \emph{Abies
+  spp} and \emph{S. gianteum}, and 3) \emph{Q. kelloggii} and \emph{Pinus spp}
+(SI Fig. 2).
 
 \begin{figure}[H]
   \centering
 \includegraphics[width=8cm]{figs_tables/fig1_drydown-curves.pdf}
-\caption[Dry down curves for eight litter types.]{Lines show best-fit exponential decay curves fit to moisture content on a dry mass basis. Litter samples we saturated by immersion for 24 hours and then allowed to drain by gravity for 3 min before initial weighing. Colors indicate genera and there were significant differences in both }
+\caption{Dry down curves for eight litter types. Lines show best-fit
+  exponential decay curves fit to moisture content on a dry mass basis. Litter
+  samples we saturated by immersion for 24 hours and then allowed to drain by
+  gravity for 3 min before initial weighing. Colors indicate genera and there
+  were significant differences in both }
  \label{fig:drydown}
 \end{figure}
 
 
-\begin{figure}[H]
-  \centering
-\includegraphics[width=8cm]{figs_tables/fig2_drydown-curves_logged.pdf}
-\caption[Semi-log scale dry down curves for eight litter types.]{Lines show best-fit lines fit to the natural log of moisture content on a dry mass basis.  The slope of the line shows the dessication rate ($hr^{-1}$). Litter samples we saturated by immersion for 24 hours and then allowed to drain by gravity for 3 min before initial weighing. Colors indicate genera and there were significant differences in both }
- \label{fig:drydown-logged}
-\end{figure}
-
-
 \begin{table}[H]
-  \caption{Mixed model results for moisture content as a function of time since wetting. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}.}
+  \caption{Mixed model results for moisture content as a function of time since
+    wetting. Approximate degrees of freedom, pseudo F statistics and p-values
+    were calculated by the Kenward-Roger approximation
+    \cite{Kenward_Roger-1997}.}
   \label{tab:drydown}
 \centering
 %% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
-\input{figs_tables/drydown-tab.ltx}
+\input{figs_tables/tab1_drydown_anova.ltx}
 \end{table}
 
-Across these eight species specific leaf area had a positive effect on maximum water retention (Fig. \ref{fig:maxmc-di}, linear model p = 0.003) and litter bulk density had a negative effect on desiccation rate (Fig. \ref{fig:bd-di}, linear model p = 0.029). Anova tables are shown in in Fig. \ref{tab-mc-anova} and Fig. \ref{tab:di-anova}.
+
+Across these eight species specific leaf area had a positive effect on maximum
+water retention (Fig. \ref{fig:maxmc-di}, linear model p = 0.003) and litter
+bulk density had a negative effect on desiccation rate (Fig. \ref{fig:bd-di},
+linear model p = 0.029). Anova tables are shown in in Fig. \ref{tab-mc-anova}
+and Fig. \ref{tab:di-anova}.
 
 \begin{figure}[H]
   \centering
-\includegraphics[width=16cm]{figs_tables/fig3-SLA-maxMC.pdf}
-\caption[Maximum water retention by specific leaf area]{Maximum water retention by specific leaf area (SLA) across eight species.  TODO }
+\includegraphics[width=16cm]{figs_tables/fig2_SLA_maxMC.pdf}
+\caption{Maximum water retention by specific leaf area (SLA) across eight species.}
   \label{fig:maxmc-di}
 \end{figure}
 
@@ -353,37 +407,76 @@ Across these eight species specific leaf area had a positive effect on maximum w
   \label{tab2:mc-anova}
 \centering
 %% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
-\input{figs_tables/mc-anova.ltx}
+\input{figs_tables/tab_mc_anova.ltx}
 \end{table}
 
 
 \begin{figure}[H]
   \centering
-\includegraphics[width=16cm]{figs_tables/fig4_di_by_bd.pdf}
-\caption[Litter density effect on dessication rate.]{  TODO }
+\includegraphics[width=16cm]{figs_tables/fig3_di_bd.pdf}
+\caption{Linear model predicting dessication rate as a function of specific leaf area and litter bulk density across eight species.}
   \label{fig:bd-di}
 \end{figure}
+
+\begin{table}[H]
+  \caption{Linear model results for estimated maximum water retention (\%) as a function of specific leaf area and litter bulk density.}
+  \label{tab2:mc-anova}
+\centering
+%% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
+\input{figs_tables/tab2_mc_anova.ltx}
+\end{table}
+
 
 \begin{table}[H]
   \caption{Linear model results for estimated dessication rate ($hr^{-1}$) as a function of specific leaf area and litter bulk density.}
   \label{tab2:di-anova}
 \centering
 %% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
-\input{figs_tables/di-anova.ltx}
+\input{figs_tables/tab3_di_anova.ltx}
 \end{table}
 
 
-\subsection{Time since wetting effect on flammability}
 
-Time to ignition and spread rate were modeled against time since wetting and using genus as a fixed effect and species as a random effect.  Time since wetting had a strong effect on spread rate (p < 0.0001) and the slope of this effect varied by genus (Fig. \ref{fig:spreadrate}, Table \ref{tab:spreadrate-anova}). The pines were able to ignite and burn much sooner after wetting than the other genera, none of which had measurable spread rates until burning was attempted 72 hours after wetting. At that point, the \emph{Abies}, \emph{Calocedrus}, and \emph{Sequiadendron} had much drying litter than did the \emph{Quercus}, yet the spread rates were slow.  \emph{Quercus} had the steepest response to time since wetting (Fig. \ref{fig5:spreadrate}).
+\subsection{Moisture effects on flammability}
 
 
+Flame spread rate declined with fuel moisture (Fig. \ref{fig:spread-moist}. \emph{Quercus} had higher spread rates across all fuel moistures and had a steeper decline in response to moisture than did the other groups (taxon by time since wetting interaction p = 0.022, Table \ref{tab:spread-moist-anova}). Fuel moisture negatively influenced fuel consumption and overall  fuel consumption as well as the rate of change with moisture content varied across the taxonomic group (Fig. \ref{fig:consume-moist}, Table \ref{tab:consume-moist-anova}). Although the overall ranking of groups was simlar for fuel consumption and for flame spread rate, in contrast to the pattern with spread rate, for fuel consumption, \emph{Pinus} and \emph{Abies} has a steeper decline in flammability with fuel moisture than did the other groups.
+
+%% spread rate by moisture
 \begin{figure}[H]
   \centering
-\includegraphics[width=8cm]{figs_tables/fig5_spread_by_time.pdf}
-\caption[Flame spread rate by time since wetting]{TODO }
-  \label{fig:spreadrate}
+\includegraphics[width=8cm]{figs_tables/fig4_spread_actualMC.pdf}
+\caption{Flame spread rate by moisture content (model fit F= 61.15, d.f = 9, 148,  p < 0.0001). Model ANOVA table in Table \ref{tab:spread-moist-anova} and coefficients in SI Table 2.
+  \label{fig:spread-moist}
 \end{figure}
+
+\begin{table}[H]
+  \caption{Mixed model results for flame spread rate as a function of fuel moisture with taxonomic group as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}. Coefficient estimates are in SI Table 2.}
+  \label{tab:spreadrate-anova}
+\centering
+\input{figs_tables/tab3_spread_moist_anova.ltx}
+\end{table}
+
+
+
+%% fuel consumption by moisture:
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/fig5_consume_actualMC.pdf}
+\caption{Percent fuel consumed by moisture content. Model ANOVA table in Table \ref{tab:consume-moist-anova} and coefficients in SI Table 3.
+  \label{fig:consume-moist}
+\end{figure}
+
+\begin{table}[H]
+  \caption{Mixed model results for fuel consumption as a function of fuel moisture with taxonomic group as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}. Coefficient estimates are in SI Table 3.}
+  \label{tab:consume-moist-anova}
+\centering
+\input{figs_tables/tab4_consume_moist_anova.ltx}
+\end{table}
+
+
+
+As a consequnece of the relationships shown above, time since wetting had a strong effect on spread rate (p < 0.0001) and the slope of this effect varied by taxonimc (Fig. \ref{fig:spreadrate}, Table \ref{tab:spreadrate-anova}). The pines were able to ignite and burn much sooner after wetting than the other genera, none of which had measurable spread rates until burning was attempted 72 hours after wetting. At that point, the \emph{Abies}, \emph{Calocedrus}, and \emph{Sequiadendron} had much drying litter than did the \emph{Quercus}, yet the spread rates were slow.  \emph{Quercus} had the steepest response to time since wetting (Fig. \ref{fig5:spreadrate}).
 
 
 \begin{table}[H]
