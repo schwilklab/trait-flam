@@ -10,6 +10,8 @@ source("theme-opts.R")
 source("dry-down.R")
 source("burn-moist.R")
 
+set.seed(100)
+
 ###############################################################################
 ## Figure 1: dry-down
 ###############################################################################
@@ -194,7 +196,9 @@ b <- oldflam %>% filter(nchar(as.character(spcode)) < 5) %>% bind_rows(burnt)
 b <- b %>% mutate(consum = case_when(consum==100 ~ 0, TRUE ~ consum),
                   didburn = !(t2ignit==0 & spread==0 & consum <0.000000001),
                   taxon = case_when(genus=="Sequoiadendron" |
-                                      genus=="Calocedrus" ~ "Cupressaceae", TRUE ~ genus)
+                                    genus=="Calocedrus" ~ "Cupressaceae",
+                       #             spcode=="Pila" ~ "P. lambertiana",
+                                    TRUE ~ genus)
                   )
 b.scaled <- b %>% mutate_if(is.numeric, scale)
 
@@ -211,7 +215,7 @@ fig4 <- ggplot(b, aes(actualMC_dry, spread, color=taxon)) +
   scale_colour_manual(values=schwilkcolors) +
   xlab("Moisture content (%)") + ylab("Spread rate (mm/s)") +
   pubtheme.nogridlines +
-  stat_smooth(data=b.burned, method="lm", se=FALSE, size=0.8, drop=TRUE) +
+  stat_smooth(method="lm", se=FALSE, size=0.8, drop=TRUE) +
   theme(legend.position=c(.75, .86),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
@@ -220,7 +224,8 @@ ggsave(file.path(RESULTS, "fig4_spread_actualMC.pdf"), plot=fig4,
        width=col1, height=col1, unit="cm")
 
 fig4
-spread.moist.mod <- lmer(spread ~ actualMC_dry + taxon + taxon:hour + vpd + (1 | spcode),
+
+spread.moist.mod <- lmer(spread ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
                          data=b)
 summary(spread.moist.mod)
 anova(spread.moist.mod)
@@ -228,7 +233,7 @@ anova(spread.moist.mod)
 ###############################################################################
 ## Table 3: Spread rate and moisture content ANOVA
 ###############################################################################
-spread.moist.mod.mixed <- mixed(spread ~ actualMC_dry + taxon + taxon:hour + vpd + (1 | spcode),
+spread.moist.mod.mixed <- mixed(spread ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
                            data=b, method="KR")
 tab.spread.moist <- anova(spread.moist.mod.mixed)
 tab.spread.moist
@@ -262,13 +267,13 @@ ggsave(file.path(RESULTS, "fig5_consume_actualMC.pdf"), plot=fig5,
 ###############################################################################
 ## Table 4: Fuel consumptione and moisture content ANOVA
 ###############################################################################
-consume.moist.mod <- lmer(consum ~ actualMC_dry + taxon + taxon:hour + vpd + (1 | spcode),
+consume.moist.mod <- lmer(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
                          data=b)
 
 summary(consume.moist.mod)
 anova(consume.moist.mod)
 
-consume.moist.mod.mixed <- mixed(consum ~ actualMC_dry + taxon + taxon:hour + vpd + (1 | spcode),
+consume.moist.mod.mixed <- mixed(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
                            data=b, method="KR")
 tab.consume.moist <- anova(consume.moist.mod.mixed)
 tab.consume.moist
@@ -287,11 +292,11 @@ print(xtable(tab.consume.moist.coef), file=file.path(RESULTS, "SI_tab3_consume_m
 ### Flammability by time since wetting
 ###############################################################################
 
+###############################################################################
+## Fig 6: # spread rate by time
+###############################################################################
 
-
-
-# spread rate by time
-ggplot(b.burned, aes(hour, spread, color=taxon)) +
+fig6 <- ggplot(b, aes(hour, spread, color=taxon)) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0) +
   geom_smooth(method="lm", se=FALSE, size=1.2) +
   scale_colour_manual(values=schwilkcolors, drop=TRUE) +
@@ -301,52 +306,100 @@ ggplot(b.burned, aes(hour, spread, color=taxon)) +
   pubtheme.nogridlines +
   theme(legend.position=c(.3, .86),
         legend.title=element_blank())
-ggsave(file.path(RESULTS, "fig5_spread_by_time.pdf"), width=col1, height=col1, units="cm")
+fig6
+ggsave(file.path(RESULTS, "fig6_spread_time.pdf"), plot=fig6,
+       width=col1, height=col1, units="cm")
 
-spread.time.mod <- lmer(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.burned.scaled) 
+spread.time.mod <- lmer(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.scaled) 
 summary(spread.time.mod)
 anova(spread.time.mod)
 
-spread.mod.mixed <- mixed(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.burned.scaled) 
+spread.mod.mixed <- mixed(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.scaled) 
 anova(spread.mod.mixed)
 
 ## spread.time.mod.lm <- lm(spread ~ hour + taxon + taxon:hour + vpd, data=b.burned) 
 ## anova(spread.time.mod.lm)
 
+###############################################################################
+## Table 5: # spread rate by time
+###############################################################################
+
 tab.spread.time <- nice(spread.mod.mixed)
 names(tab.spread.time)[4] <- "p value"
-print(xtable(tab.spread.time), file=file.path(RESULTS, "spreadrate-anova.ltx"),
+print(xtable(tab.spread.time), file=file.path(RESULTS, "tab5_spread_time_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
+
+###############################################################################
+## SI Table 4:  spread rate by time coefficients
+###############################################################################
 
 tab.spread.time.coef <- summary(spread.mod.mixed)$coefficient
-print(xtable(tab.spread.time.coef), file=file.path(RESULTS, "spreadrate-coef-tab.ltx"),  booktabs=TRUE, floating=FALSE)
+print(xtable(tab.spread.time.coef), file=file.path(RESULTS, "SI_tab4_spread_time_coef.ltx"),  booktabs=TRUE, floating=FALSE)
 
-# ignition by time since wetting
-ggplot(b, aes(hour, t2ignit, color=taxon)) +
-  geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0) +
-  geom_smooth(method="lm", se=FALSE, size=1.2) +
+
+
+###############################################################################
+## Table 6: Fuel consumption by time since wetting
+###############################################################################
+library(glmmADMB)
+library(betareg)
+#library(glmmTMB)
+
+b <- b %>% mutate(taxon = case_when(genus=="Sequoiadendron" |
+                                    genus=="Calocedrus" ~ "Cupressaceae",
+                                    spcode=="Pila" ~ "P. lambertiana",
+                                    TRUE ~ genus)
+                  )
+
+
+b1 <- b %>% mutate(spcode=factor(spcode), taxon=factor(taxon), consum=consum/100)
+b2 <- data.frame(consum = b1$consum, spcode=b.scaled$spcode,  taxon=b.scaled$taxon,
+                 vpd=b.scaled$vpd, hour=b.scaled$hour)
+b3 <- mutate(b2, consum.t = case_when(consum == 0 ~ consum+0.001, TRUE ~ consum))
+b4<- mutate(b1, consum.t = case_when(consum == 0 ~ consum+0.001, TRUE ~ consum),
+            consum=consum.t)
+
+
+## # add in zero consumption for non ignition
+## contrasts(b4$taxon) <- contr.sum(levels(b4$taxon))
+## colnames(contrasts(b4$taxon)) <- head(levels(b4$taxon), -1)
+
+### beta regression appraoch
+opts <-admbControl(impSamp=0,maxfn=500,imaxfn=500,maxph=5,noinit=FALSE,shess=TRUE,
+            run=TRUE, ZI_kluge=FALSE, poiss_prob_bound=TRUE)
+
+consume.time.mod <- glmmadmb(consum ~ hour + taxon + taxon:hour,
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b4, admb.opts=opts, verbose=TRUE)
+summary(consume.time.mod)
+
+
+newdata <- expand.grid(taxon = levels(b4$taxon), hour=c(0:144))
+newdata$consum <- predict(consume.time.mod, newdata, type="response")*100
+
+
+###############################################################################
+## Fig 7: Fuel consumption by time
+###############################################################################
+# clean the predicted data to correct ranges:
+newdata1 <- newdata %>% mutate(hour = case_when(taxon=="Abies" & hour < 48 ~ NA_real_,
+                                               taxon=="P. lambertiana" & hour < 5 ~ NA_real_,
+                                               taxon=="Quercus" & hour < 70 ~ NA_real_,
+                                               TRUE ~ as.numeric(hour)))
+
+fig7 <- ggplot(b, aes(hour, consum, color=taxon)) +
   scale_colour_manual(values=schwilkcolors) +
-  xlab("Time since wetting (hr)") + ylab("Time to ignition (s)") +
-  scale_x_continuous(breaks=xbreaks) +
-  scale_y_log10() +
+  xlab("Time since wetting (hr)") + ylab("Fuel consumed (%)") +
+  scale_y_continuous(limits=c(0,100)) +
   pubtheme.nogridlines +
-  theme(legend.position=c(0.75, 0.86),
-    legend.title=element_blank(),
-    legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
-ggsave(file.path(RESULTS, "fig2_ignit_by_time.pdf"), width=col1, height=col1, units="cm")
+  #stat_smooth(method="loess", se=FALSE, size=0.8) +
+  geom_line(data=newdata1, size=0.8) +
+  theme(legend.position=c(.175, .51),
+        legend.spacing.y=unit(0,"cm"),
+        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
+        legend.title=element_blank()) +
+  geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0)
 
-ignit.time.mod <- lmer(t2ignit ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b) 
-summary(ignit.time.mod)
-anova(ignit.time.mod)
+ggsave(file.path(RESULTS, "fig7_consume_time.pdf"), plot=fig7,
+       width=col1, height=col1, unit="cm")
 
-ignite.time.mod.mixed <- mixed(t2ignit ~ hour + taxon + taxon:hour + (1 | spcode), data=b) 
-anova(ignit.time.mod.mixed)
-
-tab.ignit.time <- nice(ignite.time.mod.mixed)
-names(tab.ignit.time)[4] <- "p value"
-print(xtable(tab.ignit.time), file=file.path(RESULTS, "ignit-time-anova.ltx"),
-      booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
-
-tab.ignit.time.coef <- summary(ignit.time.mod)$coefficient
-print(xtable(tab.ignit.time.coef), file=file.path(RESULTS, "ignit-coef-tab.ltx"),
-      booktabs=TRUE, floating=FALSE)
