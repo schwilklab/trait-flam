@@ -379,7 +379,10 @@ three groups from lowest to most rapid: 1) (\emph{C.decurrens}, 2) \emph{Abies
   exponential decay curves fit to moisture content on a dry mass basis. Litter
   samples we saturated by immersion for 24 hours and then allowed to drain by
   gravity for 3 min before initial weighing. Colors indicate genera and there
-  were significant differences in both }
+  were significant differences in both. A small amount of horizontal jitter
+  (0.5 hr) was added to this plot to aid in visualizing because, although
+  collections were staggered, there were often multiple trays collected at a
+  single time point.}
  \label{fig:drydown}
 \end{figure}
 
@@ -410,11 +413,11 @@ and Fig. \ref{tab:di-anova}.
 \end{figure}
 
 \begin{table}[H]
-  \caption{Linear model results for maximum moisture content as a function of specific leaf area and litter bulk density.}
+  \caption{Linear model results for maximum moisture content as a function of specific leaf area and litter bulk density. Mixed models were fit as a mixed beta regression. }
   \label{tab2:mc-anova}
 \centering
 %% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
-\input{figs_tables/tab_mc_anova.ltx}
+\input{figs_tables/tab2_mc_anova.ltx}
 \end{table}
 
 
@@ -453,12 +456,12 @@ Flame spread rate declined with fuel moisture (Fig. \ref{fig:spread-moist}. \emp
 \begin{figure}[H]
   \centering
 \includegraphics[width=8cm]{figs_tables/fig4_spread_actualMC.pdf}
-\caption{Flame spread rate by moisture content (model fit F= 61.15, d.f = 9, 148,  p < 0.0001). Model ANOVA table in Table \ref{tab:spread-moist-anova} and coefficients in SI Table 2.
+\caption{Flame spread rate by moisture content (model fit F= 61.15, d.f = 9, 148,  p < 0.0001). Model ANOVA table in Table \ref{tab:spread-moist-anova} and coefficients in SI Table 2.}
   \label{fig:spread-moist}
 \end{figure}
 
 \begin{table}[H]
-  \caption{Mixed model results for flame spread rate as a function of fuel moisture with taxonomic group as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}. Coefficient estimates are in SI Table 2.}
+  \caption{Linear mixed model results for flame spread rate as a function of fuel moisture with taxonomic group as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}. Coefficient estimates are in SI Table 2.}
   \label{tab:spreadrate-anova}
 \centering
 \input{figs_tables/tab3_spread_moist_anova.ltx}
@@ -470,12 +473,13 @@ Flame spread rate declined with fuel moisture (Fig. \ref{fig:spread-moist}. \emp
 \begin{figure}[H]
   \centering
 \includegraphics[width=8cm]{figs_tables/fig5_consume_actualMC.pdf}
-\caption{Percent fuel consumed by moisture content. Model ANOVA table in Table \ref{tab:consume-moist-anova} and coefficients in SI Table 3.
+\caption{Percent fuel consumed by moisture content. Lines indicate best fit beta regression lines. Model deviance table in Table \ref{tab:consume-moist-anova} and coefficients in SI Table 3.}
   \label{fig:consume-moist}
 \end{figure}
 
+
 \begin{table}[H]
-  \caption{Mixed model results for fuel consumption as a function of fuel moisture with taxonomic group as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}. Coefficient estimates are in SI Table 3.}
+  \caption{Generalized linear mixed model results for fuel consumption as a function of fuel moisture with taxonomic group as a fixed effect and species as a nested random effect.  The analysis of deviance table below shows deviance comparisons for the simplest null model with only intercept and random effect (model 1), for a taxon effect only (model 2), for a taxon and mosture content effect (model 3) and for the full model including the taxon by moisture interaction (model 4). Coefficient estimates are in SI Table 3.}
   \label{tab:consume-moist-anova}
 \centering
 \input{figs_tables/tab4_consume_moist_anova.ltx}
@@ -483,34 +487,57 @@ Flame spread rate declined with fuel moisture (Fig. \ref{fig:spread-moist}. \emp
 
 
 
-As a consequnece of the relationships shown above, time since wetting had a strong effect on spread rate (p < 0.0001) and the slope of this effect varied by taxonimc (Fig. \ref{fig:spread_time}, Table \ref{tab:spreadrate-anova}). The pines were able to ignite and burn much sooner after wetting than the other genera, none of which had measurable spread rates until burning was attempted 72 hours after wetting. At that point, the \emph{Abies}, \emph{Calocedrus}, and \emph{Sequiadendron} had much drying litter than did the \emph{Quercus}, yet the spread rates were slow.  \emph{Quercus} had the steepest response to time since wetting (Fig. \ref{fig:spread_time}).
+As a consequence of the relationships shown above, time since wetting had a strong effect on spread rate (p < 0.0001) and the slope of this effect varied by taxonomic group (Fig. \ref{fig:spread_time}, Table \ref{tab:spreadrate-anova}). The pines were able to ignite and burn much sooner after wetting than the other genera, none of which had measurable spread rates until burning was attempted 72 hours after wetting (note that trials that failed to even ignite smoldering combustion are ommitted completely from the model and figure). At that point, the \emph{Abies}, \emph{Calocedrus}, and \emph{Sequiadendron} had dryer litter than did the \emph{Quercus}, yet the spread rates were slow. \emph{Quercus} had the steepest response to time since wetting (Fig. \ref{fig:spread_time}, SI Table 4)).
 
 
 \begin{figure}[H]
   \centering
 \includegraphics[width=8cm]{figs_tables/fig6_spread_time.pdf}
-\caption{Flame spread rate by time since wetting for litter of eight species. Model ANOVA table in Table \ref{tab:tab5_spread_time_anova} and coefficients in SI Table 4.
+\caption{Flame spread rate by time since wetting for litter of eight species.
+  Lines indicate best fit linear model fits. Model ANOVA table in Table
+  \ref{tab:tab5_spread_time_anova} and coefficients in SI Table 4. Horizontal
+  jitter (up to 2 hr) was added to the plot for visualization and to avoid
+  overplotting. All collections were at the times labeled on the x-axis.. A
+  lack of data at earlier time points for a taxon indicates no ignitions
+  occurred at those time points.}
   \label{fig:spread_time}
 \end{figure}
 
 
 \begin{table}[H]
-  \caption[Mixed linear model of flame spread rate.]{Mixed model results for flame spread rate  as a function of time since wetting with genus as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}.}
+  \caption[Mixed linear model of flame spread rate.]{Mixed model results for flame spread rate  as a function of time since wetting with genus as a fixed effect and species as a nested random effect. Approximate degrees of freedom, pseudo F statistics and p-values were calculated by the Kenward-Roger approximation \cite{Kenward_Roger-1997}. Estimated coefficients are in SI Table 4}
   \label{tab:spread_time_anova}
 \centering
 %% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
 \input{figs_tables/tab5_spread_time_anova.ltx}
 \end{table}
 
+Fuel consumption was highly variable across trials and intermediate values were less common than very low are moderately high consumption (Fig. \ref{fig:spread_time}). All parameters significantly contributed to the model as indicated by Table \ref{tab:consume-time-anova}. As with flame spread rate some pines had the most rapid response to drying. However, unlike in the other flammability analyses, here the pines did not all behave similarly: \emph{P. lambertiana} had lower fuel consumption than did \emph{P. ponderosa} and \emph{P. jeffreyii}. We noticed this during trials and in model fitting we found that placing \emph{P. lambertiana} in its own group allowed model convergence that was otherwise impossible.
 
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/fig7_consume_time.pdf}
+\caption{Percent fuel consumed by time since wetting for litter of eight
+  species. Curves shown indicate best fit beta regression lines. Model ANOVA
+  table in Table \ref{tab:tab5_spread_time_anova} and coefficients in SI Table
+  4. Horizontal jitter (up to 2 hr) was added to the plot for visualization and
+  to avoid overplotting. All collections were at the times labeled on the
+  x-axis.. A lack of data at earlier time points for a taxon indicates no
+  ignitions occurred at those time points.}
+  \label{fig:spread_time}
+\end{figure}
 
-We used binomial logistic regression to model the relationship between moisture content and the probability of ignition to determine moisture of extinction for the eight species. Q. kelloggii ignited at all moisture levels tested (10--65\%) while C. decurrens and A. concolor failed to do so across most moisture levels. I assumed the inflection point on the curve at 50\% to allow for the determination of moisture of extinction for the remaining species (15\% for A. concolor and S. giganteum, 20\% for A. magnifica, 35\% for P. lambertiana, and 60\% for P. ponderosa and P. jeffreyi).
+\begin{table}[H]
+  \caption{Generalized linear mixed model results for fuel consumption as a function of time since wetting with taxonomic group as a fixed effect and species as a nested random effect. These are beta regression models. The analysis of deviance table below shows deviance comparisons for the simplest null model with only intercept and random effect (model 1), for a taxon effect only (model 2), for a taxon and mosture content effect (model 3) and for the full model including the taxon by moisture interaction (model 4). Coefficient estimates are in SI Table 5.}
+  \label{tab:consume-time-anova}
+\centering
+\input{figs_tables/tab6_consume_time_anova.ltx}
+\end{table}
+
 
 \subsection{Effects of moisture and flammability in litter mixtures}
 
-Moisture effects on litter mixtures
-
-Based on visual inspection of the dry down curves and the estimated marginal means for maximum water retainability and desiccation rate, selected four species to represent the full range of litter moisture dynamics for use in the litter mixtures: \emph{Abies concolor}, \
+Based on visual inspection of the dry down curves and the estimated marginal means for maximum water retainability and desiccation rate (SI Figs 2-3), we selected four species to represent the full range of litter moisture dynamics for use in the litter mixtures.
 
 The mixture that does not contain Q. kelloggii (AbCaPi; Fig. 2.5) absorbs less moisture. This result is to be expected considering the result obtained from the single species trials, and reveals that Q. kelloggii, as the species that absorbs more moisture, drives the water retainability behavior of the mixtures it appears in. In terms of maximum water retainability, the mixtures discriminate into three groups: 1) mixture without Q. kelloggii (AbCaPi), 2) mixtures with both A. concolor and Q. kelloggii (AbCaQu and AbPiQu), and 3) mixture without A. concolor (CaPiQu). There is no discrimination between the mixtures in terms of slopes. Though the mixtures with both C. decurrens and P. jeffreyi (AbCaPi and CaPiQu) are significantly different from one another, the remaining two mixtures (AbCaQu and AbPiQu) cannot be distinguished from one another nor from AbCaPi and CaPiQu. The moisture content of a mixture at any given time was also dependent upon the bulk density of the mixture (anova analysis resulted in a better model if bulk density was included as a fixed effect, p=0.01135).
 
@@ -527,12 +554,6 @@ Non-additivity in flammability
 
 We determined the presence of non-additivity in the flammability of litter mixtures by comparing the flammability of the mixtures to a null model created by the arithmetic average of the predicted individual flammability of each species in the mixture (Figs. 2.7 and 2.8). Both spread rate and time to ignition exhibited non-additivity, mediated by time since wetting. Observed spread rate values for the mixtures were higher than predicted by the null model, though the non-additivity was stronger for mixtures that contained Q. kelloggii. This result is likely driven by the bulk density of the mixtures, which was lower than predicted, making the mixtures’ litter beds more aerated. Non-additivity in time to ignition is strongly influenced by the presence of C. decurrens in the mixture. This species failed to ignite several times in the individual trials and was assigned the maximum number of seconds for the ignition attempt, 180.
 
-
-
-This section may be divided by subheadings. It should provide a concise and precise description of the experimental results, their interpretation as well as the experimental conclusions that can be drawn.
-\begin{quote}
-  This section may be divided by subheadings. It should provide a concise and precise description of the experimental results, their interpretation as well as the experimental conclusions that can be drawn.
-\end{quote}
 
 %\begin{listing}[H]
 %\caption{Title of the listing}
