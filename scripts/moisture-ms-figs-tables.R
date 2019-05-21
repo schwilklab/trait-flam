@@ -19,7 +19,7 @@ xbreaks <- seq(0, 144, 24)
 ybreaks <- seq(0, 700, 50)
 
 fig1 <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
-  geom_point(size=1.2, alpha=0.7, stroke=0) +
+  geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
   geom_smooth(method="glm",
               method.args=list(family=gaussian(link="log")), se=FALSE, size =0.6) +
   scale_colour_manual(values=schwilkcolors) +
@@ -188,7 +188,7 @@ print(xtable(tab3), file=file.path(RESULTS, "tab3_di_anova.ltx"),  booktabs=TRUE
 ###############################################################################
 ## Flammability plots and tables
 ###############################################################################
-oldflam <- read.csv("../data/burn-trials/flamdt.csv") %>% left_join(species) %>%
+oldflam <- read.csv("../data/burn-trials/flamdt.csv") %>% right_join(species) %>%
   mutate(hour=144, vpd=2.44, t2ignit=ignit, combust=combus) #, actualMC_dry=5)
 b <- oldflam %>% filter(nchar(as.character(spcode)) < 5) %>% bind_rows(burnt)
 
@@ -251,33 +251,66 @@ print(xtable(tab.spread.moist.coef), file=file.path(RESULTS, "SI_tab2_spread_moi
 ###############################################################################
 ## Fig 5: Fuel consumption by moisture content
 ###############################################################################
+b.consume <- b %>% mutate(spcode=factor(spcode), taxon=factor(taxon), consum=consum/100)
+b.consume <- mutate(b.consume, consum.t = case_when(consum == 0 ~ consum+0.00001, TRUE ~ consum),
+            consum=consum.t) %>% filter(!is.na(actualMC_dry))
+
+opts <-admbControl(impSamp=0,maxfn=500,imaxfn=500,maxph=5,noinit=FALSE,shess=TRUE,
+            run=TRUE, ZI_kluge=FALSE, poiss_prob_bound=TRUE)
+
+consume.moist.mod <- glmmadmb(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + (1 | spcode),
+                             family="beta", link="logit", zeroInflation=FALSE, mcmc=TRUE,
+                             data=b.consume, admb.opts=opts, verbose=TRUE)
+summary(consume.moist.mod)
+
+
+newdata <- expand.grid(taxon = levels(b.consume$taxon), actualMC_dry=c(0:80))
+newdata$consum <- predict(consume.moist.mod, newdata, type="response")*100
+
+
+
 fig5 <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
-  geom_point(size=1.5, alpha=0.7, stroke=0) +
+  geom_jitter(height=1, width=1, size=1.5, alpha=0.7, stroke=0) +
   scale_colour_manual(values=schwilkcolors) +
   xlab("Moisture content (%)") + ylab("Fuel consumed (%)") + 
   pubtheme.nogridlines +
-  stat_smooth(method="lm", se=FALSE, size=0.8) +
+  #stat_smooth(method="lm", se=FALSE, size=0.8) +
+  geom_line(data=newdata, size=0.8) +
   theme(legend.position=c(.8, .86),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
         legend.title=element_blank())
+fig5
 ggsave(file.path(RESULTS, "fig5_consume_actualMC.pdf"), plot=fig5,
        width=col1, height=col1, unit="cm")
 
 ###############################################################################
-## Table 4: Fuel consumptione and moisture content ANOVA
+## Table 4: Fuel consumption and moisture content ANOVA
 ###############################################################################
-consume.moist.mod <- lmer(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
-                         data=b)
+## consume.moist.mod <- lmer(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
+##                          data=b)
 
-summary(consume.moist.mod)
-anova(consume.moist.mod)
+## summary(consume.moist.mod)
+## anova(consume.moist.mod)
 
-consume.moist.mod.mixed <- mixed(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
-                           data=b, method="KR")
-tab.consume.moist <- anova(consume.moist.mod.mixed)
+## consume.moist.mod.mixed <- mixed(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
+##                            data=b, method="KR")
+
+consume.moist.mod.null0 <- glmmadmb(consum ~ 1 + (1 | spcode),
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b.consume, admb.opts=opts, verbose=TRUE)
+consume.moist.mod.null1 <- glmmadmb(consum ~ taxon + (1 | spcode),
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b.consume, admb.opts=opts, verbose=TRUE)
+consume.moist.mod.null2 <- glmmadmb(consum ~ taxon + actualMC_dry + (1 | spcode),
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b.consume, admb.opts=opts, verbose=TRUE)
+
+tab.consume.moist <- anova(consume.moist.mod, consume.moist.mod.null0,
+                           consume.moist.mod.null1, consume.moist.mod.null2)
+
 tab.consume.moist
-names(tab.consume.moist)[4] <- "p value"
+#names(tab.consume.moist)[4] <- "p value"
 print(xtable(tab.consume.moist), file=file.path(RESULTS, "tab4_consume_moist_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
@@ -297,7 +330,7 @@ print(xtable(tab.consume.moist.coef), file=file.path(RESULTS, "SI_tab3_consume_m
 ###############################################################################
 
 fig6 <- ggplot(b, aes(hour, spread, color=taxon)) +
-  geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0) +
+  geom_jitter(width=2, height=0, size=1.5, alpha=0.7, stroke=0) +
   geom_smooth(method="lm", se=FALSE, size=1.2) +
   scale_colour_manual(values=schwilkcolors, drop=TRUE) +
   xlab("Time since wetting (hr)") +  ylab("Spread rate (mm/s)") +
@@ -339,20 +372,20 @@ print(xtable(tab.spread.time.coef), file=file.path(RESULTS, "SI_tab4_spread_time
 
 
 ###############################################################################
-## Table 6: Fuel consumption by time since wetting
+## Figure 7: Fuel consumption by time since wetting
 ###############################################################################
 library(glmmADMB)
 library(betareg)
 #library(glmmTMB)
 
-b <- b %>% mutate(taxon = case_when(genus=="Sequoiadendron" |
+b.new <- b %>% mutate(taxon = case_when(genus=="Sequoiadendron" |
                                     genus=="Calocedrus" ~ "Cupressaceae",
                                     spcode=="Pila" ~ "P. lambertiana",
                                     TRUE ~ genus)
                   )
 
 
-b1 <- b %>% mutate(spcode=factor(spcode), taxon=factor(taxon), consum=consum/100)
+b1 <- b.new %>% mutate(spcode=factor(spcode), taxon=factor(taxon), consum=consum/100)
 b2 <- data.frame(consum = b1$consum, spcode=b.scaled$spcode,  taxon=b.scaled$taxon,
                  vpd=b.scaled$vpd, hour=b.scaled$hour)
 b3 <- mutate(b2, consum.t = case_when(consum == 0 ~ consum+0.001, TRUE ~ consum))
@@ -403,3 +436,30 @@ fig7 <- ggplot(b, aes(hour, consum, color=taxon)) +
 ggsave(file.path(RESULTS, "fig7_consume_time.pdf"), plot=fig7,
        width=col1, height=col1, unit="cm")
 
+
+###############################################################################
+## Table 6: Fuel consumption by time
+###############################################################################
+consume.time.mod.null0 <- glmmadmb(consum ~ 1,
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b4, admb.opts=opts, verbose=TRUE)
+consume.time.mod.null1 <- glmmadmb(consum ~ taxon,
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b4, admb.opts=opts, verbose=TRUE)
+consume.time.mod.null2 <- glmmadmb(consum ~ taxon + hour,
+                             family="beta", link="logit", zeroInflation=FALSE,
+                             data=b4, admb.opts=opts, verbose=TRUE)
+tab.consume.time <- anova(consume.time.mod, consume.time.mod.null0, consume.time.mod.null1,
+      consume.time.mod.null2)
+
+tab.consume.time
+print(xtable(tab.consume.time), file=file.path(RESULTS, "tab6_consume_time_anova.ltx"),
+      booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
+
+###############################################################################
+## SI Table 5: Consumption by time coefficients
+###############################################################################
+tab.consume.time.coef <- summary(consume.time.mod)$coefficients
+print(xtable(tab.consume.time.coef),
+      file=file.path(RESULTS, "SI_tab5_consume_time_coef.ltx"),
+      booktabs=TRUE, floating=FALSE)
