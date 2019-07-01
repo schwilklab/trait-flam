@@ -31,15 +31,15 @@ mmc <- mmc %>% mutate(mixcode = str_replace(mixcode, "Ab", "Abco"),
                       sp3 = str_sub(mixcode, 9,12))
 
 
-mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod$full_model, allow.new.levels=TRUE,
+mmc <- mmc %>% mutate(MC_dry_pred1 = exp(predict(dry.mod, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp1,
                                                 tray = str_c(sp1,"_",rep,"NEW"),
                                                 hour = hour))),
-                      MC_dry_pred2 = exp(predict(dry.mod$full_model, allow.new.levels=TRUE,
+                      MC_dry_pred2 = exp(predict(dry.mod, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp2,
                                                 tray = str_c(sp2,"_",rep,"NEW"),
                                                 hour = hour))),
-                      MC_dry_pred3 = exp(predict(dry.mod$full_model, allow.new.levels=TRUE,
+                      MC_dry_pred3 = exp(predict(dry.mod, allow.new.levels=TRUE,
                                                 newdata=data.frame(spcode=sp3,
                                                 tray = str_c(sp3,"_",rep,"NEW"),
                                                 hour = hour))),
@@ -73,28 +73,23 @@ mmc$logMC_dry <-  log(mmc$MC_dry)
 mmc <- mmc %>% mutate(tray = str_c(spcode, "_", rep))
 
 # Fit a nested model using lmer
-mdry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 + hour | tray), data=mmc)
+mdry.mod <- lmer(log(MC_dry) ~ hour*spcode + (1 | tray), data=mmc)
 summary(mdry.mod)
 anova(mdry.mod)
 
 # comparing the above model with one with bulk density added. Second model is better
-mdrybd.mod <- lmer(log(MC_dry) ~ hour*spcode + bd + (1 + hour | tray), data=mmc)
+mdrybd.mod <- lmer(log(MC_dry) ~ hour*spcode + bd + (1 | tray), data=mmc)
 summary(mdrybd.mod)
 anova(mdry.mod, mdrybd.mod)
 
-# test for pairwise differences and number of distinct groups
-library(lsmeans)
-#cld(lstrends(mdry.mod,~ spcode, var = "hour"))
-#cld(lsmeans(mdry.mod, ~ spcode))
+## # subset by species to get the coefficients (y0 and B) for each curve.
+## coefuncm <- function(d){
+##   mod <- lmer(log(MC_dry)~ hour + (1 | tray ), data=d)
+##   res <- coef(mod)
+##   return(data.frame(logmaxMC = res[1,1], logmaxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
+## }
 
-# subset by species to get the coefficients (y0 and B) for each curve.
-coefuncm <- function(d){
-  mod <- lmer(log(MC_dry)~ hour + (1 + hour | tray ), data=d)
-  res <- summary(mod)$coefficients
-  return(data.frame(logmaxMC = res[1,1], logmaxMC.se = res[1,2],  di= res[2,1], di.se = res[2,2]))
-}
-
-mmcdis <- mmc %>% group_by(spcode) %>% do(coefuncm(.)) %>% mutate(maxMC = exp(logmaxMC), maxMC.se=exp(logmaxMC.se))
+## mmcdis <- mmc %>% group_by(spcode) %>% do(coefuncm(.)) %>% mutate(maxMC = exp(logmaxMC), maxMC.se=exp(logmaxMC.se))
 
 
 ###############################################################################

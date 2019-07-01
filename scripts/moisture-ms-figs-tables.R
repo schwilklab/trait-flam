@@ -3,12 +3,14 @@
 
 library(xtable)
 library(ggrepel)
+library(glmmADMB)
 
 RESULTS <- "../ms/figs_tables/"
 
 source("theme-opts.R")
 source("dry-down.R")
 source("burn-moist.R")
+source("read-moistmix.R")
 
 set.seed(100)
 
@@ -463,3 +465,147 @@ tab.consume.time.coef <- summary(consume.time.mod)$coefficients
 print(xtable(tab.consume.time.coef),
       file=file.path(RESULTS, "SI_tab5_consume_time_coef.ltx"),
       booktabs=TRUE, floating=FALSE)
+
+
+##############################################################################
+## Mixtures
+##############################################################################
+
+
+###############################################################################
+## Fig 8: Drydown for mixtures
+###############################################################################
+fig8 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
+  geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
+  geom_smooth(method="glm",
+              method.args=list(family=gaussian(link="log")), se=FALSE, size =0.6) +
+  scale_colour_manual(values=schwilkcolors) +
+  xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
+  scale_x_continuous(breaks=xbreaks) +
+  scale_y_continuous(breaks=ybreaks) +
+  pubtheme.nogridlines +
+  theme(legend.position=c(0.75, 0.86),
+        legend.title=element_blank())
+#        legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
+#       legend.key.height=unit(smsize,"pt"))
+fig8
+ggsave(file.path(RESULTS, "fig8_mixture_drydown-curves.pdf"), plot=fig8,
+       width=col1, height=col1, units="cm")
+
+
+###############################################################################
+## Fig 9: Observed vs predicted moisture
+###############################################################################
+
+fig9 <- ggplot(mmc.sum, aes(MC_dry_pred, MC_dry.mean, color=spcode, shape=factor(hour))) +
+  geom_point(size=4) +
+  geom_pointrange(aes(ymin=MC_dry.mean-MC_dry.sd,
+                      ymax=MC_dry.mean+MC_dry.sd),
+                  size=0.5) +
+  scale_shape_discrete(name="Time since wetting") + 
+  scale_colour_manual(name="Litter mixture", values=schwilkcolors) +
+#  scale_colour_discrete(name="Hour since saturation") +
+  xlab("Predicted moisture content (%)") + ylab("Observed moisture content (%)") +
+  geom_abline(intercept=0, slope=1) +
+  pubtheme.nogridlines
+
+  ## theme(legend.position=c(.1, .86),
+  ##       legend.title=element_blank())
+
+
+fig9
+ggsave(file.path(RESULTS, "fig9_mixture_obs_vs_pred_mc.pdf"), plot=fig9,
+       width=col2, height=col1, units="cm")
+
+
+## test:
+mix_mc_mod <- lmer(MC_dry ~ MC_dry_pred + (1 | spcode), data=mmc)
+summary(mix_mc_mod)
+library(car)
+
+
+# conclusion, slope of .455 significantly higher than zero (p <0.0001).
+
+###############################################################################
+## Fig 10: Observed vs predicted spread rate
+###############################################################################
+names(mflam)[names(mflam) == 'spcode'] <- 'mix' # rename
+
+getmean <- function(df, hr, s1, s2, s3, var) {
+  res <- mean(dplyr::filter(df, hour==hr & spcode %in% c(s1,s2,s3))[[var]])
+  if(is.nan(res)) {
+    res <- 0
+  }
+  return(res)
+}
+
+## getmeanco <- function(df) {
+##   return(mean(df$consum))
+## }
+
+b.sum <- b %>% group_by(spcode, hour) %>% summarize(spread = mean(spread), consum = mean(consum), actualMC_dry = mean(actualMC_dry))
+
+
+b.mix.pred <- dplyr::select(mflam, mix, hour, sp1, sp2, sp3) %>%
+  unique() %>% rowwise() %>%
+  mutate(spread.m = getmean(b.sum, hour, sp1,sp2,sp3, "spread"),
+         consum.m = getmean(b.sum, hour, sp1,sp2,sp3, "consum"))
+
+b.mix.sum <- left_join(mflam, b.mix.pred)
+
+
+
+## ggplot(mflam, aes(hour, spread, color=hour)) +
+##   facet_grid(. ~ mix) +
+##   geom_jitter() +
+##   #  xlim(0.0, 0.3) +
+##   geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
+##   xlab("Time since wetting (h)") + ylab("Spread rate (cm/s)") +
+##   pubtheme.nogridlines
+
+
+
+
+fig10 <- ggplot(b.mix.sum, aes(hour, spread-spread.m)) +
+  facet_grid(. ~ mix) +
+  geom_jitter(width=3, alpha=0.8) +
+  geom_smooth(method="lm", se=FALSE, color="black") +
+  geom_hline(aes(yintercept=0), color="black") +
+  #  xlim(0.0, 0.3) +
+#  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
+  xlab("Time since wetting (h)") + ylab("Relative spread rate (cm/s)") +
+  pubtheme.nogridlines
+
+fig10
+ggsave(file.path(RESULTS, "fig10_mixture_obs_vs_pred_spread.pdf"), plot=fig10,
+       width=col2, height=col1, units="cm")
+
+# test:
+mix_spread_mod <- lmer(spread-spread.m ~ scale(hour) + (1 | mix), data = b.mix.sum)
+summary(mix_spread_mod)
+
+
+###############################################################################
+## Fig 11: Observed vs predicted fuel consumption
+###############################################################################
+fig11 <- ggplot(b.mix.sum, aes(hour, consum-consum.m)) +
+  facet_grid(. ~ mix) +
+  geom_jitter(width=3) +
+  geom_hline(aes(yintercept=0), color="black") +
+    geom_smooth(method="lm", se=FALSE, color="black") +
+  #  xlim(0.0, 0.3) +
+#  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
+  xlab("Time since wetting (h)") + ylab("Relative percent fuel consumed") +
+  pubtheme.nogridlines
+
+fig11
+ggsave(file.path(RESULTS, "fig11_mixture_obs_vs_pred_consume.pdf"), plot=fig11,
+       width=col2, height=col1, units="cm")
+
+# test:
+mix_consum_mod <- lmer(consum-consum.m ~ scale(hour) + (1 | mix), data = b.mix.sum)
+summary(mix_consum_mod)
+# So, some non additivity n drying but switches.  Positive non additivity for spread rate -- probably same mechanisms as described in 2011. No non addiviticvty for consume except for driest litters had postiive non additivity.
+
+
+
