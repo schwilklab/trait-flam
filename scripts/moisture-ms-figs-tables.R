@@ -60,7 +60,7 @@ ggsave(file.path(RESULTS, "SI_fig1_drydown-curves_logged.pdf"), plot=SI_fig1,
 ###############################################################################
 ## Table 1: drydown by species ANOVA
 ###############################################################################
-tab1 <- nice(dry.mixed)
+tab1 <- nice(dry.mixed, sig_symbols = rep("", 4))
 names(tab1)[4] <- "p value"
 #tab1 <- tab1[ ,2:4]
 tab1 <- xtable(tab1)
@@ -174,16 +174,25 @@ anova(di.mod)
 ###############################################################################
 
 tab2 <- anova(mc.mod)
-names(tab2)[5] <- "p value"
-print(xtable(tab2), file=file.path(RESULTS, "tab2_mc_anova.ltx"),  booktabs=TRUE, floating=FALSE,
+tab2$Effect <- rownames(tab2)
+tab2 <- tab2[,c(6,1,2,3,4,5)]
+names(tab2) <- c("Effect", "df", "Sum of Squares", "Mean squares", "F", "p value")
+tab2.x <- xtable(tab2, digits=c(0,0,0,1,2,2,3))
+#tab2.x[1,6] <- "<0.0001"
+print(tab2.x, file=file.path(RESULTS, "tab2_mc_anova.ltx"),  booktabs=TRUE, floating=FALSE,
       include.rownames=FALSE)
 
 ###############################################################################
 ## Table 3: dessication rateanova
 ###############################################################################
-tab3 <- anova(di.mod)
-names(tab3)[5] <- "p value"
-print(xtable(tab3), file=file.path(RESULTS, "tab3_di_anova.ltx"),  booktabs=TRUE, floating=FALSE,
+tab3 <- as.data.frame(anova(di.mod))
+tab3$Effect <- rownames(tab3)
+rownames(tab3) <- NULL
+tab3 <- tab3[,c(6,1,2,3,4,5)]
+names(tab3) <- c("Effect", "df", "Sum of Squares", "Mean squares", "F", "p value")
+tab3.x <- xtable(tab3, digits=c(0, 0 ,0,-2,-2, 2,3))
+print(tab3.x, file=file.path(RESULTS, "tab3_di_anova.ltx"), math.style.exponents=TRUE,
+      booktabs=TRUE, floating=FALSE,
       include.rownames=FALSE)
 
 
@@ -215,7 +224,7 @@ b.scaled <- b %>% mutate_if(is.numeric, scale)
 fig4 <- ggplot(b, aes(actualMC_dry, spread, color=taxon)) +
   geom_point(size=1.5, alpha=0.7, stroke=0) +
   scale_colour_manual(values=schwilkcolors) +
-  xlab("Moisture content (%)") + ylab("Spread rate (mm/s)") +
+  xlab("Moisture content (%)") + ylab("Spread rate (cm/s)") +
   pubtheme.nogridlines +
   stat_smooth(method="lm", se=FALSE, size=0.8, drop=TRUE) +
   theme(legend.position=c(.75, .86),
@@ -233,14 +242,15 @@ summary(spread.moist.mod)
 anova(spread.moist.mod)
 
 ###############################################################################
-## Table 3: Spread rate and moisture content ANOVA
+## Table 4: Spread rate and moisture content ANOVA
 ###############################################################################
-spread.moist.mod.mixed <- mixed(spread ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
-                           data=b, method="KR")
+spread.moist.mod.mixed <- mixed(spread ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd +
+                                  (1 | spcode), data=b, method="KR")
 tab.spread.moist <- anova(spread.moist.mod.mixed)
 tab.spread.moist
-names(tab.spread.moist)[4] <- "p value"
-print(xtable(tab.spread.moist), file=file.path(RESULTS, "tab3_spread_moist_anova.ltx"),
+tab4 <- nice(spread.moist.mod.mixed,  sig_symbols = rep("", 4))
+names(tab4)[4] <- "p value"
+print(xtable(tab4), file=file.path(RESULTS, "tab4_spread_moist_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
@@ -287,7 +297,7 @@ ggsave(file.path(RESULTS, "fig5_consume_actualMC.pdf"), plot=fig5,
        width=col1, height=col1, unit="cm")
 
 ###############################################################################
-## Table 4: Fuel consumption and moisture content ANOVA
+## Table 5: Fuel consumption and moisture content ANOVA
 ###############################################################################
 ## consume.moist.mod <- lmer(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
 ##                          data=b)
@@ -312,8 +322,10 @@ tab.consume.moist <- anova(consume.moist.mod, consume.moist.mod.null0,
                            consume.moist.mod.null1, consume.moist.mod.null2)
 
 tab.consume.moist
+
+
 #names(tab.consume.moist)[4] <- "p value"
-print(xtable(tab.consume.moist), file=file.path(RESULTS, "tab4_consume_moist_anova.ltx"),
+print(xtable(tab.consume.moist), file=file.path(RESULTS, "tab5_consume_moist_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
@@ -335,7 +347,7 @@ fig6 <- ggplot(b, aes(hour, spread, color=taxon)) +
   geom_jitter(width=2, height=0, size=1.5, alpha=0.7, stroke=0) +
   geom_smooth(method="lm", se=FALSE, size=1.2) +
   scale_colour_manual(values=schwilkcolors, drop=TRUE) +
-  xlab("Time since wetting (hr)") +  ylab("Spread rate (mm/s)") +
+  xlab("Time since wetting (hr)") +  ylab("Spread rate (cm/s)") +
   scale_x_continuous(breaks=xbreaks) +
   #scale_y_log10() +
   pubtheme.nogridlines +
@@ -356,12 +368,12 @@ anova(spread.mod.mixed)
 ## anova(spread.time.mod.lm)
 
 ###############################################################################
-## Table 5: # spread rate by time
+## Table 6: # spread rate by time
 ###############################################################################
 
-tab.spread.time <- nice(spread.mod.mixed)
+tab.spread.time <- nice(spread.mod.mixed, sig_symbols = rep("", 4))
 names(tab.spread.time)[4] <- "p value"
-print(xtable(tab.spread.time), file=file.path(RESULTS, "tab5_spread_time_anova.ltx"),
+print(xtable(tab.spread.time), file=file.path(RESULTS, "tab6_spread_time_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
@@ -440,7 +452,7 @@ ggsave(file.path(RESULTS, "fig7_consume_time.pdf"), plot=fig7,
 
 
 ###############################################################################
-## Table 6: Fuel consumption by time
+## Table 7: Fuel consumption by time
 ###############################################################################
 consume.time.mod.null0 <- glmmadmb(consum ~ 1,
                              family="beta", link="logit", zeroInflation=FALSE,
@@ -451,19 +463,22 @@ consume.time.mod.null1 <- glmmadmb(consum ~ taxon,
 consume.time.mod.null2 <- glmmadmb(consum ~ taxon + hour,
                              family="beta", link="logit", zeroInflation=FALSE,
                              data=b4, admb.opts=opts, verbose=TRUE)
-tab.consume.time <- anova(consume.time.mod, consume.time.mod.null0, consume.time.mod.null1,
-      consume.time.mod.null2)
+tab.consume.time <- anova(consume.time.mod.null0, consume.time.mod.null1, consume.time.mod.null2, consume.time.mod)
 
-tab.consume.time
-print(xtable(tab.consume.time), file=file.path(RESULTS, "tab6_consume_time_anova.ltx"),
+tab.consume.time[,1] <- c("consum ~ 1","consum ~ taxon","consum ~ taxon + hour","consum ~ hour + taxon + taxon:hour")
+
+names(tab.consume.time) <- c("Model", "Log Lik.", "df", "Deviance", "p value")
+
+print(xtable(tab.consume.time), file=file.path(RESULTS, "tab7_consume_time_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
+
 
 ###############################################################################
 ## SI Table 5: Consumption by time coefficients
 ###############################################################################
 tab.consume.time.coef <- summary(consume.time.mod)$coefficients
-print(xtable(tab.consume.time.coef),
-      file=file.path(RESULTS, "SI_tab5_consume_time_coef.ltx"),
+SI_tab5 <- xtable(tab.consume.time.coef)
+print(SI_tab5,file=file.path(RESULTS, "SI_tab5_consume_time_coef.ltx"),
       booktabs=TRUE, floating=FALSE)
 
 
@@ -480,7 +495,7 @@ fig8 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
   geom_smooth(method="glm",
               method.args=list(family=gaussian(link="log")), se=FALSE, size =0.6) +
   scale_colour_manual(values=schwilkcolors) +
-  xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
+  xlab("Time since wetting (hr)") + ylab("Moisture by dry weight (%)") +
   scale_x_continuous(breaks=xbreaks) +
   scale_y_continuous(breaks=ybreaks) +
   pubtheme.nogridlines +
@@ -492,6 +507,22 @@ fig8
 ggsave(file.path(RESULTS, "fig8_mixture_drydown-curves.pdf"), plot=fig8,
        width=col1, height=col1, units="cm")
 
+# stats
+mix_drydown_mod <- lmer(log(MC_dry) ~ hour * spcode + (1 | rep), data=mmc)
+summary(mix_drydown_mod)
+anova(mix_drydown_mod)
+
+mix_drydown_mixed <- mixed(log(MC_dry) ~ hour * spcode + (1 | rep), data=mmc)
+
+###############################################################################
+## Table 8: drydown by species ANOVA
+###############################################################################
+tab8 <- nice(mix_drydown_mixed,  sig_symbols = rep("", 4))
+names(tab8)[4] <- "p value"
+#tab1 <- tab1[ ,2:4]
+tab8.x <- xtable(tab8)
+
+print(tab8.x, file=file.path(RESULTS, "tab8_mixtures_drydown_anova.ltx"),  booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
 ## Fig 9: Observed vs predicted moisture
@@ -555,26 +586,26 @@ b.mix.sum <- left_join(mflam, b.mix.pred)
 
 
 
-## ggplot(mflam, aes(hour, spread, color=hour)) +
-##   facet_grid(. ~ mix) +
-##   geom_jitter() +
-##   #  xlim(0.0, 0.3) +
-##   geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
-##   xlab("Time since wetting (h)") + ylab("Spread rate (cm/s)") +
-##   pubtheme.nogridlines
-
-
-
-
-fig10 <- ggplot(b.mix.sum, aes(hour, spread-spread.m)) +
+fig10 <- ggplot(mflam, aes(hour, spread)) +
   facet_grid(. ~ mix) +
-  geom_jitter(width=3, alpha=0.8) +
-  geom_smooth(method="lm", se=FALSE, color="black") +
-  geom_hline(aes(yintercept=0), color="black") +
+  geom_jitter() +
   #  xlim(0.0, 0.3) +
-#  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
-  xlab("Time since wetting (h)") + ylab("Relative spread rate (cm/s)") +
+  geom_point(aes(hour, spread.m), size=3, shape=5, data = b.mix.pred) +
+  xlab("Time since wetting (h)") + ylab("Spread rate (cm/s)") +
   pubtheme.nogridlines
+
+
+
+
+## fig10 <- ggplot(b.mix.sum, aes(hour, spread-spread.m)) +
+##   facet_grid(. ~ mix) +
+##   geom_jitter(width=3, alpha=0.8) +
+##   geom_smooth(method="lm", se=FALSE, color="black") +
+##   geom_hline(aes(yintercept=0), color="black") +
+##   #  xlim(0.0, 0.3) +
+## #  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
+##   xlab("Time since wetting (h)") + ylab("Relative spread rate (cm/s)") +
+##   pubtheme.nogridlines
 
 fig10
 ggsave(file.path(RESULTS, "fig10_mixture_obs_vs_pred_spread.pdf"), plot=fig10,
@@ -588,15 +619,26 @@ summary(mix_spread_mod)
 ###############################################################################
 ## Fig 11: Observed vs predicted fuel consumption
 ###############################################################################
-fig11 <- ggplot(b.mix.sum, aes(hour, consum-consum.m)) +
+fig11 <- ggplot(mflam, aes(hour, consum)) +
   facet_grid(. ~ mix) +
-  geom_jitter(width=3) +
-  geom_hline(aes(yintercept=0), color="black") +
-    geom_smooth(method="lm", se=FALSE, color="black") +
+  geom_jitter() +
   #  xlim(0.0, 0.3) +
-#  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
-  xlab("Time since wetting (h)") + ylab("Relative percent fuel consumed") +
+  geom_point(aes(hour, consum.m), size=3, shape=5, data = b.mix.pred) +
+  xlab("Time since wetting (h)") + ylab("Percent fuel consumed") +
   pubtheme.nogridlines
+
+
+
+
+## fig11 <- ggplot(b.mix.sum, aes(hour, consum-consum.m)) +
+##   facet_grid(. ~ mix) +
+##   geom_jitter(width=3) +
+##   geom_hline(aes(yintercept=0), color="black") +
+##     geom_smooth(method="lm", se=FALSE, color="black") +
+##   #  xlim(0.0, 0.3) +
+## #  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
+##   xlab("Time since wetting (h)") + ylab("Relative percent fuel consumed") +
+##   pubtheme.nogridlines
 
 fig11
 ggsave(file.path(RESULTS, "fig11_mixture_obs_vs_pred_consume.pdf"), plot=fig11,

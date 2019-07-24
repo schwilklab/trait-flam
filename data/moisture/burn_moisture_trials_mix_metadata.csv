@@ -5,10 +5,10 @@ day,numerical,,day of the burn
 month,numerical,,month of the burn
 time,numerical,,hour of the burn
 t2ignit,numerical,s,"time to ignition, measured as the # of seconds it takes for steady flame"
-sustain,numerical,s,"flaming duration, measured as the # of seconds it takes flame to travel through the bed"
+sustain,numerical,s,flaming duration
 combust,numerical,mm,"maximum flame height, measured as height of the tallest flame"
 consum,numerical,%,"consumability, as percent mass loss"
-spread,numerical,cm,"spread rate, measured by dividing the length of the bed by sustainability"
+spread,numerical,cm/s,flame spread rate
 rh,numerical,%,relative humidity
-T_C,numerical,°C,air temperature
+T_C,numerical,ï¿½C,air temperature
 type,string,,indicates whether spcode refers to a monoculture or a mixture
