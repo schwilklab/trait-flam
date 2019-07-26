@@ -1,18 +1,20 @@
 %%% ========================================================= %%%
-%%% Package jae.sty                                           %%%
+%%% Package jecol.sty                                         %%%
+%%% Dylan Schwilk 2019.                                       %%%
+%%% Based on jae.sty by                                       %%%
 %%% Mathieu Basille basille@ase-research.org                  %%%
-%%% 09.02.2011                                                %%%
 %%% ========================================================= %%%
 
-\ProvidesPackage{jae}
+\ProvidesPackage{jecol}
 
 %%% Encodage et police
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
 %%% Package divers et langue
 \usepackage{graphicx, url, color, multirow, rotating, mdwlist}
+\usepackage{fullpage}
 \usepackage[absolute]{textpos}
-\usepackage[french,british]{babel}
+%\usepackage[french,british]{babel}
 %%% Mise en page : numérotation de toutes les lignes, interligne double
 \usepackage{lineno}
   \linenumbers
@@ -21,11 +23,13 @@
 \usepackage{fancyhdr}
 %%% Style de bibliographie adapté à JAE, gestion des \cite dans le texte
 \usepackage{natbib}
-  \bibliographystyle{jae}
+  \bibliographystyle{jecol}
   % \bibpunct{(}{)}{,}{a}{}{,}
 
-
-%%% Nouvelles commandes pour le '\maketitle' : 
+\usepackage{booktabs}
+  
+  
+%%% Additions to command '\maketitle' : 
 %%% '\running' : Running head
 %%% '\nwords' : Number of words
 %%% '\ntables' : Number of tables
@@ -119,7 +123,6 @@
 {\endorig@thebibliography}
 
 
-%%% Style des titres
 \renewcommand\section{\@startsection {section}{1}{\z@}%
                                    {-3.5ex \@plus -1ex \@minus -.2ex}%
                                    {2.3ex \@plus.2ex}%
@@ -145,12 +148,10 @@
 }
 
 
-%%% Pour renommer figures / abstract
-\addto\captionsbritish{%
-  \renewcommand{\abstractname}%
-    {{\sf\bfseries Summary}}%
-}
-\addto\captionsbritish{%
-  \renewcommand{\figurename}%
-    {Fig.}%
-}
+%% tables and figures
+
+\renewenvironment{table}
+  {\setlength\abovecaptionskip{0\p@}%
+   \setlength\belowcaptionskip{10\p@}%
+   \@float{table}}
+ {\end@float}

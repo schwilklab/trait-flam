@@ -1,11 +1,9 @@
 \documentclass[letterpaper,12pt]{article}
-\usepackage{jae/jae}
-\usepackage{booktabs}
+\usepackage{jecol}
 
 \title{Moisture effects on leaf litter are species-specific and result in non-additive flammability in mixed conifer forest}
 
 \running{Leaf litter flammability}
-
 
 \author{Rita Quinones de Magalhaes$^{1,2}$ and Dylan W. Schwilk$^1$}
   
@@ -14,9 +12,7 @@
     \item Current address: Rochester Institute of Technology, Rochester, NY 14623, USA.
 }
 
-  
-
-\nwords{X}
+\nwords{7600}
 \ntables{X}
 \nfig{X}
 \nref{X}
@@ -225,7 +221,7 @@ collection involved 2--4 individual trees at each site, separated from one
 another by at least 10\,m. The litter was collected 2\,m away from the trunk to
 obtain a more uniform sample of leaf and fine branchlet litter, because bark
 and heavier branches tend to fall closer to the tree trunk. All litter was air
-dried to < 5\% fuel moisture by dry weight for weighing and dividing into
+dried to $< 5$\% fuel moisture by dry weight for weighing and dividing into
 moisture trials. The moisture manipulations and subsequent burning trials were
 conducted in April--August 2015.
 
@@ -259,9 +255,8 @@ the observed moisture dynamics was low, so we decided \emph{a priori} to test
 the effect of one leaf trait likely to influence moisture absorption, specific
 leaf area, and one litter trait known to directly effect flammability and
 likely to influence drying rate, litter bulk density. Specific leaf area was
-taken from leaf fresh leaf area and leaf dry mass from 5 individuals per
-species and was collected as part of a previous study
-\citep{Magalhaes+Schwilk-2012}. Litter bulk density was obtained in this
+taken from leaf freshly fallen litter leaf area and leaf dry mass from 5 individuals per
+species. This measurement included petiole and for the scale-leaved species included the full excised branchlet, so this is not directly comparable to typical specific leaf area measurements on fresh leaves. Litter bulk density was obtained in this
 experiment for each basket by dividing the dry mass (450\,g) by the estimated
 litter volume (basket width x length x litter depth).
 
@@ -432,45 +427,25 @@ to most rapid: 1) \emph{C.decurrens}, 2) \emph{Abies spp} and \emph{S.
   \toprule
 Effect & df & $F$ & $P$ \\ 
   \midrule
-hour & 1, 183.73 & 1599.59 & $<$.0001 \\ 
-  spcode & 7, 89.73 & 36.15 & $<$.0001 \\ 
-  hour:spcode & 7, 184.15 & 23.06 & $<$.0001 \\ 
+  hour & 1, 183.73 & 1599.59 & $<$.0001 \\ 
+  species & 7, 89.73 & 36.15 & $<$.0001 \\ 
+  hour:species & 7, 184.15 & 23.06 & $<$.0001 \\ 
    \bottomrule
 \end{tabular}
 \end{table}
 
-
 Across these eight species specific leaf area had a positive effect on maximum
-water retention (Fig. \ref{fig:maxmc-di}, linear model $P$ = 0.003) and litter
-bulk density had a negative effect on desiccation rate (Fig. \ref{fig:bd-di},
+water retention (SI Fig 4, linear model $P$ = 0.003) and litter
+bulk density had a negative effect on desiccation rate (SI Fig 5,
 linear model $P$ = 0.029). Anova results are shown in Tables
 \ref{tab:mc_di_anova}.
-
-\begin{figure}[h]
-  \centering
-\includegraphics[width=16cm]{figs_tables/fig2_SLA_maxMC.pdf}
-\caption{Maximum water retention by specific leaf area across eight species.
-  ANOVA table in Table \ref{tab:mc_di_anova}.}
-  \label{fig:maxmc-di}
-\end{figure}
-
-
-\begin{figure}[h]
-  \centering
-\includegraphics[width=16cm]{figs_tables/fig3_di_bd.pdf}
-\caption{Drying rate rate as a function of specific leaf area and litter bulk
-  density across eight species. ANOVA table in Table \ref{tab:mc_di_anova}}.
-  \label{fig:bd-di}
-\end{figure}
-
-
 
 \begin{table}[h]
   \caption{Linear model results for maximum water retention (\% moisture
     content on dry mass basis) and for estimated drying rate (hr$^{-1}$) as
     functions of specific leaf area and litter bulk density across eight
     species. ANOVA tables shown with degrees of freedom, sum of squares, mean
-    squares, $F$, and $P$ for each effect.}
+    squares, $F$, and $P$ for each effect. Model coefficients in SI tables 2 and 3}
   \label{tab:mc_di_anova}
 \centering
 %% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
@@ -516,11 +491,11 @@ moisture than did the other groups.
 \includegraphics[width=8cm]{figs_tables/fig4_spread_actualMC.pdf}
 \caption{Flame spread rate by moisture content (model fit $F$= 61.15, df = 9,
   148, $P$ < 0.0001). Model ANOVA table in Table \ref{tab:spreadrate_anova} and
-  coefficients in SI Table 2.}
+  coefficients in SI Table 4.}
   \label{fig:spread_moist}
 \end{figure}
 
-%% Table 3 (formerly 3 and 5)
+%% Table 3 
 \begin{table}[h]
   \caption{Generalized linear mixed model results for two models predicting
     flame spread rate: the first model examined spread rate as a function of
@@ -532,13 +507,14 @@ moisture than did the other groups.
     approximation \citep{Kenward_Roger-1997}. Estimated coefficients are in SI
     Tables 2 and 4}
   \label{tab:spreadrate_anova}
+  
 \centering
 \begin{tabular}{ccrrrrr}
   \toprule
 Model set & Effect & df & $F$ & & $P$ \\
   \midrule
   Effect of moisture & mc & 1, 146.20 & 21.04 & $<$.0001 \\ 
- &  taxon & 3, 51.58 & 65.08 & $<$.0001 \\ 
+ & taxon & 3, 51.58 & 65.08 & $<$.0001 \\ 
  & vpd & 1, 148.79 & 9.62 & .002 \\ 
  & mc:taxon & 3, 147.21 & 4.83 & .003 \\ 
    
@@ -581,19 +557,19 @@ Model set & Effect & df & $F$ & & $P$ \\
   \label{tab:consume_anova}
   \centering
 
-  \begin{tabular}{ccrrrr}
+  \begin{tabular}{llrrrr}
 \toprule
 Model set & model & Log Lik. & df & Deviance & $P$ \\ 
 \midrule
-  Effect of moisture &  consum \~{} 1 & 262.12 &  &  &  \\ 
-   & consum \~{} taxon & 268.73 & 3 & 13.23 & 0.0042 \\ 
-   & consum \~{} taxon + mc & 289.57 & 1 & 41.68 & < 0.0001 \\ 
-   & consum \~{} taxon + mc + taxon:mc & 293.87 & 3 & 8.60 & 0.0351 \\ 
+  Effect of moisture &   \~{} 1 & 262.12 &  &  &  \\ 
+   &  \~{} taxon & 268.73 & 3 & 13.23 & 0.0042 \\ 
+   & \~{} taxon + mc & 289.57 & 1 & 41.68 & $<$ 0.0001 \\ 
+   & \~{} taxon + mc + taxon:mc & 293.87 & 3 & 8.60 & 0.0351 \\ 
 \midrule
 Effect of time &  consum \~{} 1 & 140.08 &  &  &  \\ 
- &  consum \~{} taxon & 155.84 & 4.00 & 31.51 & < 0.001 \\ 
- & consum \~{} taxon + time & 209.84 & 1.00 & 108.01 & <0.001 \\ 
- & consum \~{} hour + taxon + taxon:time & 216.96 & 4.00 & 14.23 & 0.01 \\ 
+ & \~{} taxon & 155.84 & 4.00 & 31.51 & $<$ 0.001 \\ 
+ & \~{} taxon + time & 209.84 & 1.00 & 108.01 & $<$ 0.001 \\ 
+ & \~{} hour + taxon + taxon:time & 216.96 & 4.00 & 14.23 & 0.01 \\ 
     \bottomrule
     \end{tabular}
 \end{table}
@@ -664,39 +640,11 @@ for use in the litter mixtures and examined all four three-species combinations
 of those four. The four species were \emph{Abies concolor}, \emph{Calocedrus
   decurrens}, \emph{Pinus jeffreyi} and \emph{Quercus kelloggii}.
 
-\begin{figure}[h]
-  \centering
-\includegraphics[width=8cm]{figs_tables/fig8_mixture_drydown-curves.pdf}
-\caption{Fuel moisture by time since saturation for four litter mixtures.  Codes for species in mixtures: Ab = \emph{Abies concolor}, Ca = \emph{Calocedrus decurrens}, Pi = \emph{Pinus jeffreyi} and Qu = \emph{Quercus kellogii}. Moistures were measured every 24 hours but data are shown with slight horizontal jitter to reduce point overlap. Mixed linear model results shown in Table \ref{tab:mixtures_drydown}.}
-  \label{fig:mixture_dry_down}
-\end{figure}
-
 Mixture dry down rates and maximum water retention showed some relationship to
-the dry down curves for individual constituent species (Fig.
-\ref{fig:mixture_dry_down}. For example, the mixture that does not contain
-\emph{Q. kelloggii} (AbCaPi in Fig. Fig. \ref{fig:mixture_dry_down}) has the
-lowest initial retention. Initial water retention and rates differed across
-mixtures (linear model based on log of moisture content, Table
-\ref{tab:mixtures_drydown}).
-
-\begin{table}[h]
-  \caption{Linear mixed model results for moisture content as a function of
-    time since wetting for four different litter mixture types. Approximate
-    degrees of freedom (df), pseudo F statistics and p-values were calculated
-    by the Kenward-Roger approximation \citep{Kenward_Roger-1997}.}
-  \label{tab:mixtures_drydown}
-\centering
-
-\begin{tabular}{llll}
-  \toprule
-Effect & df & $F$ & $P$ \\ 
-  \midrule
-time & 1, 96.19 & 565.28 & $<$.0001 \\ 
-  mixture & 3, 96.08 & 23.63 & $<$.0001 \\ 
-  time:mixture & 3, 95.71 & 8.70 & $<$.0001 \\ 
-   \bottomrule
-\end{tabular}
-\end{table}
+the dry down curves for individual constituent species (see SI Fig. 6). For
+example, the mixture that does not contain \emph{Q. kelloggii} (AbCaPi in SI
+Fig. 6) has the lowest initial retention. Initial water retention and rates
+differed across mixtures (linear model based on log of moisture content, SI Table 8)
 
 
 % . The moisture content of a mixture at any given time was also dependent upon the bulk density of the mixture (anova analysis resulted in a better model if bulk density was included as a fixed effect, p=0.01135).

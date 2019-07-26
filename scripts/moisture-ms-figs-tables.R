@@ -94,7 +94,7 @@ ggsave(file.path(RESULTS, "SI_fig2_max_water_emmeans.pdf"), plot=SI_fig2,
 ###############################################################################
 dry.trends <- emtrends(dry.mod, "display.name", var="hour")
 SI_fig3 <- plot(dry.trends) + #, comparisons=TRUE) +
-  xlab(expression(paste("Estimated marginal mean dessication rate (", hr^-1, ")"))) +
+  xlab(expression(paste("Estimated marginal mean drying rate (", hr^-1, ")"))) +
   ylab("Species") +
   pubtheme.nogridlines +
   theme(axis.text.y = element_text(face = "italic"))
@@ -109,7 +109,7 @@ ggsave(file.path(RESULTS, "SI_fig3_dessication_emmeans.pdf"), plot=SI_fig3,
 
 # 2011 trait data:
 oldtraits <- read.csv("../data/moisture/traits.csv", stringsAsFactors=FALSE)
-
+oldtraits$SLA <- oldtraits$SLA/1000
 #mtrait <- left_join(newmctr, species)
 mtrait <- left_join(mc.sum, flam.sp.avg)
 mtrait <- left_join(mtrait, oldtraits)
@@ -124,35 +124,42 @@ fig2 <- ggplot(mtrait, aes(SLA, maxMC)) +
 #  geom_errorbar(aes(ymin=maxMC+maxMC.se, ymax=maxMC-maxMC.se))+
 #  geom_errorbarh(aes(xmin=leaf.area.mean+(leaf.area.sd/sqrt(6)), xmax=leaf.area.mean-(leaf.area.sd/sqrt(6))))+
   geom_label_repel(aes(label=display.name),
-                  nudge_x=0.02,
-                  nudge_y=-0.05,
-                  fontface="italic") +
+                   hjust= 0,
+                  # direction="y",
+                   nudge_x= 2,
+                   nudge_y=100,
+                  fontface="italic",
+                  size=smsize-6,
+                  max.iter=5000) +
 #  scale_y_log10() + 
 #  scale_colour_manual(values=schwilkcolors) +
   xlab(expression(paste("Specific leaf area (", cm^3/g, ")" ))) +
-  ylab("Maximum moisture retention by dry weight ln(%)") +
+  ylab("Maximum moisture content (%)") +
   pubtheme.nogridlines
+
+fig2
 ggsave(file.path(RESULTS, "fig2_SLA_maxMC.pdf"), plot=fig2,
-       width=col2, height=col1*1.5, units="cm")
+       width=col1, height=col1, units="cm")
 
 ###############################################################################
 ## Fig. 3: leaf traits and dessication rate
 ###############################################################################
 fig3 <- ggplot(mtrait, aes(bd.mean, abs(di))) +
-  geom_point(size=3, stroke=0) +
+  geom_point(size=3, stroke=0, alpha=0.8) +
 #  geom_errorbar(aes(ymin=abs(di)+di.se, ymax=abs(di)-di.se))+
 #  geom_errorbarh(aes(xmin=bd.mean+(bd.sd/sqrt(6)), xmax=bd.mean-(bd.sd/sqrt(6))))+
   scale_colour_manual(values=schwilkcolors) +
   xlab(expression(paste("Bulk density (", g/cm^3,")"))) +
-  ylab(expression(paste("Desiccation rate (", hr^-1, ")"))) +
+  ylab(expression(paste("Drying rate (", hr^-1, ")"))) +
  geom_label_repel(aes(label=display.name),
                   nudge_x=0.005,
                   nudge_y=-0.001,
+                    size=smsize-6,
                   fontface="italic") +
   pubtheme.nogridlines
-
+fig3
 ggsave(file.path(RESULTS, "fig3_di_bd.pdf"), plot=fig3,
-       width=col2, height=col1*1.5, units="cm")
+       width=col1, height=col1, units="cm")
 
 ###############################################################################
 ## leaf traits and drydown stats
@@ -194,6 +201,16 @@ tab3.x <- xtable(tab3, digits=c(0, 0 ,0,-2,-2, 2,3))
 print(tab3.x, file=file.path(RESULTS, "tab3_di_anova.ltx"), math.style.exponents=TRUE,
       booktabs=TRUE, floating=FALSE,
       include.rownames=FALSE)
+
+
+##########################
+## SI tables for traits anaovs SI tab 2 and SI tab 3
+
+SI.tab.moist.coef <- summary(mc.mod)$coefficients
+print(xtable(SI.tab.moist.coef), file=file.path(RESULTS, "SI_tab2_mc_coef.ltx"),  booktabs=TRUE, floating=FALSE)
+
+SI.tab.di.coef <- summary(di.mod)$coefficients
+print(xtable(SI.tab.di.coef), file=file.path(RESULTS, "SI_tab3_di_coef.ltx"),  booktabs=TRUE, floating=FALSE)
 
 
 ###############################################################################
@@ -254,10 +271,10 @@ print(xtable(tab4), file=file.path(RESULTS, "tab4_spread_moist_anova.ltx"),
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
-## SI Table 2: Spread rate and moisture content coefficients
+## SI Table 4: Spread rate and moisture content coefficients
 ###############################################################################
 tab.spread.moist.coef <- summary(spread.moist.mod)$coefficients
-print(xtable(tab.spread.moist.coef), file=file.path(RESULTS, "SI_tab2_spread_moist_coef.ltx"),  booktabs=TRUE, floating=FALSE)
+print(xtable(tab.spread.moist.coef), file=file.path(RESULTS, "SI_tab4_spread_moist_coef.ltx"),  booktabs=TRUE, floating=FALSE)
 
 
 ###############################################################################
@@ -329,10 +346,10 @@ print(xtable(tab.consume.moist), file=file.path(RESULTS, "tab5_consume_moist_ano
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
-## SI Table 3: Consumption and moisture content coefficients
+## SI Table 5: Consumption and moisture content coefficients
 ###############################################################################
 tab.consume.moist.coef <- summary(consume.moist.mod)$coefficients
-print(xtable(tab.consume.moist.coef), file=file.path(RESULTS, "SI_tab3_consume_moist_coef.ltx"),  booktabs=TRUE, floating=FALSE)
+print(xtable(tab.consume.moist.coef), file=file.path(RESULTS, "SI_tab5_consume_moist_coef.ltx"),  booktabs=TRUE, floating=FALSE)
 
 
 ###############################################################################
@@ -377,11 +394,11 @@ print(xtable(tab.spread.time), file=file.path(RESULTS, "tab6_spread_time_anova.l
       booktabs=TRUE, floating=FALSE, include.rownames=FALSE)
 
 ###############################################################################
-## SI Table 4:  spread rate by time coefficients
+## SI Table 6:  spread rate by time coefficients
 ###############################################################################
 
 tab.spread.time.coef <- summary(spread.mod.mixed)$coefficient
-print(xtable(tab.spread.time.coef), file=file.path(RESULTS, "SI_tab4_spread_time_coef.ltx"),  booktabs=TRUE, floating=FALSE)
+print(xtable(tab.spread.time.coef), file=file.path(RESULTS, "SI_tab6_spread_time_coef.ltx"),  booktabs=TRUE, floating=FALSE)
 
 
 
@@ -474,11 +491,11 @@ print(xtable(tab.consume.time), file=file.path(RESULTS, "tab7_consume_time_anova
 
 
 ###############################################################################
-## SI Table 5: Consumption by time coefficients
+## SI Table 7: Consumption by time coefficients
 ###############################################################################
 tab.consume.time.coef <- summary(consume.time.mod)$coefficients
 SI_tab5 <- xtable(tab.consume.time.coef)
-print(SI_tab5,file=file.path(RESULTS, "SI_tab5_consume_time_coef.ltx"),
+print(SI_tab5,file=file.path(RESULTS, "SI_tab7_consume_time_coef.ltx"),
       booktabs=TRUE, floating=FALSE)
 
 
@@ -488,9 +505,9 @@ print(SI_tab5,file=file.path(RESULTS, "SI_tab5_consume_time_coef.ltx"),
 
 
 ###############################################################################
-## Fig 8: Drydown for mixtures
+## Fig SI 4: Drydown for mixtures
 ###############################################################################
-fig8 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
+SI_fig4 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
   geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
   geom_smooth(method="glm",
               method.args=list(family=gaussian(link="log")), se=FALSE, size =0.6) +
@@ -503,8 +520,8 @@ fig8 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
         legend.title=element_blank())
 #        legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 #       legend.key.height=unit(smsize,"pt"))
-fig8
-ggsave(file.path(RESULTS, "fig8_mixture_drydown-curves.pdf"), plot=fig8,
+SI_fig4
+ggsave(file.path(RESULTS, "SI_fig4_mixture_drydown-curves.pdf"), plot=SI_fig4,
        width=col1, height=col1, units="cm")
 
 # stats
@@ -515,7 +532,7 @@ anova(mix_drydown_mod)
 mix_drydown_mixed <- mixed(log(MC_dry) ~ hour * spcode + (1 | rep), data=mmc)
 
 ###############################################################################
-## Table 8: drydown by species ANOVA
+## Table 8: drydown by mixture ANOVA
 ###############################################################################
 tab8 <- nice(mix_drydown_mixed,  sig_symbols = rep("", 4))
 names(tab8)[4] <- "p value"

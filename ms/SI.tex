@@ -4,11 +4,12 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{fullpage}
+\usepackage{float}
 
 
 \title{Magalhaes and Schwilk Supplementary Materials}
 \author{Rita Quinones de Magalhaes and Dylan W. Schwilk}
-%\date{\today}
+\date{}
 
 % Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
 % before or after the \begin{document} command 
@@ -20,24 +21,79 @@
 
 \section{Tables}
 
-\begin{table}[h]
+\begin{table}[H]
   \caption{Mixed model coefficients for drydown curves. Table shows linear model results of model fit to  natural log of dry-mass based fuel moisture content as a function of time and species.} 
   \label{tabS1}
 \centering
 \input{figs_tables/SI_tab1_drydown_coef.ltx}
 \end{table}
 
-\begin{table}[h]
-  \caption{Mixed model coefficients for flame spread rate. Table shows mixed linear model results.} 
+\begin{table}[H]
+  \caption{ANOVA model coefficients for moisture content as a function of species traits} 
+  \label{tabS2}
+\centering
+\input{figs_tables/SI_tab2_mc_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{ANOVA model coefficients for drying rate as a function of species traits} 
   \label{tabS3}
 \centering
-\input{figs_tables/SI_tab2_spread_moist_coef.ltx}
+\input{figs_tables/SI_tab3_di_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for flame spread rate as a function of taxon and moisture content. Table shows mixed linear model results.} 
+  \label{tabS4}
+\centering
+\input{figs_tables/SI_tab4_spread_moist_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for fuel consumption as a function of taxon and moisture content. Table shows mixed linear model results.} 
+  \label{tabS5}
+\centering
+\input{figs_tables/SI_tab5_consume_moist_coef.ltx}
+\end{table}
+
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for flame spread rate as a function of taxon and time since wetting. Table shows mixed linear model results.} 
+  \label{tabS6}
+\centering
+\input{figs_tables/SI_tab6_spread_time_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for fuel consumption as a function of taxon and time since wetting. Table shows mixed linear model results.} 
+  \label{tabS6}
+\centering
+\input{figs_tables/SI_tab7_consume_time_coef.ltx}
+\end{table}
+
+% table 7
+\begin{table}[H]
+  \caption{Linear mixed model results for moisture content as a function of
+    time since wetting for four different litter mixture types. Approximate
+    degrees of freedom (df), pseudo F statistics and p-values were calculated
+    by the Kenward-Roger approximation}.
+  \label{tab:mixtures_drydown}
+\centering
+
+\begin{tabular}{llll}
+  \toprule
+Effect & df & $F$ & $P$ \\ 
+  \midrule
+time & 1, 96.19 & 565.28 & $<$0.0001 \\ 
+  mixture & 3, 96.08 & 23.63 & $<$0.0001 \\ 
+  time:mixture & 3, 95.71 & 8.70 & $<$0.0001 \\ 
+   \bottomrule
+\end{tabular}
 \end{table}
 
 \section{Figures}
 
-
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=8cm]{figs_tables/SI_fig1_drydown-curves_logged.pdf}
    \label{SI_fig1}
@@ -47,7 +103,7 @@
 
 
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \label{SI_fig2}
   \includegraphics[width=17cm]{figs_tables/SI_fig2_max_water_emmeans.pdf}
@@ -55,11 +111,41 @@
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
-  \label{fig-S2}
+  \label{SI_fig3}
 \includegraphics[width=17cm]{figs_tables/SI_fig3_dessication_emmeans.pdf}
 \caption{Estimated marginal means by species for dessication rate based on mixed model results. Shaded regions indicate 95\% confidence intervals for the marginal means.}
+\end{figure}
+
+
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/SI_fig4_mixture_drydown-curves.pdf}
+\caption{Fuel moisture by time since saturation for four litter mixtures.  Codes for species in mixtures: Ab = \emph{Abies concolor}, Ca = \emph{Calocedrus decurrens}, Pi = \emph{Pinus jeffreyi} and Qu = \emph{Quercus kellogii}. Moistures were measured every 24 hours but data are shown with slight horizontal jitter to reduce point overlap. Mixed linear model results shown in SI Table 7.}
+  \label{SI_fig4}
+\end{figure}
+
+% SI fig 5
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/fig2_SLA_maxMC.pdf}
+\caption{Maximum water retention by specific leaf area across eight species.
+  % ANOVA table in Table \ref{tab:mc_di_anova}.
+}
+  \label{fig:maxmc-di}
+\end{figure}
+
+% SI fig 6
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/fig3_di_bd.pdf}
+\caption{Drying rate rate as a function of specific leaf area and litter bulk
+  density across eight species.
+  % ANOVA table in Table \ref{tab:mc_di_anova}
+}.
+  \label{fig:bd-di}
 \end{figure}
 
 
