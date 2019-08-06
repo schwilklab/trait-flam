@@ -66,12 +66,12 @@
 
 \begin{table}[H]
   \caption{Mixed model coefficients for fuel consumption as a function of taxon and time since wetting. Table shows mixed linear model results.} 
-  \label{tabS6}
+  \label{tabS7}
 \centering
 \input{figs_tables/SI_tab7_consume_time_coef.ltx}
 \end{table}
 
-% table 7
+% table 8
 \begin{table}[H]
   \caption{Linear mixed model results for moisture content as a function of
     time since wetting for four different litter mixture types. Approximate
@@ -87,6 +87,27 @@ Effect & df & $F$ & $P$ \\
 time & 1, 96.19 & 565.28 & $<$0.0001 \\ 
   mixture & 3, 96.08 & 23.63 & $<$0.0001 \\ 
   time:mixture & 3, 95.71 & 8.70 & $<$0.0001 \\ 
+   \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \caption{Linear mixed model coefficients for moisture content as a function of
+    time since wetting for four different litter mixture types.}.
+  \label{tab:mixtures_drydown}
+\centering
+\begin{tabular}{rrrrrr}
+  \toprule
+ & Estimate & Std. Error & df & t value & Pr($>$$|$t$|$) \\ 
+  \midrule
+(Intercept) & 4.59 & 0.06 & 71.04 & 77.18 & 0.00 \\ 
+  hour & -0.01 & 0.00 & 95.45 & -13.96 & 0.00 \\ 
+  spcodeAbCaQu & 0.26 & 0.08 & 95.35 & 3.28 & 0.00 \\ 
+  spcodeAbPiQu & 0.54 & 0.08 & 96.53 & 7.04 & 0.00 \\ 
+  spcodeCaPiQu & 0.57 & 0.08 & 95.35 & 7.25 & 0.00 \\ 
+  hour:spcodeAbCaQu & 0.00 & 0.00 & 95.40 & 3.67 & 0.00 \\ 
+  hour:spcodeAbPiQu & -0.00 & 0.00 & 95.78 & -0.70 & 0.49 \\ 
+  hour:spcodeCaPiQu & 0.00 & 0.00 & 95.40 & 2.64 & 0.01 \\ 
    \bottomrule
 \end{tabular}
 \end{table}
@@ -118,13 +139,27 @@ time & 1, 96.19 & 565.28 & $<$0.0001 \\
 \caption{Estimated marginal means by species for dessication rate based on mixed model results. Shaded regions indicate 95\% confidence intervals for the marginal means.}
 \end{figure}
 
+\begin{figure}[H]
+  \centering
+\includegraphics[width=16cm]{figs_tables/SI_fig4_SLA_maxMC.pdf}
+\caption{Maximum water retention by specific leaf area (SLA) across eight species.}
+  \label{fig:maxmc-di}
+\end{figure}
 
 
 \begin{figure}[H]
   \centering
-\includegraphics[width=8cm]{figs_tables/SI_fig4_mixture_drydown-curves.pdf}
+\includegraphics[width=16cm]{figs_tables/SI_fig5_di_bd.pdf}
+\caption{Linear model predicting dessication rate as a function of specific leaf area and litter bulk density across eight species.}.
+  \label{fig:bd-di}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/SI_fig6_mixture_drydown-curves.pdf}
 \caption{Fuel moisture by time since saturation for four litter mixtures.  Codes for species in mixtures: Ab = \emph{Abies concolor}, Ca = \emph{Calocedrus decurrens}, Pi = \emph{Pinus jeffreyi} and Qu = \emph{Quercus kellogii}. Moistures were measured every 24 hours but data are shown with slight horizontal jitter to reduce point overlap. Mixed linear model results shown in SI Table 7.}
-  \label{SI_fig4}
+  \label{SI_fig6}
 \end{figure}
 
 % SI fig 5
