@@ -1,4 +1,4 @@
-flammability
+trait-flam
 ============
 
-Flammability: linking traits to fuels to fire behavior.  For Rita's thesis work and collaboration
+Repository for Rita Margarida Magalhães's graduate project on litter flammability in Sierra Nevada mixed conifer
