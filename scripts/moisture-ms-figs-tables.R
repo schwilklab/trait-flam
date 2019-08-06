@@ -462,8 +462,8 @@ fig5 <- ggplot(b, aes(hour, consum, color=taxon)) +
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
         legend.title=element_blank()) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0)
-
-ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig7,
+fig5
+ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,
        width=col1, height=col1, unit="cm")
 
 
