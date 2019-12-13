@@ -1,5 +1,5 @@
 # Figures for moisture manuscript
-# 2019-05-16
+# 2019-12-12
 
 library(xtable)
 library(ggrepel)
@@ -12,7 +12,37 @@ source("dry-down.R")
 source("burn-moist.R")
 source("read-moistmix.R")
 
+# decomp project data for litter particle size distributions
+source("decomp-flam.R") # needed for Fig 2
+
 set.seed(100)
+
+decompsp <- decomp %>% left_join(species)
+
+###############################################################################
+## SI Fig 1: litter particle length distributions
+###############################################################################
+
+SI_fig1 <- ggplot(subset(decompsp, year==0), aes(display.name, l+w+t)) +
+  geom_violin(scale="width", fill="gray") +
+#  geom_jitter(alpha=0.1) +
+  xlab("Species") +
+  ylab(expression("Litter particle volume (" * mm^3 * ")")) +
+#  geom_point(data=mtrait, aes(display.name, leaf.length)) +
+#  scale_fill_brewer(palette="Greys", direction=-1, name="Year") +
+  pubtheme +
+  theme(axis.text.x  = element_text(face="italic", angle=45, vjust=1, hjust=1))
+SI_fig1
+ggsave(file.path(RESULTS, "SI_fig1_litter-particle-volumes-by-species.pdf"), plot=SI_fig1,
+                 width=col2, height=col2/1.5, units="cm")
+
+# sample size for caption=500 - 5800 particles depending on species.
+
+x <- subset(decomp, year==0) %>% group_by(spcode)
+summarize(x, n=length(l))
+
+
+
 
 ###############################################################################
 ## Figure 1: dry-down
@@ -38,10 +68,10 @@ ggsave(file.path(RESULTS, "fig1_drydown-curves.pdf"), plot=fig1,
        width=col1, height=col1, units="cm")
 
 ###############################################################################
-# SI fig 1: dry down on semi log scale
+# SI fig 2: dry down on semi log scale
 ###############################################################################
 
-SI_fig1 <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
+SI_fig2 <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
   geom_point(size=1.2, alpha=0.7, stroke=0) +
   geom_smooth(method="lm", se=FALSE, size =0.6) +
   scale_colour_manual(values=schwilkcolors) +
@@ -53,7 +83,7 @@ SI_fig1 <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
         legend.title=element_blank(),
         legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 
-ggsave(file.path(RESULTS, "SI_fig1_drydown-curves_logged.pdf"), plot=SI_fig1,
+ggsave(file.path(RESULTS, "SI_fig2_drydown-curves_logged.pdf"), plot=SI_fig2,
        width=col1, height=col1, units="cm")
 
 
@@ -76,30 +106,30 @@ SI_tab1 <- summary(dry.mod)$coefficient
 print(xtable(SI_tab1), file=file.path(RESULTS, "SI_tab1_drydown_coef.ltx"),  booktabs=TRUE, floating=FALSE)
 
 ###############################################################################
-## SI Fig 2:  marginal means for max water content
+## SI Fig 3:  marginal means for max water content
 ###############################################################################
 dry.mod <- lmer(log(MC_dry) ~ hour*display.name + (1 | tray), data=mc)
 dry.emm <- emmeans(dry.mod, "display.name")
-SI_fig2 <- plot(dry.emm) + #, comparisons=TRUE) +
+SI_fig3 <- plot(dry.emm) + #, comparisons=TRUE) +
   xlab("Estimated marginal mean (log water content)") +
   ylab("Species") +
   pubtheme.nogridlines +
   theme(axis.text.y = element_text(face = "italic"))
 
-ggsave(file.path(RESULTS, "SI_fig2_max_water_emmeans.pdf"), plot=SI_fig2,
+ggsave(file.path(RESULTS, "SI_fig3_max_water_emmeans.pdf"), plot=SI_fig3,
        width=col2, height=col1, units="cm")
 
 ###############################################################################
-## SI Fig 3: Marginal means for dessication rate
+## SI Fig 4: Marginal means for dessication rate
 ###############################################################################
 dry.trends <- emtrends(dry.mod, "display.name", var="hour")
-SI_fig3 <- plot(dry.trends) + #, comparisons=TRUE) +
+SI_fig4 <- plot(dry.trends) + #, comparisons=TRUE) +
   xlab(expression(paste("Estimated marginal mean drying rate (", hr^-1, ")"))) +
   ylab("Species") +
   pubtheme.nogridlines +
   theme(axis.text.y = element_text(face = "italic"))
 
-ggsave(file.path(RESULTS, "SI_fig3_dessication_emmeans.pdf"), plot=SI_fig3,
+ggsave(file.path(RESULTS, "SI_fig4_dessication_emmeans.pdf"), plot=SI_fig4,
        width=col2, height=col1, units="cm")
 
 
@@ -119,7 +149,7 @@ mtrait <- left_join(mtrait, oldtraits)
 ## SI Fig. 4: leaf area and max retention
 ###############################################################################
 
-SI_fig4 <- ggplot(mtrait, aes(SLA, maxMC)) +
+SI_fig5 <- ggplot(mtrait, aes(SLA, maxMC)) +
   geom_point(size=3) +
 #  geom_errorbar(aes(ymin=maxMC+maxMC.se, ymax=maxMC-maxMC.se))+
 #  geom_errorbarh(aes(xmin=leaf.area.mean+(leaf.area.sd/sqrt(6)), xmax=leaf.area.mean-(leaf.area.sd/sqrt(6))))+
@@ -137,14 +167,14 @@ SI_fig4 <- ggplot(mtrait, aes(SLA, maxMC)) +
   ylab("Maximum moisture content (%)") +
   pubtheme.nogridlines
 
-SI_fig4
-ggsave(file.path(RESULTS, "SI_fig4_SLA_maxMC.pdf"), plot=SI_fig4,
+SI_fig5
+ggsave(file.path(RESULTS, "SI_fig5_SLA_maxMC.pdf"), plot=SI_fig5,
        width=col1, height=col1, units="cm")
 
 ###############################################################################
-## SI Fig 5: leaf traits and dessication rate
+## SI Fig 6: leaf traits and dessication rate
 ###############################################################################
-SI_fig5 <- ggplot(mtrait, aes(bd.mean, abs(di))) +
+SI_fig6 <- ggplot(mtrait, aes(bd.mean, abs(di))) +
   geom_point(size=3, stroke=0, alpha=0.8) +
 #  geom_errorbar(aes(ymin=abs(di)+di.se, ymax=abs(di)-di.se))+
 #  geom_errorbarh(aes(xmin=bd.mean+(bd.sd/sqrt(6)), xmax=bd.mean-(bd.sd/sqrt(6))))+
@@ -157,8 +187,8 @@ SI_fig5 <- ggplot(mtrait, aes(bd.mean, abs(di))) +
                     size=smsize-6,
                   fontface="italic") +
   pubtheme.nogridlines
-SI_fig5
-ggsave(file.path(RESULTS, "SI_fig5_di_bd.pdf"), plot=SI_fig5,
+SI_fig6
+ggsave(file.path(RESULTS, "SI_fig6_di_bd.pdf"), plot=SI_fig6,
        width=col1, height=col1, units="cm")
 
 ###############################################################################
@@ -294,8 +324,6 @@ summary(consume.moist.mod)
 
 newdata <- expand.grid(taxon = levels(b.consume$taxon), actualMC_dry=c(0:80))
 newdata$consum <- predict(consume.moist.mod, newdata, type="response")*100
-
-
 
 fig3 <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
   geom_jitter(height=1, width=1, size=1.5, alpha=0.7, stroke=0) +
@@ -504,9 +532,9 @@ print(SI_tab5,file=file.path(RESULTS, "SI_tab7_consume_time_coef.ltx"),
 
 
 ###############################################################################
-## Fig SI 4: Drydown for mixtures
+## SI fig7: Drydown for mixtures
 ###############################################################################
-SI_fig6 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
+SI_fig7 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
   geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
   geom_smooth(method="glm",
               method.args=list(family=gaussian(link="log")), se=FALSE, size =0.6) +
@@ -519,8 +547,8 @@ SI_fig6 <- ggplot(mmc, aes(hour, MC_dry, color=spcode)) +
         legend.title=element_blank())
 #        legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 #       legend.key.height=unit(smsize,"pt"))
-SI_fig6
-ggsave(file.path(RESULTS, "SI_fig6_mixture_drydown-curves.pdf"), plot=SI_fig6,
+SI_fig7
+ggsave(file.path(RESULTS, "SI_fig7_mixture_drydown-curves.pdf"), plot=SI_fig7,
        width=col1, height=col1, units="cm")
 
 # stats
@@ -593,12 +621,7 @@ getmean <- function(df, hr, s1, s2, s3, var) {
   return(res)
 }
 
-## getmeanco <- function(df) {
-##   return(mean(df$consum))
-## }
-
 b.sum <- b %>% group_by(spcode, hour) %>% summarize(spread = mean(spread), consum = mean(consum), actualMC_dry = mean(actualMC_dry))
-
 
 b.mix.pred <- dplyr::select(mflam, mix, hour, sp1, sp2, sp3) %>%
   unique() %>% rowwise() %>%
@@ -606,8 +629,6 @@ b.mix.pred <- dplyr::select(mflam, mix, hour, sp1, sp2, sp3) %>%
          consum.m = getmean(b.sum, hour, sp1,sp2,sp3, "consum"))
 
 b.mix.sum <- left_join(mflam, b.mix.pred)
-
-
 
 fig7 <- ggplot(mflam, aes(hour, spread)) +
   facet_grid(. ~ mix) +
@@ -637,16 +658,6 @@ fig8 <- ggplot(mflam, aes(hour, consum)) +
   xlab("Time since wetting (h)") + ylab("Percent fuel consumed") +
   pubtheme.nogridlines
 
-## fig11 <- ggplot(b.mix.sum, aes(hour, consum-consum.m)) +
-##   facet_grid(. ~ mix) +
-##   geom_jitter(width=3) +
-##   geom_hline(aes(yintercept=0), color="black") +
-##     geom_smooth(method="lm", se=FALSE, color="black") +
-##   #  xlim(0.0, 0.3) +
-## #  geom_point(aes(hour, spread.m, color=hour), size=3, shape=5, data = b.mix.pred) +
-##   xlab("Time since wetting (h)") + ylab("Relative percent fuel consumed") +
-##   pubtheme.nogridlines
-
 fig8
 ggsave(file.path(RESULTS, "fig8_mixture_obs_vs_pred_consume.pdf"), plot=fig8,
        width=col2, height=col1, units="cm")
@@ -654,7 +665,8 @@ ggsave(file.path(RESULTS, "fig8_mixture_obs_vs_pred_consume.pdf"), plot=fig8,
 # test:
 mix_consum_mod <- lmer(consum-consum.m ~ scale(hour) + (1 | mix), data = b.mix.sum)
 summary(mix_consum_mod)
-# So, some non additivity n drying but switches.  Positive non additivity for spread rate -- probably same mechanisms as described in 2011. No non addiviticvty for consume except for driest litters had postiive non additivity.
-
-
+# So, some non additivity n drying but switches. Positive non additivity for
+# spread rate -- probably same mechanisms as described in 2011. No
+# nonadditivity for consume except for driest litters had positive
+# nonadditivity.
 
