@@ -1,6 +1,6 @@
 ## Read flammability trial data
 
-#library(dplyr)
+library(dplyr)
 
 flam <- read.csv("../data/burn-trials/flamdt.csv", stringsAsFactors=FALSE)
 flam <- flam %>% mutate(mixture=nchar(spcode) > 4,
