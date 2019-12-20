@@ -100,7 +100,7 @@ print(tab1, file=file.path(RESULTS, "tab1_drydown_anova.ltx"),  booktabs=TRUE, f
 
 
 ###############################################################################
-## SI Table 1: drydown by species model coefficients
+## SI Table 1: drydown by genus model coefficients
 ###############################################################################
 SI_tab1 <- summary(dry.mod)$coefficient
 print(xtable(SI_tab1), file=file.path(RESULTS, "SI_tab1_drydown_coef.ltx"),  booktabs=TRUE, floating=FALSE)
