@@ -1,4 +1,3 @@
-%% Revision 2019-12-10
 \documentclass[letterpaper,12pt]{article}
 \usepackage{jecol}
 
@@ -16,7 +15,7 @@
 
 \nwords{8200}
 \ntables{4}
-\nfig{8}
+\nfig{5}
 \nref{55}
 
 \corr{\url{dylan.schwilk@ttu.edu}}
@@ -180,7 +179,7 @@ are affected by leaf particle traits, especially leaf size
 \citep{Scarff+Westoby-2006}. Fuel-beds composed of larger leaves or leaves with
 thin cuticles should favor moisture absorption. On the other hand, large leaves
 lower litter density and should favor drying, thus increasing the probability
-of ignition and fire spread. The interaction of mositure absorption and drying
+of ignition and fire spread. The interaction of moisture absorption and drying
 deserves investigation.
 
 In mixed species communities, species traits may interact such that the
@@ -456,16 +455,18 @@ discriminated species into three groups from lowest to most rapid: 1) \emph{C.
 
 \begin{figure}[h]
   \centering
-\includegraphics[width=8cm]{figs_tables/fig1_drydown-curves.pdf}
-\caption{Dry down curves for eight litter types. Lines show best-fit
-  exponential decay curves fit to moisture content on a dry mass basis. Litter
-  samples we saturated by immersion for 24 hours and then allowed to drain by
-  gravity for 3 min before initial weighing. Colors indicate genera and there
-  were significant differences in both maximum water absorption and in rate of
-  drying (based linear model on log of water content). A small amount of
-  horizontal jitter (0.5 hr) was added to this plot because, although
-  collections were staggered, there were sometimes multiple samples collected
-  at a single time point.}
+\includegraphics[width=5cm]{figs_tables/fig1_dry_effects_by_taxon.pdf}
+\caption{Effects of litter drying on fuel moisture and flammability. A) Dry
+  down curves for eight species. Lines show best-fit exponential decay curves
+  fit to moisture content on a dry mass basis. B) Flame spread rate by time
+  since wetting. Lines indicate best fit linear model fits by taxonomic group.
+  Model ANOVA table in Table \ref{tab:spreadrate_anova} and coefficients in SI
+  Table 6. C) Percent fuel consumed by time since wetting. Curves shown
+  indicate best fit beta regression lines by taxonomic group. Model ANOVA table
+  in Table \ref{tab:consume_anova} and coefficients in SI Table 7. For all
+  plots, horizontal jitter (0.5 to 2 hr) was added to avoid overplotting. A
+  lack of data at earlier time points for a taxon indicates no ignitions
+  occurred at those time points. }
  \label{fig:drydown}
 \end{figure}
 
@@ -525,29 +526,31 @@ Drying rate & density & 1 & $3.92 \times 10^{-4}$ & $3.92 \times 10^{-4}$ & 11.0
 
 \subsection*{Flammability across taxonomic groups}
 
-Flame spread rate declined with fuel moisture (Fig.~\ref{fig:spread_moist}).
+Flame spread rate declined with fuel moisture (Fig.~\ref{fig:flam_moist}).
 \emph{Quercus} had higher spread rates across all fuel moistures and had a
 steeper decline in response to moisture than did the other groups (taxon by
 time since wetting interaction $P = 0.022$, Table~\ref{tab:spreadrate_anova}).
 Fuel moisture negatively influenced fuel consumption. Fuel consumption and the
 rate of change with moisture content varied across the taxonomic groups
-(Fig.~\ref{fig:consume_moist}, Table~\ref{tab:consume_anova}). Although the
+(Fig.~\ref{fig:flam_moist}, Table~\ref{tab:consume_anova}). Although the
 overall ranking of groups was similar for fuel consumption and for flame spread
 rate, there were different pattern across taxa in these two flammability
 parameters. For spread rate, the decline in flammability with moisture was
-shallowest for \emph{Pinus} and Cupressaceae (Fig.~\ref{fig:spread_moist}). For
+shallowest for \emph{Pinus} and Cupressaceae (Fig.~\ref{fig:flam_moist}). For
 fuel consumption, \emph{Pinus} and \emph{Abies} has a steeper decline in
 flammability with fuel moisture than did the other groups
-(Fig.~\ref{fig:consume_moist}).
+(Fig.~\ref{fig:flam_moist}).
 
 %% spread rate by moisture
 \begin{figure}[h]
   \centering
-\includegraphics[width=8cm]{figs_tables/fig2_spread_actualMC.pdf}
-\caption{Flame spread rate by moisture content (model fit $F = 61.15$, df = 9,
+\includegraphics[width=8cm]{figs_tables/fig2_moisture_flam.pdf}
+\caption{Fuel moisture effects on flammability. A) Flame spread rate by moisture content (model fit $F = 61.15$, df = 9,
   148, $P < 0.0001$). Model ANOVA table in Table \ref{tab:spreadrate_anova} and
-  coefficients in SI Table 4.}
-  \label{fig:spread_moist}
+  coefficients in SI Table 4. B) Percent fuel consumed by moisture content. Lines indicate best fit
+  beta regression lines. Model deviance table in Table \ref{tab:consume_anova}
+  and coefficients are in SI Table 5.}
+  \label{fig:flam_moist}
 \end{figure}
 
 %% Table 3 
@@ -585,15 +588,6 @@ Model set & Effect & df & $F$ & & $P$ \\
 \end{tabular}
 \end{table}
 
-%% fuel consumption by moisture:
-\begin{figure}[h]
-  \centering
-\includegraphics[width=8cm]{figs_tables/fig3_consume_actualMC.pdf}
-\caption{Percent fuel consumed by moisture content. Lines indicate best fit
-  beta regression lines. Model deviance table in Table \ref{tab:consume_anova}
-  and coefficients are in SI Table 5.}
-  \label{fig:consume_moist}
-\end{figure}
 
 
 \begin{table}[h]
@@ -632,32 +626,20 @@ Effect of time &  consum \~{} 1 & 140.08 &  &  &  \\
 
 As a consequence of the relationships between fuel moisture and flammability,
 time since wetting had a significant effect on spread rate ($P < 0.0001$) and
-the slope of this effect varied by taxonomic group (Fig. \ref{fig:spread_time},
+the slope of this effect varied by taxonomic group (Fig. \ref{fig:drydown},
 Table~\ref{tab:spreadrate_anova}). The pines were able to ignite and burn much
 sooner after wetting than did the other taxa, none of which had measurable
 spread rates until burning was attempted 72 hours after wetting. Trials that
 failed to even ignite smoldering combustion are omitted completely from the
 model and figure. At 72 hours, the \emph{Abies}, \emph{Calocedrus}, and
-\emph{Sequoiadendron} had dryer litter than did the \emph{Quercus}, yet the
+\emph{Sequoiadendron} had drier litter than did the \emph{Quercus}, yet the
 spread rates were slow. \emph{Quercus} had the steepest response to time since
-wetting (Fig.~\ref{fig:spread_time}, SI Table~6)).
+wetting (Fig.~\ref{fig:drydown}, SI Table~6)).
 
-
-\begin{figure}[h]
-  \centering
-\includegraphics[width=8cm]{figs_tables/fig4_spread_time.pdf}
-\caption{Flame spread rate by time since wetting for litter of eight species.
-  Lines indicate best fit linear model fits. Model ANOVA table in Table
-  \ref{tab:spreadrate_anova} and coefficients in SI Table 6. Horizontal jitter
-  (up to 2 hr) was added to the plot to avoid overplotting. All collections
-  were at the times labeled on the x-axis. A lack of data at earlier time
-  points for a taxon indicates no ignitions occurred at those time points.}
-\label{fig:spread_time}
-\end{figure}
 
 Fuel consumption was highly variable across trials and intermediate values were
 less common than were very low or moderately high consumption
-(Fig.~\ref{fig:consume_time}). All parameters significantly contributed to the
+(Fig.~\ref{fig:drydown}). All parameters significantly contributed to the
 generalized linear mixed beta regression model as indicated by the nested model
 comparisons in Table~\ref{tab:consume_anova}. As was the pattern for flame
 spread rate, pines had rapid flammability increases with drying. However,
@@ -671,20 +653,6 @@ model convergence otherwise. This result should therefore be seen as
 preliminary because the test does not reflect an \emph{a priori} hypothesis,
 but probably reflects the fact that \emph{P. lambertiana} has shorter and finer
 needles than the other two pines.
-
-
-\begin{figure}[h]
-  \centering
-\includegraphics[width=8cm]{figs_tables/fig5_consume_time.pdf}
-\caption{Percent fuel consumed by time since wetting for litter of eight
-  species. Curves shown indicate best fit beta regression lines. Model ANOVA
-  table in Table \ref{tab:consume_anova} and coefficients in SI Table 7.
-  Horizontal jitter (up to 2 hr) was added to the plot to avoid overplotting.
-  All collections were at the times labeled on the x-axis. A lack of data at
-  earlier time points for a taxon indicates no ignitions occurred at those time
-  points.}
-  \label{fig:consume_time}
-\end{figure}
 
 
 \subsection*{Nonadditivity in  litter mixtures}
@@ -706,7 +674,7 @@ content, SI Tables~8 and 9).
 
 \begin{figure}[h]
   \centering
-\includegraphics[width=16cm]{figs_tables/fig6_mixture_obs_vs_pred_mc.pdf}
+\includegraphics[width=16cm]{figs_tables/fig3_mixture_obs_vs_pred_mc.pdf}
 \caption{Observed vs predicted fuel moisture content for litter mixtures.
   Predictions are based on the mean moisture content at each time since wetting
   for the three constituent species in each mixture. Codes for species in
@@ -725,7 +693,7 @@ drying (Wald test shows slope of mixed linear model
 
 \begin{figure}[h]
   \centering
-\includegraphics[width=16cm]{figs_tables/fig7_mixture_obs_vs_pred_spread.pdf}
+\includegraphics[width=16cm]{figs_tables/fig4_mixture_obs_vs_pred_spread.pdf}
 \caption{Observed vs. predicted flame spread rate for litter mixtures. Filled
   circles show observed spread rate values. Open diamonds indicate predicted
   spread rates based on the average spread rate at each time since wetting for
@@ -738,7 +706,7 @@ drying (Wald test shows slope of mixed linear model
 
 \begin{figure}[h]
   \centering
-\includegraphics[width=16cm]{figs_tables/fig8_mixture_obs_vs_pred_consume.pdf}
+\includegraphics[width=16cm]{figs_tables/fig5_mixture_obs_vs_pred_consume.pdf}
 \caption{Observed vs predicted fuel consumption for litter mixtures. Filled
   circles show observed fuel consumption percentages. Open diamonds indicate
   predicted fuel consumption based on the average fuel consumption at each
@@ -782,7 +750,7 @@ experiment was that the high flammability previously reported for \emph{Q.
   kelloggii} \citep{Magalhaes+Schwilk-2012} would disappear under higher fuel
 moisture contents. This prediction was partly supported: \emph{Q. kelloggii}
 fails to ignite until after 72 hours of drying in this study (Figs.
-\ref{fig:spread_time} and \ref{fig:consume_time}). However, high moisture
+\ref{fig:drydown} and \ref{fig:drydown}). However, high moisture
 content in this oak was unable to suppress ignition of mixtures to which it
 contributed (Figs. \ref{fig:mixture_obs_pred_spread} and
 \ref{fig:mixture_obs_pred_consume}).
@@ -802,7 +770,7 @@ in Sequoia National Park show evidence of moisture limiting fire behavior at
 Our flammability trials demonstrate that both flame spread rate and fuel
 consumption increased with time since wetting but that the rate of increase
 varied across these taxa. Only the pines are able to ignite and support flame
-spread immediately after wetting (Fig. \ref{fig:spread_time}). In contrast,
+spread immediately after wetting (Fig. \ref{fig:drydown}). In contrast,
 \emph{Quercus} exhibited a threshold response to drying with no ignition prior
 to 72 hours of drying but once ignition is possible, it had faster spread rates
 than the other taxa. Our two Cupressaceae, which have dense litter but have low

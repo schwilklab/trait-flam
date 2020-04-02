@@ -1,9 +1,9 @@
-"spcode","common.name","genus","se","family","display.name"
-"Abco","White fir","Abies","concolor","Pinaceae","A. concolor"
-"Abma","Red fir","Abies","magnifica","Pinaceae","A. magnifica"
-"Cade","Incense cedar","Calocedrus","decurrens","Cupressaceae","C. decurrens"
-"Pije","Jeffrey pine","Pinus","jeffreyi","Pinaceae","P. jeffreyi"
-"Pila","Sugar pine","Pinus","lambertiana","Pinaceae","P. lambertiana"
-"Pipo","Ponderosa pine","Pinus","ponderosa","Pinaceae","P. ponderosa"
-"Quke","Black oak","Quercus","kelloggii","Fagaceae","Q. kelloggii"
-"Segi","Sequoia","Sequoiadendron","giganteum","Cupressaceae","S. giganteum"
+spcode,common.name,genus,se,family,display.name,taxon,taxon2
+Abco,White fir,Abies,concolor,Pinaceae,A. concolor,Abies,Abies
+Abma,Red fir,Abies,magnifica,Pinaceae,A. magnifica,Abies,Abies
+Cade,Incense cedar,Calocedrus,decurrens,Cupressaceae,C. decurrens,Cupressaceae,Cupressaceae
+Pije,Jeffrey pine,Pinus,jeffreyi,Pinaceae,P. jeffreyi,Pinus,Pinus
+Pila,Sugar pine,Pinus,lambertiana,Pinaceae,P. lambertiana,Pinus,P. lambertiana
+Pipo,Ponderosa pine,Pinus,ponderosa,Pinaceae,P. ponderosa,Pinus,Pinus
+Quke,Black oak,Quercus,kelloggii,Fagaceae,Q. kelloggii,Quercus,Quercus
+Segi,Sequoia,Sequoiadendron,giganteum,Cupressaceae,S. giganteum,Cupressaceae,Cupressaceae

@@ -4,6 +4,7 @@
 library(xtable)
 library(ggrepel)
 library(glmmADMB)
+library(cowplot)
 
 RESULTS <- "../ms/figs_tables/"
 
@@ -45,17 +46,19 @@ summarize(x, n=length(l))
 
 
 ###############################################################################
-## Figure 1: dry-down
+## Figure 1a: dry-down
 ###############################################################################
 xbreaks <- seq(0, 144, 24)
 ybreaks <- seq(0, 700, 50)
 
-fig1 <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
+fig1a <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=taxon)) +
   geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
   geom_smooth(method="glm",
-              method.args=list(family=gaussian(link="log")), se=FALSE, size =0.6) +
+              method.args=list(family=gaussian(link="log")), se=FALSE, size=1) +
   scale_colour_manual(values=schwilkcolors) +
-  xlab("Hours since wetting") + ylab("Moisture by dry weight (%)") +
+  #xlab("Time since wetting (hr)") +
+  xlab("") +
+  ylab("Moisture by dry weight (%)") +
   scale_x_continuous(breaks=xbreaks) +
   scale_y_continuous(breaks=ybreaks) +
   pubtheme.nogridlines +
@@ -64,8 +67,8 @@ fig1 <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=genus)) +
         legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
 #       legend.key.height=unit(smsize,"pt"))
 
-ggsave(file.path(RESULTS, "fig1_drydown-curves.pdf"), plot=fig1,
-       width=col1, height=col1, units="cm")
+## ggsave(file.path(RESULTS, "fig1a_drydown-curves.pdf"), plot=fig1a,
+##        width=col1, height=col1, units="cm")
 
 ###############################################################################
 # SI fig 2: dry down on semi log scale
@@ -250,13 +253,13 @@ oldflam <- read.csv("../data/burn-trials/flamdt.csv") %>% right_join(species) %>
   mutate(hour=144, vpd=2.44, t2ignit=ignit, combust=combus) #, actualMC_dry=5)
 b <- oldflam %>% filter(nchar(as.character(spcode)) < 5) %>% bind_rows(burnt)
 
-# fix coding errors in data:
+# fix coding:
 b <- b %>% mutate(consum = case_when(consum==100 ~ 0, TRUE ~ consum),
                   didburn = !(t2ignit==0 & spread==0 & consum <0.000000001),
-                  taxon = case_when(genus=="Sequoiadendron" |
-                                    genus=="Calocedrus" ~ "Cupressaceae",
-                       #             spcode=="Pila" ~ "P. lambertiana",
-                                    TRUE ~ genus)
+                  ## taxon = case_when(genus=="Sequoiadendron" |
+                  ##                   genus=="Calocedrus" ~ "Cupressaceae",
+                  ##      #             spcode=="Pila" ~ "P. lambertiana",
+                  ##                   TRUE ~ genus)
                   )
 b.scaled <- b %>% mutate_if(is.numeric, scale)
 
@@ -268,20 +271,20 @@ b.scaled <- b %>% mutate_if(is.numeric, scale)
 ###############################################################################
 ## Fig 2: Spread rate and moisture content
 ###############################################################################
-fig2 <- ggplot(b, aes(actualMC_dry, spread, color=taxon)) +
+fig2a <- ggplot(b, aes(actualMC_dry, spread, color=taxon)) +
   geom_point(size=1.5, alpha=0.7, stroke=0) +
   scale_colour_manual(values=schwilkcolors) +
   xlab("Moisture content (%)") + ylab("Spread rate (cm/s)") +
   pubtheme.nogridlines +
-  stat_smooth(method="lm", se=FALSE, size=0.8, drop=TRUE) +
-  theme(legend.position=c(.75, .86),
+  stat_smooth(method="lm", se=FALSE, size=1, drop=TRUE) +
+  theme(legend.position=c(.76, .86),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
         legend.title=element_blank())
-ggsave(file.path(RESULTS, "fig2_spread_actualMC.pdf"), plot=fig2,
-       width=col1, height=col1, unit="cm")
+## ggsave(file.path(RESULTS, "fig2_spread_actualMC.pdf"), plot=fig2a,
+##        width=col1, height=col1, unit="cm")
 
-fig2
+fig2a
 spread.moist.mod <- lmer(spread ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
                          data=b)
 summary(spread.moist.mod)
@@ -325,20 +328,33 @@ summary(consume.moist.mod)
 newdata <- expand.grid(taxon = levels(b.consume$taxon), actualMC_dry=c(0:80))
 newdata$consum <- predict(consume.moist.mod, newdata, type="response")*100
 
-fig3 <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
+fig2b <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
   geom_jitter(height=1, width=1, size=1.5, alpha=0.7, stroke=0) +
   scale_colour_manual(values=schwilkcolors) +
   xlab("Moisture content (%)") + ylab("Fuel consumed (%)") + 
   pubtheme.nogridlines +
   #stat_smooth(method="lm", se=FALSE, size=0.8) +
-  geom_line(data=newdata, size=0.8) +
-  theme(legend.position=c(.8, .86),
-        legend.spacing.y=unit(0,"cm"),
-        legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        legend.title=element_blank())
-fig3
-ggsave(file.path(RESULTS, "fig3_consume_actualMC.pdf"), plot=fig3,
-       width=col1, height=col1, unit="cm")
+  geom_line(data=newdata, size=1) +
+  theme(legend.position="none")
+  ## theme(legend.position=c(.8, .86),
+  ##       legend.spacing.y=unit(0,"cm"),
+  ##       legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
+  ##       legend.title=element_blank())
+fig2b
+## ggsave(file.path(RESULTS, "fig3_consume_actualMC.pdf"), plot=fig3,
+##        width=col1, height=col1, unit="cm")
+
+
+## New fig 2
+
+fig2 <- plot_grid(fig2a, fig2b, labels=c("A", "B"), ncol=1, align="h")
+fig2
+
+ggsave(file.path(RESULTS, "fig2_moisture_flam.pdf"), plot=fig2,
+       width=col1, height=col1*2, unit="cm")
+
+
+
 
 ###############################################################################
 ## Table 5: Fuel consumption and moisture content ANOVA
@@ -384,22 +400,23 @@ print(xtable(tab.consume.moist.coef), file=file.path(RESULTS, "SI_tab5_consume_m
 ###############################################################################
 
 ###############################################################################
-## Fig 4: # spread rate by time
+## Fig 1b: # spread rate by time
 ###############################################################################
 
-fig4 <- ggplot(b, aes(hour, spread, color=taxon)) +
+fig1b <- ggplot(b, aes(hour, spread, color=taxon)) +
   geom_jitter(width=2, height=0, size=1.5, alpha=0.7, stroke=0) +
-  geom_smooth(method="lm", se=FALSE, size=1.2) +
+  geom_smooth(method="lm", se=FALSE, size=1) +
   scale_colour_manual(values=schwilkcolors, drop=TRUE) +
-  xlab("Time since wetting (hr)") +  ylab("Spread rate (cm/s)") +
+  #xlab("Time since wetting (hr)")
+  xlab("") +  ylab("Spread rate (cm/s)") +
   scale_x_continuous(breaks=xbreaks) +
   #scale_y_log10() +
   pubtheme.nogridlines +
   theme(legend.position=c(.3, .86),
         legend.title=element_blank())
-fig4
-ggsave(file.path(RESULTS, "fig4_spread_time.pdf"), plot=fig4,
-       width=col1, height=col1, units="cm")
+fig1b
+## ggsave(file.path(RESULTS, "fig4_spread_time.pdf"), plot=fig4,
+##        width=col1, height=col1, units="cm")
 
 spread.time.mod <- lmer(spread ~ hour + taxon + taxon:hour + vpd + (1 | spcode), data=b.scaled) 
 summary(spread.time.mod)
@@ -436,14 +453,15 @@ library(glmmADMB)
 library(betareg)
 #library(glmmTMB)
 
-b.new <- b %>% mutate(taxon = case_when(genus=="Sequoiadendron" |
-                                    genus=="Calocedrus" ~ "Cupressaceae",
-                                    spcode=="Pila" ~ "P. lambertiana",
-                                    TRUE ~ genus)
-                  )
+## b.new <- b %>% mutate(taxon = case_when(genus=="Sequoiadendron" |
+##                                     genus=="Calocedrus" ~ "Cupressaceae",
+##                                     spcode=="Pila" ~ "P. lambertiana",
+##                                     TRUE ~ genus)
+##                   )
 
-
-b1 <- b.new %>% mutate(spcode=factor(spcode), taxon=factor(taxon), consum=consum/100)
+b.new <- b %>% mutate(taxon2 = factor(taxon2), taxon2 = factor(taxon2, levels(taxon2)[c(1:2,4,5,3)]))
+  
+b1 <- b.new %>% mutate(spcode=factor(spcode), consum=consum/100)
 b2 <- data.frame(consum = b1$consum, spcode=b.scaled$spcode,  taxon=b.scaled$taxon,
                  vpd=b.scaled$vpd, hour=b.scaled$hour)
 b3 <- mutate(b2, consum.t = case_when(consum == 0 ~ consum+0.001, TRUE ~ consum))
@@ -459,40 +477,51 @@ b4<- mutate(b1, consum.t = case_when(consum == 0 ~ consum+0.001, TRUE ~ consum),
 opts <-admbControl(impSamp=0,maxfn=500,imaxfn=500,maxph=5,noinit=FALSE,shess=TRUE,
             run=TRUE, ZI_kluge=FALSE, poiss_prob_bound=TRUE)
 
-consume.time.mod <- glmmadmb(consum ~ hour + taxon + taxon:hour,
+consume.time.mod <- glmmadmb(consum ~ hour + taxon2 + taxon2:hour,
                              family="beta", link="logit", zeroInflation=FALSE,
                              data=b4, admb.opts=opts, verbose=TRUE)
 summary(consume.time.mod)
 
 
-newdata <- expand.grid(taxon = levels(b4$taxon), hour=c(0:144))
+newdata <- expand.grid(taxon2 = levels(b4$taxon2), hour=c(0:144))
 newdata$consum <- predict(consume.time.mod, newdata, type="response")*100
 
 
 ###############################################################################
-## Fig 5: Fuel consumption by time
+## Fig 1c: Fuel consumption by time
 ###############################################################################
 # clean the predicted data to correct ranges:
-newdata1 <- newdata %>% mutate(hour = case_when(taxon=="Abies" & hour < 48 ~ NA_real_,
-                                               taxon=="P. lambertiana" & hour < 5 ~ NA_real_,
-                                               taxon=="Quercus" & hour < 70 ~ NA_real_,
+newdata1 <- newdata %>% mutate(hour = case_when(taxon2=="Abies" & hour < 48 ~ NA_real_,
+                                               taxon2=="P. lambertiana" & hour < 5 ~ NA_real_,
+                                               taxon2=="Quercus" & hour < 70 ~ NA_real_,
                                                TRUE ~ as.numeric(hour)))
 
-fig5 <- ggplot(b, aes(hour, consum, color=taxon)) +
+fig1c <- ggplot(b, aes(hour, consum, color=taxon2)) +
   scale_colour_manual(values=schwilkcolors) +
   xlab("Time since wetting (hr)") + ylab("Fuel consumed (%)") +
   scale_y_continuous(limits=c(0,100)) +
+  scale_x_continuous(breaks=xbreaks) +
   pubtheme.nogridlines +
   #stat_smooth(method="loess", se=FALSE, size=0.8) +
-  geom_line(data=newdata1, size=0.8) +
+  geom_line(data=newdata1, size=1) +
   theme(legend.position=c(.175, .51),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
         legend.title=element_blank()) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0)
-fig5
-ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,
-       width=col1, height=col1, unit="cm")
+fig1c
+## ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,
+##        width=col1, height=col1, unit="cm")
+
+
+## New Fig1 ###
+fig1 <- plot_grid(fig1a, fig1b, fig1c, labels=c("A", "B", "C"), ncol=1, align="h")
+fig1
+
+ggsave(file.path(RESULTS, "fig1_dry_effects_by_taxon.pdf"), plot=fig1,
+       width=col1, height=col1*3, unit="cm")
+
+
 
 
 ###############################################################################
@@ -501,10 +530,10 @@ ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,
 consume.time.mod.null0 <- glmmadmb(consum ~ 1,
                              family="beta", link="logit", zeroInflation=FALSE,
                              data=b4, admb.opts=opts, verbose=TRUE)
-consume.time.mod.null1 <- glmmadmb(consum ~ taxon,
+consume.time.mod.null1 <- glmmadmb(consum ~ taxon2,
                              family="beta", link="logit", zeroInflation=FALSE,
                              data=b4, admb.opts=opts, verbose=TRUE)
-consume.time.mod.null2 <- glmmadmb(consum ~ taxon + hour,
+consume.time.mod.null2 <- glmmadmb(consum ~ taxon2 + hour,
                              family="beta", link="logit", zeroInflation=FALSE,
                              data=b4, admb.opts=opts, verbose=TRUE)
 tab.consume.time <- anova(consume.time.mod.null0, consume.time.mod.null1, consume.time.mod.null2, consume.time.mod)
@@ -580,7 +609,7 @@ print(SI_tab9,file=file.path(RESULTS, "SI_tab9_mix_drydown_coef.ltx"),
 ## Fig 6: Observed vs predicted moisture
 ###############################################################################
 
-fig6 <- ggplot(mmc.sum, aes(MC_dry_pred, MC_dry.mean, color=spcode, shape=factor(hour))) +
+fig3 <- ggplot(mmc.sum, aes(MC_dry_pred, MC_dry.mean, color=spcode, shape=factor(hour))) +
   geom_point(size=4) +
   geom_pointrange(aes(ymin=MC_dry.mean-MC_dry.sd,
                       ymax=MC_dry.mean+MC_dry.sd),
@@ -595,8 +624,8 @@ fig6 <- ggplot(mmc.sum, aes(MC_dry_pred, MC_dry.mean, color=spcode, shape=factor
   ## theme(legend.position=c(.1, .86),
   ##       legend.title=element_blank())
 
-fig6
-ggsave(file.path(RESULTS, "fig6_mixture_obs_vs_pred_mc.pdf"), plot=fig6,
+fig3
+ggsave(file.path(RESULTS, "fig3_mixture_obs_vs_pred_mc.pdf"), plot=fig3,
        width=col2, height=col1, units="cm")
 
 
@@ -630,7 +659,7 @@ b.mix.pred <- dplyr::select(mflam, mix, hour, sp1, sp2, sp3) %>%
 
 b.mix.sum <- left_join(mflam, b.mix.pred)
 
-fig7 <- ggplot(mflam, aes(hour, spread)) +
+fig4 <- ggplot(mflam, aes(hour, spread)) +
   facet_grid(. ~ mix) +
   geom_jitter() +
   #  xlim(0.0, 0.3) +
@@ -638,8 +667,8 @@ fig7 <- ggplot(mflam, aes(hour, spread)) +
   xlab("Time since wetting (h)") + ylab("Spread rate (cm/s)") +
   pubtheme.nogridlines
 
-fig7
-ggsave(file.path(RESULTS, "fig7_mixture_obs_vs_pred_spread.pdf"), plot=fig7,
+fig4
+ggsave(file.path(RESULTS, "fig4_mixture_obs_vs_pred_spread.pdf"), plot=fig4,
        width=col2, height=col1, units="cm")
 
 # test:
@@ -650,7 +679,7 @@ summary(mix_spread_mod)
 ###############################################################################
 ## Fig 8: Observed vs predicted fuel consumption
 ###############################################################################
-fig8 <- ggplot(mflam, aes(hour, consum)) +
+fig5 <- ggplot(mflam, aes(hour, consum)) +
   facet_grid(. ~ mix) +
   geom_jitter() +
   #  xlim(0.0, 0.3) +
@@ -658,8 +687,8 @@ fig8 <- ggplot(mflam, aes(hour, consum)) +
   xlab("Time since wetting (h)") + ylab("Percent fuel consumed") +
   pubtheme.nogridlines
 
-fig8
-ggsave(file.path(RESULTS, "fig8_mixture_obs_vs_pred_consume.pdf"), plot=fig8,
+fig5
+ggsave(file.path(RESULTS, "fig5_mixture_obs_vs_pred_consume.pdf"), plot=fig5,
        width=col2, height=col1, units="cm")
 
 # test:
