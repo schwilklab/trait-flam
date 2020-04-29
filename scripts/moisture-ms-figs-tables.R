@@ -513,8 +513,9 @@ fig1c
 ## ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,
 ##        width=col1, height=col1, unit="cm")
 
-
-## New Fig1 ###
+###############################################################################
+## Fig1 combined a,b,c  ###
+##############################################################################
 fig1 <- plot_grid(fig1a, fig1b, fig1c, labels=c("A", "B", "C"), ncol=1, align="h")
 fig1
 
