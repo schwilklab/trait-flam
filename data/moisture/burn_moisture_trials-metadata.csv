@@ -6,9 +6,9 @@ month,numeric,,
 time,,,
 t2ignit,numeric,seconds,time to sustained ignition (flame lasts more than 10 seconds unassisted)
 ignit,factor,,binomial variable indicates whether there was successful ignition or not
-sustain,numeric,seconds,number of seconds flaming combustion lasted
+sustain,numeric,seconds,
 combust,numeric,millimeters,height of the tallest flame
 consum,numeric,%,percent mass loss
-spread,numeric,mm/s,"distance travelled by the flame, per unit time"
+spread,numeric,mm/s,flame spread rate
 rh,numeric,%,
 temp,numeric,F,

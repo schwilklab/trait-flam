@@ -4,11 +4,12 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{fullpage}
+\usepackage{float}
 
 
 \title{Magalhaes and Schwilk Supplementary Materials}
 \author{Rita Quinones de Magalhaes and Dylan W. Schwilk}
-%\date{\today}
+\date{}
 
 % Hint: \title{what ever}, \author{who care} and \date{when ever} could stand 
 % before or after the \begin{document} command 
@@ -20,47 +21,173 @@
 
 \section{Tables}
 
-\begin{table}[h]
+\begin{table}[H]
   \caption{Mixed model coefficients for drydown curves. Table shows linear model results of model fit to  natural log of dry-mass based fuel moisture content as a function of time and species.} 
   \label{tabS1}
 \centering
 \input{figs_tables/SI_tab1_drydown_coef.ltx}
 \end{table}
 
-\begin{table}[h]
-  \caption{Mixed model coefficients for flame spread rate. Table shows mixed linear model results.} 
+\begin{table}[H]
+  \caption{ANOVA model coefficients for moisture content as a function of species traits} 
+  \label{tabS2}
+\centering
+\input{figs_tables/SI_tab2_mc_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{ANOVA model coefficients for drying rate as a function of species traits} 
   \label{tabS3}
 \centering
-\input{figs_tables/SI_tab2_spread_moist_coef.ltx}
+\input{figs_tables/SI_tab3_di_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for flame spread rate as a function of taxon and moisture content. Table shows mixed linear model results.} 
+  \label{tabS4}
+\centering
+\input{figs_tables/SI_tab4_spread_moist_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for fuel consumption as a function of taxon and moisture content. Table shows mixed linear model results.} 
+  \label{tabS5}
+\centering
+\input{figs_tables/SI_tab5_consume_moist_coef.ltx}
+\end{table}
+
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for flame spread rate as a function of taxon and time since wetting. Table shows mixed linear model results.} 
+  \label{tabS6}
+\centering
+\input{figs_tables/SI_tab6_spread_time_coef.ltx}
+\end{table}
+
+\begin{table}[H]
+  \caption{Mixed model coefficients for fuel consumption as a function of taxon and time since wetting. Table shows mixed linear model results.} 
+  \label{tabS7}
+\centering
+\input{figs_tables/SI_tab7_consume_time_coef.ltx}
+\end{table}
+
+% table 8
+\begin{table}[H]
+  \caption{Linear mixed model results for moisture content as a function of
+    time since wetting for four different litter mixture types. Approximate
+    degrees of freedom (df), pseudo F statistics and p-values were calculated
+    by the Kenward-Roger approximation}.
+  \label{tab:mixtures_drydown}
+\centering
+
+\begin{tabular}{llll}
+  \toprule
+Effect & df & $F$ & $P$ \\ 
+  \midrule
+time & 1, 96.19 & 565.28 & $<$0.0001 \\ 
+  mixture & 3, 96.08 & 23.63 & $<$0.0001 \\ 
+  time:mixture & 3, 95.71 & 8.70 & $<$0.0001 \\ 
+   \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \caption{Linear mixed model coefficients for moisture content as a function of
+    time since wetting for four different litter mixture types.}.
+  \label{tab:mixtures_drydown}
+\centering
+\begin{tabular}{rrrrrr}
+  \toprule
+ & Estimate & Std. Error & df & t value & Pr($>$$|$t$|$) \\ 
+  \midrule
+(Intercept) & 4.59 & 0.06 & 71.04 & 77.18 & 0.00 \\ 
+  hour & -0.01 & 0.00 & 95.45 & -13.96 & 0.00 \\ 
+  spcodeAbCaQu & 0.26 & 0.08 & 95.35 & 3.28 & 0.00 \\ 
+  spcodeAbPiQu & 0.54 & 0.08 & 96.53 & 7.04 & 0.00 \\ 
+  spcodeCaPiQu & 0.57 & 0.08 & 95.35 & 7.25 & 0.00 \\ 
+  hour:spcodeAbCaQu & 0.00 & 0.00 & 95.40 & 3.67 & 0.00 \\ 
+  hour:spcodeAbPiQu & -0.00 & 0.00 & 95.78 & -0.70 & 0.49 \\ 
+  hour:spcodeCaPiQu & 0.00 & 0.00 & 95.40 & 2.64 & 0.01 \\ 
+   \bottomrule
+\end{tabular}
 \end{table}
 
 \section{Figures}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
-  \includegraphics[width=8cm]{figs_tables/SI_fig1_drydown-curves_logged.pdf}
+  \includegraphics[width=8cm]{figs_tables/SI_fig2_drydown-curves_logged.pdf}
    \label{SI_fig1}
-\caption[Semi-log scale dry down curves for eight litter types.]{Lines show best-fit lines fit to the natural log of moisture content on a dry mass basis.  The slope of the line shows the dessication rate ($hr^{-1}$). Litter samples we saturated by immersion for 24 hours and then allowed to drain by gravity for 3 min before initial weighing. Colors indicate genera and there were significant differences in both }
+\caption{Semi-log scale dry down curves for eight litter types. Lines show best-fit lines fit to the natural log of moisture content on a dry mass basis.  The slope of the line shows the drying rate ($hr^{-1}$). Litter samples we saturated by immersion for 24 hours and then allowed to drain by gravity for 3 min before initial weighing. Colors indicate genera and there were significant differences in both maximum absorption and drying rate (main text Table 1.}
 
 \end{figure}
 
-
-
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
-  \label{SI_fig2}
-  \includegraphics[width=17cm]{figs_tables/SI_fig2_max_water_emmeans.pdf}
+  \label{SI_fig1}
+  \includegraphics[width=16cm]{figs_tables/SI_fig3_max_water_emmeans.pdf}
 \caption{Estimated marginal means by species for maximum water retainability based on mixed model results. Shaded regions indicate 95\% confidence intervals for the marginal means.}
 \end{figure}
 
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
-  \label{fig-S2}
-\includegraphics[width=17cm]{figs_tables/SI_fig3_dessication_emmeans.pdf}
-\caption{Estimated marginal means by species for dessication rate based on mixed model results. Shaded regions indicate 95\% confidence intervals for the marginal means.}
+  \label{SI_fig3}
+\includegraphics[width=16cm]{figs_tables/SI_fig4_dessication_emmeans.pdf}
+\caption{Estimated marginal means by species for drying rate based on mixed model results. Shaded regions indicate 95\% confidence intervals for the marginal means.}
 \end{figure}
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/SI_fig5_SLA_maxMC.pdf}
+\caption{Maximum water absorption by specific leaf area (SLA) across eight species.}
+  \label{SI_fig4}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/SI_fig6_di_bd.pdf}
+\caption{Linear model predicting drying rate as a function of specific leaf area and litter bulk density across eight species.}.
+  \label{SI_fig5}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=8cm]{figs_tables/SI_fig1_litter-particle-volumes-by-species.pdf}
+   \label{SI_fig6}
+   \caption{Litter particle volume distributions. 10 2\,g subsamples of litter per species were assembled and each individual particle of that subsample was measured for length (longest axis), width (longest axis perpendicular to length) and thickness (perpendicular to length and width, at midrib) using an electronic caliper. Violin plots here show the distribution of the sum of the three dimensions as a measure of the containing prism volume (N=27--450 per species).}
+\end{figure}
+
+
+\begin{figure}[H]
+  \centering
+\includegraphics[width=8cm]{figs_tables/SI_fig7_mixture_drydown-curves.pdf}
+\caption{Fuel moisture by time since saturation for four litter mixtures.  Codes for species in mixtures: Ab = \emph{Abies concolor}, Ca = \emph{Calocedrus decurrens}, Pi = \emph{Pinus jeffreyi} and Qu = \emph{Quercus kellogii}. Moistures were measured every 24 hours but data are shown with slight horizontal jitter to reduce point overlap. Mixed linear model results shown in SI Table 7.}
+  \label{SI_fig7}
+\end{figure}
+
+% % SI fig 8
+% \begin{figure}[H]
+%   \centering
+% \includegraphics[width=8cm]{figs_tables/SI_fig8_SLA_maxMC.pdf}
+% \caption{Maximum water retention by specific leaf area across eight species.
+%   % ANOVA table in Table \ref{tab:mc_di_anova}.
+% }
+%   \label{fig:maxmc-di}
+% \end{figure}
+
+
+% \begin{figure}[H]
+%   \centering
+% \includegraphics[width=8cm]{figs_tables/SI_fig9_di_bd.pdf}
+% \caption{Drying rate rate as a function of specific leaf area and litter bulk
+%   density across eight species.
+%   % ANOVA table in Table \ref{tab:mc_di_anova}
+% }.
+%   \label{fig:bd-di}
+% \end{figure}
 
 
 \end{document}

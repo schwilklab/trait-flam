@@ -17,14 +17,13 @@ schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#362908", "#EC4E15")
 #362908
 
 
-
 textsize <- 12
 axissz <- textsize-2
 smsize <- textsize-5
 pt2mm <- 0.35146
 #smsize.mm <- smsize*pt2mm
 fontfamily = "Arial"  # Some journals want this, others happy with open source fonts
-col2 <- 17.5 # cm  -- adjust for journal specfic column sizes.
+col2 <- 16 # cm  -- adjust for journal specfic column sizes.
 col1 <- 8.0 # cm -- make sure to indicate units when using ggsave!
 ppi <- 300 # for raster formats, not recommended
 

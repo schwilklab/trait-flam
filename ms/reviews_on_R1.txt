@@ -1,0 +1,102 @@
+ 
+From: Journal of Ecology <onbehalfof@manuscriptcentral.com>
+To: dylan.schwilk@ttu.edu, dylan@schwilk.org
+Cc: admin@journalofecology.org
+Subject: Journal of Ecology - decision on JEcol-2019-1061
+Flags: seen
+Date: Fri 07 Feb 2020 08:46:11 AM CST
+Maildir: /schwilk.org/Inbox
+
+07-Feb-2020
+Moisture absorption and drying alter nonadditive litter flammability in a mixed conifer forest
+JEcol-2019-1061
+
+
+Dear Dr Dylan Schwilk,
+
+
+Thank you for submitting the revised version of your manuscript. We have assessed your revision and I am writing to let you know that we are not able to accept your manuscript in its current form. There are still several substantial concerns you must address.
+
+I'm pleased that you've improved the manuscript in this revised and resubmitted version. However, as pointed out by the AE there is major revision still required to better focus the main emphasis of your work on multispecies mixtures and articulate the novelty of your study. Please make revisions addressing the AEs comments. Please show all changes and new text in red font.
+
+The reviewer and Associate Editor comments are included below my signature.
+
+Please note that this letter does not guarantee eventual acceptance of your manuscript. Your revised manuscript will be reassessed by the Associate Editor and will likely be sent for further review.
+
+Please find information on how to submit your revised manuscript, below. The deadline to submit your revision is: 07-May-2020.
+
+If you have any problems submitting your revision, or any other queries, please contact Rhiannon Robins in our editorial office at admin@journalofecology.org.
+
+We look forward to receiving your revision.
+
+
+Best wishes,
+
+David Gibson
+Senior Editor, Journal of Ecology
+
+
+----------------------
+
+Associate Editor's comments:
+
+Unfortunately the original only reviewer 2, who was very critical, did not send in a report on the revision. The original reviewer 1, who was much more supportive of the original manuscript, was happy with this revision. I agree that many of the previous queries have been addressed adequately in this revision, but I also feel that the most serious problem has still not been solved. Previously, as pointed out by reviewer 1 and the senior editor, there were questionmarks about the novelty of this study. I now feel that, while this study has novel elements that are potentially important for understanding and predicting field fire behaviour, this novelty is swamped by the strong emphasis and large amounts of text and graphics about single species results. I think that the only way this manuscript may reach the standard of novelty needed for this journal is to make major reductions in the single species sections throughout. This may partly be done by moving certain parts to supplementary materials and merge figures (e.g. Fig. 1+4+5, Fig. 2+3). 
+Other issues to be tackled:
+In the Abstract the importance/implications of this study doesn't come out strongly.
+In the Intro, the final line of research question implies that this is not very new: Blauw et al. 2015 asked and answered this question already. Reformulate to emphasize what is the really new question asked here.
+
+A few other points I picked up along the way:
+Line 124 typo in moisture
+Line 140 delete "on"
+Line 173: what was the temperature of oven-drying? This is important to know.
+Line 344: typo in drier
+
+If the authors are willing to carry out a major revision as suggested it is highly likely the revision will be sent out to a new reviewer.
+
+----------------------
+
+Reviewer 1 comments:
+
+The authors have  addressed the concerns I had with an earlier version of the ms, and written a very nice rebuttal explaining the changes
+
+----------------------
+
++++++
+
+Revision Guidelines:
+
+The deadline to submit your revision is 07-May-2020. Please submit before this date if possible to ensure that there are no issues with time difference. Let us know, as soon as possible, if there are any problems with this deadline.
+
+Note that we do not usually allow multiple revisions, however we have made an exception in this case. Please ensure you carefully address all of the reviewer and Associate Editor’s comments in your revised manuscript and submit a response to reviewers document providing details of how you have addressed each of the comments point by point. When you submit your revised manuscript, please also highlight the changes you have made in red text in your main document. If there are any comments you have chosen not to address, please provide details of the scientific reasons you have not done so in your response to reviewers.
+
+Please note that this letter does not guarantee eventual acceptance of your manuscript. Your revised manuscript will be assessed by the original Associate Editor, whenever possible, and they will decide whether further advice from one or more of the original reviewers is necessary.  If the original reviewers are not available and further reviewer advice is required, it may be necessary for us to invite new reviewers.
+
+To submit your revision please log in to your author centre at https://mc.manuscriptcentral.com/jecol-besjournals and click ‘create a revision’ under ‘manuscripts with decisions’ and follow the on screen instructions.  Please do NOT click ‘start new submission’.
+
+----------------------
+
+Editorial Office:
+
+Please read our author guidelines carefully before submitting your revision. In particular please note the following:
+
+Data Availability Statement Statement:
+
+A statement must be included in your manuscript indicating where the data are deposited (in an external archive, in supporting information, etc.), or an explanation must be provided explaining why there are no additional data (e.g., all data are included in the manuscript, the data are confidential, the data are under a long embargo, etc.) Archived data (such as data archived on DRYAD) should be included in the references as well as the Data Availability Statement Statement section.
+
+Maximising your impact:
+
+As many readers will use search engines when looking for journal papers online, we are keen to help you optimise your article’s search engine ranking, for more information: http://authorservices.wiley.com/bauthor/seo.asp.
+
+Abstract and Keywords:
+
+To ensure that your paper achieves impact with as wide readership as possible, please make sure that the final point of the summary is headed 'Synthesis' and that it emphasises the broader significance of your work and how your study has advanced ecological understanding. Up to ten keywords can be included. These should also include some generic items and the subject category you have selected when you submitted your paper.
+
+Second language abstract:
+
+We also encourage authors to provide a second abstract in their native language or the language relevant to the country in which the research was conducted. For more information: http://besjournals.onlinelibrary.wiley.com/hub/journal/10.1111/(ISSN)1365-2745/author-guidelines.html#manuscriptspecifications.
+
+----------------------
+
+Editorial Office email: admin@journalofecology.org
+
+Journal of Ecology is a journal of the British Ecological Society. The British Ecological Society is a limited company, registered in England No. 1522897 and a Registered Charity No. 281213. VAT registration No. 199992863. Information and advice given to members or others by or on behalf of the Society is given on the basis that no liability attaches to the Society, its Council Members, Officers or representatives in respect thereof.

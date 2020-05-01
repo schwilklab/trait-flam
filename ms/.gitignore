@@ -6,3 +6,7 @@ Definitions/*
 *.log
 *.aux
 *.synctex.gz
+*.fff
+*.lof
+*.lot
+*.ttt

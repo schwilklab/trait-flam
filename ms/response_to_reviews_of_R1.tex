@@ -1,0 +1,107 @@
+ 
+\documentclass[letterpaper, 12pt]{letter}
+\usepackage{times, fullpage}
+\usepackage{url}
+
+\address{Department of Biological Sciences\\Flint and Main\\Texas Tech University\\
+  Lubbock, TX 79409}
+
+\name{Dylan W. Schwilk}
+
+\begin{document}
+\begin{letter}{}
+
+\opening{Dear Dr. David Gibson,}
+
+Enclosed is our revised manuscript research article, ``Moisture absorption and
+drying alter nonadditive litter flammability in a mixed conifer forest''.
+
+The editors listed two substantial concerns with our revised manuscript: 1) we
+did not adequately articulate the novelty of the study and 2) that we had too
+strong an emphasis and ``\ldots and large amounts of text and graphics about
+single species results.'' We have tried to rectify these shortcomings with this
+submission. Our most substantial change was to combine figures and reorganize
+the results around these new figures as the editors suggested.
+
+Additionally, to answer the first complaint, we have slightly revised the
+Introduction. We have emphasized that this study is the first to examine
+ecologically relevant drying rates and their interaction with non additive
+moisture effects on flammability. Yes, Blauw et al (2015) report moisture and
+flammability interactions but their study did not investigate the drying
+process which our results demonstrate is key to understanding flammability
+changes with time since wetting. Furthermore, their study investigated a very
+different system. The Sierran mixed confier forests in which our study takes
+place include large areas where surface fire driven by leaf litter is the
+dominant ecological disturbance and many fires are completely decoupled from
+canopy fuels. I think extensive quibbles with Blauw et al would be out of place
+in our Introduction. Our ability to investigate the mechanisms underlying our
+results are limited by the diversity of traits in our species pool, but theses
+consistent patterns within groups suggest mechanisms which we explore in the
+Discussion. No previous work has been able to address these questions --- with
+four species in Blauew et al 2015 there was even less ability to provide
+information on potential trait effects.
+
+The editors' complaint regarding ``single species'' results must refer to the
+dry down curves which do show each species and to other figures which show
+results by genus. We have combined the figures as suggested. This allows a more
+concise and consistent presentation of the results and I hope satisfies the
+suggestion to reduce emphasis on these results by taxon. We feel that the
+differences across taxa are important, however, and should be presented before
+the mixture results. The consistency across groups (not necessarily species)
+points to potential generalizability of the results and these families and
+genera are important components of many forests. Additionally, some results
+necessitated slight modifications to the planned analyses (eg those reported on
+lines 350-360). My preference is to be exact and completely upfront on these
+changes, but that does add some length to the text. Is this something the
+editors wanted further cut down? I am loathe to do so but would consider it. I
+worry that to cut the text further here would rob some context from the mixture
+results we later describe. We have made cuts and other edits to the Discussion
+to increase focus on the mixture results.
+
+The decision letter requested I mark new changes to the text in color.
+Therefore, I will submit a second pdf alongside the main submission showing
+highlighted changes to the main text (not the figures). This colorized pdf was
+created with latexdiff, but editors and reviewers are also welcome to examine
+the diffs of the text source directly in git as we have made the repository
+public.
+
+% git diff --word-diff --color-words R1 Magalhaes_Schwilk_litter_flam_moisture.tex | aha > worddiff.html
+% or see latexdiff --flatten
+
+{\bf Additional specific comments and our responses:}
+
+\begin{quote}
+  Line 124 typo in moisture
+\end{quote}
+
+Thank you. fixed
+
+\begin{quote}
+  Line 140 delete "on"
+\end{quote}
+
+We disagree because the sentence would then no longer make sense. ``Based
+largely on'' is grammatically correct in at least American English usage of the
+phrasal verb.
+
+\begin{quote}
+  Line 173: what was the temperature of oven-drying? This is important to know.
+\end{quote}
+
+Oven temperature was $60^\circ$C. We've added that to the methods (line 178).
+That is an interesting point about the potential importance of this. I've seen
+some data showing that drying temperature speed will effect volatile retention,
+but I think that was from live collected foliage. I wonder if there is much
+effect on litter that has gone through natural wetting/drying cycles?
+
+\begin{quote}
+Line 344: typo in drier
+\end{quote}
+
+Oops! Yes, not the clothes dryer. Fixed!
+
+
+\closing{Sincerely,}
+
+\end{letter}
+\end{document}
