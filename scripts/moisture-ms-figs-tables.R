@@ -21,7 +21,7 @@ set.seed(100)
 decompsp <- decomp %>% left_join(species)
 
 ###############################################################################
-## SI Fig 1: litter particle length distributions
+## SI Fig 6: litter particle length distributions
 ###############################################################################
 
 SI_fig1 <- ggplot(subset(decompsp, year==0), aes(display.name, l+w+t)) +
