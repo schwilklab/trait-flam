@@ -1,6 +1,13 @@
 # Figures for moisture manuscript
 # 2019-12-12
 
+## install.packages("R2admb")
+## install.packages("glmmADMB", 
+##     repos=c("http://glmmadmb.r-forge.r-project.org/repos",
+##             getOption("repos")),
+##     type="source")
+
+
 library(xtable)
 library(ggrepel)
 library(glmmADMB)
@@ -44,7 +51,6 @@ summarize(x, n=length(l))
 
 
 
-
 ###############################################################################
 ## Figure 1a: dry-down
 ###############################################################################
@@ -64,7 +70,9 @@ fig1a <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=taxon)) +
   pubtheme.nogridlines +
   theme(legend.position=c(0.75, 0.86),
         legend.title=element_blank(),
-        legend.text = element_text(family=fontfamily, size=smsize, face="italic"))
+        legend.text = element_text(family=fontfamily, size=smsize, face="italic"),
+        plot.margin = unit(c(0, 5.5, 3, 5.5), "pt"),
+        axis.title.x = element_blank()
 #       legend.key.height=unit(smsize,"pt"))
 
 ## ggsave(file.path(RESULTS, "fig1a_drydown-curves.pdf"), plot=fig1a,
@@ -274,13 +282,15 @@ b.scaled <- b %>% mutate_if(is.numeric, scale)
 fig2a <- ggplot(b, aes(actualMC_dry, spread, color=taxon)) +
   geom_point(size=1.5, alpha=0.7, stroke=0) +
   scale_colour_manual(values=schwilkcolors) +
-  xlab("Moisture content (%)") + ylab("Spread rate (cm/s)") +
+  ylab("Spread rate (cm/s)") +
   pubtheme.nogridlines +
   stat_smooth(method="lm", se=FALSE, size=1, drop=TRUE) +
   theme(legend.position=c(.76, .86),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        legend.title=element_blank())
+        legend.title=element_blank(),
+        plot.margin = unit(c(0, 5.5, 3, 5.5), "pt"),
+        axis.title.x = element_blank())
 ## ggsave(file.path(RESULTS, "fig2_spread_actualMC.pdf"), plot=fig2a,
 ##        width=col1, height=col1, unit="cm")
 
@@ -335,7 +345,8 @@ fig2b <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
   pubtheme.nogridlines +
   #stat_smooth(method="lm", se=FALSE, size=0.8) +
   geom_line(data=newdata, size=1) +
-  theme(legend.position="none")
+  theme(legend.position="none",
+         plot.margin = unit(c(0, 5.5, 3, 5.5), "pt"))
   ## theme(legend.position=c(.8, .86),
   ##       legend.spacing.y=unit(0,"cm"),
   ##       legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
@@ -347,11 +358,12 @@ fig2b
 
 ## New fig 2
 
-fig2 <- plot_grid(fig2a, fig2b, labels=c("A", "B"), ncol=1, align="h")
+fig2 <- plot_grid(fig2a, fig2b, labels=c("A", "B"), ncol=1, align="h",
+                   label_x = 0, label_y = 0.1, hjust = -0.5, vjust = -0.5)
 fig2
 
 ggsave(file.path(RESULTS, "fig2_moisture_flam.pdf"), plot=fig2,
-       width=col1, height=col1*2, unit="cm")
+       width=col1, height=col1*1.667, unit="cm")
 
 
 
@@ -368,7 +380,7 @@ ggsave(file.path(RESULTS, "fig2_moisture_flam.pdf"), plot=fig2,
 ## consume.moist.mod.mixed <- mixed(consum ~ actualMC_dry + taxon + taxon:actualMC_dry + vpd + (1 | spcode),
 ##                            data=b, method="KR")
 
-consume.moist.mod.null0 <- glmmadmb(consum ~ 1 + (1 | spcode),
+onsume.moist.mod.null0 <- glmmadmb(consum ~ 1 + (1 | spcode),
                              family="beta", link="logit", zeroInflation=FALSE,
                              data=b.consume, admb.opts=opts, verbose=TRUE)
 consume.moist.mod.null1 <- glmmadmb(consum ~ taxon + (1 | spcode),
@@ -413,7 +425,9 @@ fig1b <- ggplot(b, aes(hour, spread, color=taxon)) +
   #scale_y_log10() +
   pubtheme.nogridlines +
   theme(legend.position=c(.3, .86),
-        legend.title=element_blank())
+        legend.title=element_blank(),
+        axis.title.x = element_blank(),
+        plot.margin = unit(c(0, 5.5, 3, 5.5), "pt"))
 fig1b
 ## ggsave(file.path(RESULTS, "fig4_spread_time.pdf"), plot=fig4,
 ##        width=col1, height=col1, units="cm")
@@ -504,23 +518,25 @@ fig1c <- ggplot(b, aes(hour, consum, color=taxon2)) +
   pubtheme.nogridlines +
   #stat_smooth(method="loess", se=FALSE, size=0.8) +
   geom_line(data=newdata1, size=1) +
-  theme(legend.position=c(.175, .51),
+  theme(legend.position=c(.19, .625),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        legend.title=element_blank()) +
+        legend.title=element_blank(),
+        plot.margin = unit(c(0, 5.5, 3, 5.5), "pt")) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0)
 fig1c
-## ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,
+## ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,tex
 ##        width=col1, height=col1, unit="cm")
 
 ###############################################################################
 ## Fig1 combined a,b,c  ###
 ##############################################################################
-fig1 <- plot_grid(fig1a, fig1b, fig1c, labels=c("A", "B", "C"), ncol=1, align="h")
+fig1 <- plot_grid(fig1a, fig1b, fig1c, labels=c("A", "B", "C"), ncol=1, align="h",
+                  label_x = 0, label_y = 0.1, hjust = -0.5, vjust = -0.5)
 fig1
 
 ggsave(file.path(RESULTS, "fig1_dry_effects_by_taxon.pdf"), plot=fig1,
-       width=col1, height=col1*3, unit="cm")
+       width=col1, height=col1*2.5, unit="cm")
 
 
 
