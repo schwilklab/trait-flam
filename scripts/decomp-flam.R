@@ -18,7 +18,7 @@ library(AICcmodavg)
 ## any real reason for selecting columns there?
 # New dataframe with the predicted spread rate after decomposition (year 1)
 decomp.by.species <- decomp.sum %>%  ungroup() %>%
-  select(spcode, year, l_mean, w_mean, t_mean, larea_mean, lt_mean) %>%
+  dplyr::select(spcode, year, l_mean, w_mean, t_mean, larea_mean, lt_mean) %>%
   group_by(spcode, year) %>% summarise(l_mean_sd = sd(l_mean, na.rm=TRUE),
                                  l_mean = mean(l_mean),
                                  t_mean_sd = sd(t_mean, na.rm=TRUE),
@@ -35,7 +35,7 @@ decomp.by.species <- decomp.sum %>%  ungroup() %>%
 ## Year 0 decomp by flam summary for figure 2
 flam.by.species <- flam.sp.avg %>%
   mutate(spread_lc = spread.mean-2*spread.sd, spread_uc = spread.mean+2*spread.sd) %>%
-  select(spcode, spread_mean=spread.mean, spread_lc, spread_uc)
+  dplyr::select(spcode, spread_mean=spread.mean, spread_lc, spread_uc)
 
 flamdecomp <- decomp.by.species %>% filter(year == 0) %>% left_join(flam.by.species)
 ## decomp.Y0.conifers <- filter(decomp.Y0, spcode %in% 
@@ -74,7 +74,7 @@ pred.y1 <- decomp.by.species %>% filter(year == 1)
 #pred.ci <- predict(lmfit2, newdata=pred.y1, interval="confidence", level=.95, se.fit=TRUE)
 pred.pi <- predict(lmfit2, newdata=pred.y1, interval="confidence", #"prediction",
                    level=.95, se.fit=TRUE)$fit %>% as.data.frame() %>%
-            select(spread_mean = fit, spread_lc = lwr, spread_uc = upr)
+            dplyr::select(spread_mean = fit, spread_lc = lwr, spread_uc = upr)
 
 pred.y1 <- bind_cols(pred.y1, pred.pi)
 

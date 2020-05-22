@@ -4,8 +4,8 @@ library(ggplot2)
 library(gridExtra)
 library(scales)
 library(extrafont)
-font_import(pattern="Arial")
-#loadfonts()
+#font_import(pattern="Arial")
+loadfonts()
 
 # constants and theme for publications
 #schwilkcolors <- c("#D68D18", "#836B43", "#A0AE6A", "#437683", "#18B0D6")
