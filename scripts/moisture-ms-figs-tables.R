@@ -55,7 +55,7 @@ summarize(x, n=length(l))
 ## Figure 1a: dry-down
 ###############################################################################
 xbreaks <- seq(0, 144, 24)
-ybreaks <- seq(0, 700, 50)
+ybreaks <- seq(0, 700, 100)
 
 fig1a <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=taxon)) +
   geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
@@ -71,7 +71,7 @@ fig1a <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=taxon)) +
   theme(legend.position=c(0.79, 0.86),
         legend.title=element_blank(),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        plot.margin = unit(c(0, 3, 3, 5.5), "pt"),
+        plot.margin = unit(c(5, 1, 3, 5), "pt"),
         axis.title.x = element_blank())
 #        legend.key.height=unit(smsize,"pt"))
 
@@ -352,7 +352,7 @@ fig1e <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
         legend.title=element_blank(),
         axis.title.y = element_blank(),
-        plot.margin = unit(c(0, 5.5, 3, 0), "pt"))
+        plot.margin = unit(c(0, 5, 5, 0), "pt"))
 fig1e
 
 ###############################################################################
@@ -415,7 +415,7 @@ fig1b <- ggplot(b, aes(hour, spread, color=taxon)) +
         legend.title=element_blank(),
         axis.title.x = element_blank(),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
-        plot.margin = unit(c(0, 3, 3, 5.5), "pt"))
+        plot.margin = unit(c(0, 1, 3, 5), "pt"))
 fig1b
 ## ggsave(file.path(RESULTS, "fig4_spread_time.pdf"), plot=fig4,
 ##        width=col1, height=col1, units="cm")
@@ -510,7 +510,7 @@ fig1c <- ggplot(b, aes(hour, consum, color=taxon2)) +
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
         legend.title=element_blank(),
-        plot.margin = unit(c(0, 3, 3, 5.5), "pt")) +
+        plot.margin = unit(c(0, 1, 5, 5), "pt")) +
   geom_jitter(width=2, size=1.5, alpha=0.7, stroke=0)
 fig1c
 ## ggsave(file.path(RESULTS, "fig5_consume_time.pdf"), plot=fig5,tex
