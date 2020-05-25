@@ -11,7 +11,7 @@
 library(xtable)
 library(ggrepel)
 library(glmmADMB)
-library(cowplot)
+library(patchwork)
 
 RESULTS <- "../ms/figs_tables/"
 
@@ -519,8 +519,14 @@ fig1c
 ###############################################################################
 ## Fig1 combined a,b,c,d,e  ###
 ##############################################################################
-fig1 <- plot_grid(fig1a, NULL, fig1b, fig1d, fig1c, fig1e, labels=c("A", "", "B", "D", "C", "E"),
-                  ncol=2, align="hv", hjust=c(-0.5,-2,-0.5,-2, -0.5, -2))
+## fig1 <- plot_grid(fig1a, NULL, fig1b, fig1d, fig1c, fig1e, labels=c("A", "", "B", "D", "C", "E"),
+##                   ncol=2, align="hv", hjust=c(-0.5,-2,-0.5,-2, -0.5, -2))
+fig1 <- fig1a + fig1b + fig1c + plot_spacer() + fig1d + fig1e +
+  plot_layout(nrow = 3, byrow = FALSE) +
+  plot_annotation(tag_levels = 'A') &
+  theme(plot.margin = unit(c(4, 4, 4, 4), "pt"),
+        plot.tag.position = c(0, 1),
+        plot.tag = element_text(hjust = -0.5, vjust = 0.3))
 fig1
 
 ggsave(file.path(RESULTS, "fig1_dry_effects_by_taxon.pdf"), plot=fig1,
