@@ -212,8 +212,8 @@ nonadditivity has also been recorded for litter mixtures
 that similar nonadditive effects may influence litter moisture content and
 flammability of moist fuels. There is some evidence for nonadditive
 flammability in moist fuels with a single study finding increasing
-nonadditivity with moisture \citep{Blauw+Wensink+etal-2015}, but this previous
-work did not include estimation of mixture effect on the dry-down process and
+nonadditivity with moisture \citep{Blauw+Wensink+etal-2015}. However, this study
+did not include estimation of mixture effect on the dry-down process and
 had an unclear relationship to fire behavior in the field. In mixed conifer
 forest in California, where the fire regime is characterized by surface fires
 fueled by plant litter, overstory tree composition drives variation in local
@@ -248,11 +248,11 @@ Field sites for this study were located in Sequoia and Kings Canyon National
 Parks, California, USA (N$36^\circ 36'$, W$118^\circ 42'$) between 1600 and
 2400\,m elevation in mixed-conifer forest. We chose eight dominant tree species
 that are representative of this type of forest: \emph{Pinus jeffreyi} Grev. \&
-Balf., \emph{Pinus lambertiana} Dougl., \emph{Pinus ponderosa} Dougl. ex Laws.,
-\emph{Abies concolor} (Gord. \& Glend.) Lindl. ex Hildebr., \emph{Abies
-  magnifica} A. Murr., \emph{Calocedrus decurrens} (Torr.) Florin,
+Balf., \emph{Pinus lambertiana} Douglas, \emph{Pinus ponderosa} Douglas ex Lawson \& C. Lawson,
+\emph{Abies concolor} (Gordon \& Glend.) Lindl. ex Hildebr., \emph{Abies
+  magnifica} A. Murray, \emph{Calocedrus decurrens} (Torr.) Florin,
 \emph{Quercus kelloggii} Newb., and \emph{Sequoiadendron giganteum} (Lindl.) J.
-Buchholz. In this study, we consider ``litter'' the top layer of leaves and small
+Buchholz (identification and authorities from the Jepson Flora Project 2020). In this study, we consider ``litter'' the top layer of leaves and small
 twigs less than 1\,cm diameter that have fallen in the previous year (mostly
 undecomposed or lightly decomposed litter representing fuels classified as
 1-hour and 10-hour fuels). Leaf litter was collected in the summer (mid-June to
@@ -421,7 +421,7 @@ genera in the Cupressaceae, \emph{Calocedrus} and \emph{Sequoiadendron}, also
 behaved similarly to one another. Therefore, to preserve power we used
 taxonomic groups (\emph{Abies}, Cupressaceae, \emph{Quercus}, and \emph{Pinus})
 as our flammability functional groups and treated these as fixed effects in our
-models. The effects of fuel moisture and time since wetting on flammability
+models (Table \ref{tab:species}). The effects of fuel moisture and time since wetting on flammability
 parameters were modeled using linear models with fuel moisture or time since
 wetting and taxon as fixed effects and average vapor pressure deficit in the
 burning room during that trial as a nuisance covariate. We used linear mixed
@@ -430,6 +430,29 @@ effects with few intermediate values. Therefore, we used mixed generalized
 linear models with a beta regression link with the `glmmADMB' package
 \citep{Skaug_Fournier_etal-2016} to model percent fuel consumed as a function
 of moisture content and of time since wetting.
+
+
+\begin{table}
+  \caption{Species included in this study and the taxonomic groups used as fixed effects in statistical models. Names and authorities according to \citet{Jepson:2020}.
+  \label{tab:species}}
+\centering
+%% \tablesize{} %% You can specify the fontsize here, e.g., \tablesize{\footnotesize}. If commented out \small will be used.
+\begin{tabular}{lll}
+  \toprule
+  Species & Authority & Taxonomic group \\
+  \midrule
+    \emph{Pinus jeffreyi}    & Grev. \& Balf.  & \emph{Pinus}\\
+    \emph{Pinus lambertiana} & Douglas          & \emph{Pinus} \\
+    \emph{Pinus ponderosa}   &  Douglas ex Lawson \& C. Lawson & \emph{Pinus} \\
+    \emph{Abies concolor}    & (Gordon \& Glend.) Lindl. ex Hildebr. & \emph{Abies} \\
+    \emph{Abies magnifica}   & A. Murray   & \emph{Abies} \\
+    \emph{Calocedrus decurrens} & (Torr.) Florin & Cuppressaceae \\
+    \emph{Sequoiadendron giganteum} & (Lindl.) J. Buchholz & Cuppressaceae \\
+    \emph{Quercus kelloggii}    & Newb. & \emph{Quercus}\\ 
+  \bottomrule
+\end{tabular}
+\end{table}
+
 
 We investigated nonadditive effects on moisture and on flammability by
 testing if moisture content and flammability of mixtures were predicted by the
@@ -480,20 +503,26 @@ species into three groups from lowest to most rapid drying rate: 1) \emph{C.
   \ContinuedFloat
   \caption{Effects of litter drying on fuel moisture and flammability. A) Dry
     down curves for eight species. Lines show best-fit exponential decay curves
-    fit to moisture content on a dry mass basis. B) Flame spread rate by time
-    since wetting. Lines indicate best fit linear model by taxonomic group.
-    Model ANOVA table in Table \ref{tab:spreadrate_anova} and coefficients in
-    SI Table 6. C) Percent fuel consumed by time since wetting. Curves indicate
-    best fit beta regression lines by taxonomic group. Model ANOVA table in
-    Table \ref{tab:consume_anova} and coefficients in SI Table 7. D) Flame
-    spread rate by fuel moisture content. Model ANOVA table in Table
-    \ref{tab:spreadrate_anova} and coefficients in SI Table 4. E) Percent fuel
+    fit to moisture content on a dry mass basis. The lines for \emph{P.
+      jeffreyi} and for \emph{P. ponderosa} overlap and appear to be a single
+    line. B) Flame spread rate by time since wetting. Lines indicate best fit
+    linear model by taxonomic group (Table \ref{tab:species}). Model ANOVA
+    table is in Table \ref{tab:spreadrate_anova} and coefficients are in SI Table 6.
+    C) Percent fuel consumed by time since wetting. Curves indicate best fit
+    beta regression by taxonomic group, except that \emph{P. lambertiana}
+    is fit separately from \emph{P. jeffrey} and \emph{P. ponderosa} as
+    explained in the text (Table \ref{tab:species}). Model ANOVA table is in Table
+    \ref{tab:consume_anova} and coefficients are in SI Table 7. D) Flame spread
+    rate by fuel moisture content. Lines indicate best fit linear model by
+    taxonomic group (Table \ref{tab:species}). Model ANOVA table is in Table
+    \ref{tab:spreadrate_anova} and coefficients are in SI Table 4. E) Percent fuel
     consumed by moisture content. Lines indicate best fit beta regression
-    lines. Model deviance table in Table \ref{tab:consume_anova} and
-    coefficients are in SI Table 5. For plots in left column, horizontal jitter
-    was added to avoid overplotting. for flammability plots, a lack of data at
-    earlier time points for a taxon indicates no ignitions occurred at those
-    time points.}
+    lines. Curves indicate best fit linear model by taxonomic group (Table
+    \ref{tab:species}). Model deviance is in Table \ref{tab:consume_anova}
+    and coefficients are in SI Table 5. For plots in left column, horizontal
+    jitter was added to avoid overplotting. For flammability plots, a lack of
+    data at earlier time points for a taxon indicates no ignitions occurred at
+    those time points.}
  \label{fig:drydown}
 \end{figure}
 %% \clearpage

@@ -27,6 +27,8 @@ set.seed(100)
 
 decompsp <- decomp %>% left_join(species)
 
+fig_line_size<-0.9
+
 ###############################################################################
 ## SI Fig 6: litter particle length distributions
 ###############################################################################
@@ -60,7 +62,7 @@ ybreaks <- seq(0, 700, 100)
 fig1a <- ggplot(mc, aes(hour, MC_dry, group=display.name, color=taxon)) +
   geom_jitter(height=0, width=0.5, size=1.2, alpha=0.7, stroke=0) +
   geom_smooth(method="glm",
-              method.args=list(family=gaussian(link="log")), se=FALSE, size=1) +
+              method.args=list(family=gaussian(link="log")), se=FALSE, size=fig_line_size) +
   scale_colour_manual(values=schwilkcolors) +
   #xlab("Time since wetting (hr)") +
   xlab("") +
@@ -280,7 +282,7 @@ fig1d <- ggplot(b, aes(actualMC_dry, spread, color=taxon)) +
   ylab("Spread rate (cm/s)") +
   scale_x_continuous(limits=c(0,80), breaks=c(0,20,40,60,80)) +
   pubtheme.nogridlines +
-  stat_smooth(method="lm", se=FALSE, size=1, drop=TRUE) +
+  stat_smooth(method="lm", se=FALSE, size=fig_line_size, drop=TRUE) +
   theme(legend.position=c(.79, .86),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
@@ -339,7 +341,7 @@ fig1e <- ggplot(b, aes(actualMC_dry, consum, color=taxon)) +
   scale_y_continuous("Fuel consumed (%)", breaks=c(0, 25, 50, 75, 100), labels=c("0","25","50","75","")) +
   pubtheme.nogridlines +
   #stat_smooth(method="lm", se=FALSE, size=0.8) +
-  geom_line(data=newdata, size=1) +
+  geom_line(data=newdata, size=fig_line_size) +
   theme(legend.position=c(.78, .86),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
@@ -397,7 +399,7 @@ print(xtable(tab.consume.moist.coef), file=file.path(RESULTS, "SI_tab5_consume_m
 
 fig1b <- ggplot(b, aes(hour, spread, color=taxon)) +
   geom_jitter(width=2, height=0, size=1.5, alpha=0.7, stroke=0) +
-  geom_smooth(method="lm", se=FALSE, size=1) +
+  geom_smooth(method="lm", se=FALSE, size=fig_line_size) +
   scale_colour_manual(values=schwilkcolors, drop=TRUE) +
   #xlab("Time since wetting (hr)")
   xlab("") +  ylab("Spread rate (cm/s)") +
@@ -487,7 +489,7 @@ fig1c <- ggplot(b, aes(hour, consum, color=taxon2)) +
   scale_y_continuous(limits=c(0,100)) +
   scale_x_continuous(breaks=xbreaks) +
   pubtheme.nogridlines +
-  geom_line(data=newdata1, size=1) +
+  geom_line(data=newdata1, size=fig_line_size) +
   theme(legend.position=c(.19, .625),
         legend.spacing.y=unit(0,"cm"),
         legend.text = element_text(family=fontfamily, size=smsize-1, face="italic"),
@@ -508,7 +510,7 @@ fig1 <- fig1a + fig1b + fig1c + plot_spacer() + fig1d + fig1e +
 fig1
 
 ggsave(file.path(RESULTS, "fig1_dry_effects_by_taxon.pdf"), plot=fig1,
-       width=col2, height=col1*2.5, unit="cm")
+       width=col2, height=col1*3, unit="cm")
 
 
 ###############################################################################
